@@ -1,0 +1,745 @@
+/* Global box-sizing and responsive images for device compatibility */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/*screen loader*/
+
+#loader {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 999999;
+    opacity: 1;
+    transform: scale(1);
+    transition: transform 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19), opacity 0.4s ease;
+}
+
+#loader.done {
+    transform: scale(2.5);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;        
+    object-position: center;
+    z-index: 1;
+    animation: bgzoom 2s ease-in-out infinite alternate;
+}
+
+@keyframes bgzoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.08); }
+}
+
+.logo {
+    width: 35vw;
+    max-width: 220px;
+    min-width: 120px;
+    z-index: 3;
+    animation: pop 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pop {
+    0%   { transform: scale(1); }
+    100% { transform: scale(1.12); }
+}
+
+#content {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+#content.show {
+    opacity: 1;
+}
+
+
+/*Main content*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+#content {
+    background-image: url("pics/BG\ ELEMENTS.png");
+    background-size:cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;  
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.top-links{
+    width: 97%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 20 40px;
+    margin-top: 20px;
+}
+
+
+.top-links a{
+    font-size: 35px;
+    font-weight: 600;
+    color: #32A928;
+    text-decoration: none;
+    font-family:'poppins';
+}
+
+#choices{
+    margin-top: -5px;
+    display:flex;
+    justify-content: center;
+    gap: 25px;
+    position: relative;
+}
+
+.blur-bg{
+    position:absolute;
+    width: 1500px;
+    height: 575px;
+    top: -75px;
+    z-index: 0;
+    opacity: 0.80;
+}
+
+.title{
+    font-size:45px;
+    font-weight: 600;
+    color: #32A928;
+    text-align: center;
+    position: relative;
+    z-index: 5;
+    top: 50px;
+    left:3px;
+}
+
+
+#choices {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 220px;
+    position: relative;
+}
+
+
+.blur-bg {
+    position: absolute;
+    width: 90%;
+    max-width: 1100px;
+    top: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 0;
+    opacity: 0.80;
+    pointer-events: none;
+}
+
+
+.choice-card {
+    position: relative;
+    z-index: 10;
+    border-radius: 30px;    
+    margin-top: 50px;
+    overflow: hidden;       
+    cursor: pointer;
+    transition: transform .25s ease;
+}
+
+
+.choice-card img {
+    width: 300px;
+    display: block;
+    border-radius: 40px;    
+}
+
+
+.choice-card:hover {
+    transform: scale(1.05);  
+}
+
+.choice-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 3px solid black;
+    border-radius: 40px;    
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all .30s ease;
+    pointer-events: none;
+}
+
+.choice-card:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+/*form*/
+#popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 100;
+}
+
+#popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(.8);
+    width: 1000px;
+    max-height: 95vh;
+    background: white;
+    border-radius: 18px;
+    z-index: 101;
+    transition: .25s ease;
+    box-shadow: 0 0 30px rgba(0,0,0,0.15);
+    overflow-y: auto;
+}
+
+
+.close-btn {
+    position: absolute;
+    right: 18px;
+    top: 12px;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 200;
+}
+
+.popup-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.popup-left {
+    width: 50%;
+    padding: 40px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.left-logo {
+    width: 200px;
+    margin: 0 auto;
+    display: block;
+    margin-top: -50px;
+}
+
+.left-title {
+    text-align: center;
+    font-size: 45px;
+    font-weight: 700;
+    color: #32A928;
+    font-weight: bolder;
+    margin-top: -75px;
+}
+
+.left-welcome {
+    text-align: center;
+    font-size: 15px;
+    color: #444;
+    line-height: 1.4;
+    margin-top: -40px;
+}
+
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.left-icon1 {
+    width: 500px;
+    margin-left: -110px;
+    margin-top: -20px;
+}
+
+.left-icon2 {
+    width: 330px;
+    margin-right: -70px;
+    margin-top: -175px;
+}
+
+.left-icon {
+    width: 550px;
+    display: block;   
+    position: relative;
+    left: -80px;   
+    top: -40px;    
+}
+
+
+.left-text1 {
+    font-size: 14px;
+    color: #333;
+    margin-left: -150px;
+    margin-top: -150px;
+}
+
+.left-text2 {
+    font-size: 15px;
+    color: #333;
+    margin-left: 50px;
+    margin-top: -50px;
+}
+
+.left-text3 {
+    font-size: 14px;
+    color: #333;
+    margin-left: -300px;
+    margin-top: -75px;
+    z-index: 2;
+}
+
+.popup-right {
+    width: 50%;
+    padding: 40px 30px;
+}
+
+
+.popup-title {
+    font-size: 24px;
+    color: #32A928;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+    width: 95%;
+    padding: 15px;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid #bfbfbf;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+    display: none;
+    width: 90%;
+}
+
+
+.delivery-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.other-option {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.pass-message {
+    color: red;
+    font-size: 13px;
+    margin-top: -5px;
+    display: none;
+}
+
+.password-wrapper {
+    position: relative;
+    width: 95%;
+    margin-bottom: 12px;
+}
+
+
+.password-wrapper input {
+    width: 100%;
+}
+
+.toggle-pass {
+    position: absolute;
+    right: 12px;       
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;        
+    cursor: pointer;
+    opacity: 0;        
+    pointer-events: auto;
+    transition: .2s;
+}
+.toggle-pass.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#hidePass1,
+#hidePass2 {
+    display: none;
+}
+
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: #32A928;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.submit-btn:disabled {
+    background: #32A928;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+
+.agreement-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: #444;
+    cursor: pointer;
+    position: relative;
+}
+
+.agreement-label input[type="checkbox"] {
+    display: none; 
+}
+
+.checkmark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid black;
+    border-radius: 50%; 
+    background-color: white;
+    position: relative;
+    flex-shrink: 0;
+}
+
+
+.agreement-label input[type="checkbox"]:checked + .checkmark {
+    background-color: #32A928;
+}
+.agreement-text {
+    line-height: 1.4;
+}
+
+.agreement-text a {
+    color: #32A928;
+    text-decoration: none;
+}
+
+.agreement-text a:hover {
+    text-decoration: underline;
+}
+
+
+#popup::-webkit-scrollbar {
+    width: 14px;
+}
+
+#popup::-webkit-scrollbar-track {
+    background: #dff5df;
+    border-radius: 10px;
+}
+
+#popup::-webkit-scrollbar-thumb {
+    background: #32A928;
+    border-radius: 10px;
+}
+
+#popup::-webkit-scrollbar-thumb:hover {
+    background: #2a8f22;
+}
+
+
+/* Responsive Adjustments */
+@media screen and (max-width: 1200px) {
+    #choices {
+        gap: 150px;
+        justify-content: center;
+    }
+
+    .choice-card img {
+        width: 250px;
+    }
+
+    .choice-card::after {
+        border-width: 2.5px;
+    }
+
+    .blur-bg {
+        width: 95%;
+        max-width: 1000px;
+        top: -60px;
+    }
+
+    .left-logo {
+        width: 180px;
+        margin-top: -40px;
+    }
+
+    .left-title {
+        font-size: 38px;
+        margin-top: -60px;
+    }
+
+    .left-welcome {
+        font-size: 14px;
+        margin-top: -30px;
+    }
+
+    .left-icon1 {
+        width: 400px;
+        margin-left: -80px;
+        margin-top: -15px;
+    }
+
+    .left-icon2 {
+        width: 280px;
+        margin-right: -50px;
+        margin-top: -150px;
+    }
+
+    .left-icon {
+        width: 480px;
+        left: -60px;
+        top: -30px;
+    }
+
+    .left-text1, .left-text2, .left-text3 {
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .popup-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .popup-left, .popup-right {
+        width: 90%;
+        padding: 20px;
+    }
+
+    #choices {
+        flex-direction: column;   
+        align-items: center;      
+        gap: 20px;                
+    }
+
+    .choice-card img {
+        max-width: 180px;         
+    }
+
+    .choice-card::after {
+        border-width: 2px;        
+    }
+
+    .blur-bg {
+        top: -40px;
+    }
+
+    .left-logo {
+        width: 150px;
+        margin-top: -30px;
+    }
+
+    .left-title {
+        font-size: 32px;
+        margin-top: -50px;
+    }
+
+    .left-welcome {
+        font-size: 13px;
+        margin-top: -25px;
+    }
+
+    .left-icon1 {
+        width: 350px;
+        margin-left: -60px;
+        margin-top: -10px;
+    }
+
+    .left-icon2 {
+        width: 250px;
+        margin-right: -40px;
+        margin-top: -120px;
+    }
+
+    .left-icon {
+        width: 420px;
+        left: -50px;
+        top: -25px;
+    }
+
+    .left-text1, .left-text2, .left-text3 {
+        font-size: 12px;
+        margin-left: 0;
+        margin-top: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .top-links a {
+        font-size: 1.1rem;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .blur-bg {
+        top: -30px;
+    }
+
+    #choices {
+        gap: 15px;
+    }
+
+    .choice-card img {
+        max-width: 150px;
+    }
+
+    .choice-card::after {
+        border-width: 1.5px;      
+    }
+
+    .left-logo {
+        width: 120px;
+        margin-top: -20px;
+    }
+
+    .left-title {
+        font-size: 28px;
+        margin-top: -40px;
+    }
+
+    .left-welcome {
+        font-size: 12px;
+        margin-top: -20px;
+    }
+
+    .left-icon1 {
+        width: 280px;
+        margin-left: -40px;
+        margin-top: -5px;
+    }
+
+    .left-icon2 {
+        width: 200px;
+        margin-right: -20px;
+        margin-top: -100px;
+    }
+
+    .left-icon {
+        width: 360px;
+        left: -40px;
+        top: -20px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #choices {
+        gap: 10px;
+    }
+
+    .choice-card img {
+        max-width: 120px;
+    }
+
+    .choice-card::after {
+        border-width: 1px;        
+    }
+
+    .left-logo {
+        width: 100px;
+        margin-top: -15px;
+    }
+
+    .left-title {
+        font-size: 22px;
+        margin-top: -30px;
+    }
+
+    .left-welcome {
+        font-size: 11px;
+        margin-top: -15px;
+    }
+
+    .left-icon1 {
+        width: 220px;
+        margin-left: -30px;
+    }
+
+    .left-icon2 {
+        width: 180px;
+        margin-right: -15px;
+        margin-top: -80px;
+    }
+
+    .left-icon {
+        width: 300px;
+        left: -30px;
+        top: -15px;
+    }
+
+    .left-text1, .left-text2, .left-text3 {
+        font-size: 11px;
+    }
+
+    .popup-right {
+        padding: 15px;
+    }
+
+    .popup-left {
+        padding: 15px;
+    }
+
+    #popup {
+        width: 95%;
+    }
+}

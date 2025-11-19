@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Link - Sign Up</title>
+    <link rel="shortcut icon" href="/Log-in-page/pictures - resources/FARMLINK LOGO.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Sign-up-option.css">
+</head>
+<body>
+    
+     <!-- Loading Screen -->
+         <div id="loader">
+            <img src="pics/BG ELEMENTS.png" class="bg">
+            <img src="pics/LANDING PAGE LOGO.png" class="logo">
+        </div>
+
+    <div id="content">
+
+        <!-- Top Links -->
+        <div class="top-links">
+            <a href="/Log-in-page/login.html">Login</a>
+            <a href="#">Learn More</a>
+        </div>
+
+        <!-- Title -->
+        <div class="title-container">
+            <a href="/Sign-up-page(NGO)/Sign-up-option.html" class="back-btn">
+                <img src="/Sign-up-page(Buyer)/pics/BUYER SIGN UP/Back-arrow.png" alt="Back">
+            </a>
+            <h1 class="title">Which describes interest you the most?</h1>
+        </div>
+
+        <!-- Choice Cards -->
+        <div id="choices">
+            <img src="pics/CONTAINER BLUR.png" class="blur-bg" alt="Background Blur">
+            <div class="choice-card" onclick="goWholesale()">
+                <img src="pics/BUYER SIGN UP/WHOLESALE BUTTON.png" alt="Wholesale">
+            </div>
+            <div class="choice-card" onclick="goRetail()">
+                <img src="pics/BUYER SIGN UP/RETAIL BUTTON.png" alt="Retail">
+            </div>
+        </div>
+
+        <!-- Popup Overlay -->
+        <div id="popup-overlay"></div>
+
+        <!-- Popup Form -->
+        <div id="popup">
+            <span id="close-popup" class="close-btn">&times;</span>
+            <div class="popup-container">
+
+                <!-- Left Section -->
+                <div class="popup-left">
+                    <img src="pics/BUYER SIGN UP/SIGNUP PAGE LOGO.png" class="left-logo" alt="Logo">
+                    <h2 class="left-title">Sign Up (Buyer)</h2>
+                    <p class="left-welcome">
+                        Welcome to FarmLink! Please sign up <br>
+                        your following details beside.
+                    </p>
+
+                    <div class="left-section">
+                        <img src="pics/BUYER SIGN UP/BASKET WT TRAIL.png" class="left-icon1" alt="">
+                        <p class="left-text1">FarmLink helps NGOs transport produce efficiently through direct farmer connections.</p>
+                    </div>
+
+                    <div class="left-section">
+                        <p class="left-text2">Fresh, high-quality produce delivered straight from local farms.</p>
+                        <img src="pics/BUYER SIGN UP/VEGETABLES.png" class="left-icon2" alt="">
+                    </div>
+
+                    <div class="left-section">
+                        <img src="pics/BUYER SIGN UP/SALAD WT TRAIL.png" class="left-icon" alt="">
+                        <p class="left-text3">Empowering communities by bridging farmers and organizations.</p>
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="popup-right">
+                    <form>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="region">Region</label>
+                            <input type="text" id="region" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="province">Province</label>
+                            <input type="text" id="province" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="municipality">Municipality/City</label>
+                            <input type="text" id="municipality" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="barangay">Barangay</label>
+                            <input type="text" id="barangay" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact">Contact Number</label>
+                            <input type="number" id="contact" required>
+                        </div>
+
+                        <div class="form-group password-group">
+                            <label for="password">Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="password" required>
+                                <img src="pics/Eye.png" class="toggle-pass" id="togglePass1" alt="Toggle Password">
+                            </div>
+                            <p class="pass-message">Minimum of 8 characters, must include letters, numbers, and special characters.</p>
+                        </div>
+
+                        <div class="form-group password-group">
+                            <label for="password2">Re-type Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="password2" required>
+                                <img src="pics/Eye.png" class="toggle-pass" id="togglePass2" alt="Toggle Password">
+                            </div>
+                        </div>
+
+                        <label class="agreement-label">
+                            <input type="checkbox" id="agreement">
+                            <span class="checkmark"></span>
+                            <span class="agreement-text">
+                                By continuing, you agree to our <a href="/T&C/T&C.html" target="_blank">Terms of Service</a> and 
+                                <a href="/T&C/T&C.html" target="_blank">Privacy Policy</a>.
+                            </span>
+                        </label>
+
+                        <button type="submit" id="submitBtn" class="submit-btn" disabled>Sign Up</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="Sign-up-option.js"></script>
+</body>
+</html>
