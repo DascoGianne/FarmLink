@@ -1,0 +1,11 @@
+{
+  "name": "farmlink",
+  "version": "1.0.0",
+  "description": "FarmLink is a digital marketplace that connects farmers directly to consumers and businesses with the support of LGUs and NGOs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
