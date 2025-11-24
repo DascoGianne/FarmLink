@@ -76,7 +76,7 @@ img {
 /*Main content*/
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 #content {
-    background-image: url("pics/BG\ ELEMENTS.png");
+    background-image: url("/client/public/images/picsss/BG\ ELEMENTS.png");
     background-size:cover;
     background-position: center;
     background-repeat: no-repeat;

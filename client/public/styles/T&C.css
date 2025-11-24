@@ -74,7 +74,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-image: url("pics/BG ELEMENTS.png");
+    background-image: url("/client/public/images/picss/BG ELEMENTS.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

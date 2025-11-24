@@ -17,7 +17,7 @@ window.onload = function() {
 
 
 function goBuyer() {
-    window.location.href = "/Sign-up-page(Buyer)/Sign-up-option.html";
+    window.location.href = "Sign-up-option.html";
 }
 
 
@@ -150,10 +150,10 @@ function setupToggle(inputId, iconId) {
     icon.addEventListener("click", () => {
         if (input.type === "password") {
             input.type = "text";
-            icon.src = "pics/Hide.png";
+            icon.src = "/client/public/images/pictures - resources/Hide.png";
         } else {
             input.type = "password";
-            icon.src = "pics/Eye.png";
+            icon.src = "/client/public/images/pictures - resources/Eye.png";
         }
     });
 }

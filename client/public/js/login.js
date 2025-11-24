@@ -36,10 +36,10 @@ function setupToggle(inputId, iconId) {
     icon.addEventListener("click", () => {
         if (input.type === "password") {
             input.type = "text";
-            icon.src = "pictures - resources/Hide.png";
+            icon.src = "/client/public/images/pictures - resources/Hide.png";
         } else {
             input.type = "password";
-            icon.src = "pictures - resources/Eye.png";
+            icon.src = "/client/public/images/pictures - resources/Eye.png";
         }
     });
 }

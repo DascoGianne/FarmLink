@@ -62,7 +62,7 @@
 /*Main content*/
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 #content {
-    background-image: url("pics/BG\ ELEMENTS.png");
+    background-image: url("/client/public/images/picsss/BG\ ELEMENTS.png");
     background-size:cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -332,6 +332,7 @@ html, body {
     color: #333;
     margin-left: 50px;
     margin-top: -50px;
+    z-index: 2;
 }
 
 .left-text3 {
@@ -389,7 +390,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .password-wrapper {
     position: relative;
-    width: 90%;
+    width: 95%;
     margin-bottom: 12px;
 }
 
@@ -418,6 +419,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 #hidePass2 {
     display: none;
 }
+
 
 
 .submit-btn {

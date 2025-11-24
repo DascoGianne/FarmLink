@@ -60,7 +60,7 @@ html, body {
 #content {
     opacity: 0;
     transition: opacity 0.8s ease;
-    background-image: url("pictures - resources/BG ELEMENTS.png");
+    background-image: url("/client/public/images/pictures - resources/BG ELEMENTS.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

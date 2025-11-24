@@ -130,38 +130,35 @@ function setupToggle(inputId, iconId) {
     const input = document.getElementById(inputId);
     const icon = document.getElementById(iconId);
 
-
+    // hide eye at start
     icon.style.opacity = "0";
+
+    // show only when typing
     input.addEventListener("input", () => {
-        if (input.value.length > 0 && document.activeElement === input) {
-            icon.style.opacity = "1";
-        } else {
-            icon.style.opacity = "0";
-        }
+        icon.style.opacity = (input.value.length > 0) ? "1" : "0";
     });
 
+    // show when focused and has text
     input.addEventListener("focus", () => {
-        if (input.value.length > 0) {
-            icon.style.opacity = "1";
-        }
+        if (input.value.length > 0) icon.style.opacity = "1";
     });
 
+    // hide when focus leaves
     input.addEventListener("blur", () => {
-        setTimeout(() => {
-            icon.style.opacity = "0";
-        }, 100);
+        setTimeout(() => icon.style.opacity = "0", 100);
     });
 
+    // prevent focus loss on click
     icon.addEventListener("mousedown", e => e.preventDefault());
 
+    // toggle type + icon image
     icon.addEventListener("click", () => {
-        if (input.type === "password") {
-            input.type = "text";
-            icon.src = "pics/Hide.png";
-        } else {
-            input.type = "password";
-            icon.src = "pics/Eye.png";
-        }
+        const isHidden = input.type === "password";
+        input.type = isHidden ? "text" : "password";
+
+        icon.src = isHidden
+            ? "/client/public/images/pictures - resources/Hide.png"
+            : "/client/public/images/pictures - resources/Eye.png";
     });
 }
 
