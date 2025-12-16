@@ -1,0 +1,217 @@
+/*screen loader*/
+#loader {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 999999;
+    opacity: 1;
+    transform: scale(1);
+    transition: transform 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19), opacity 0.4s ease;
+}
+
+#loader.done {
+    transform: scale(2.5);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;        
+    object-position: center;
+    z-index: 1;
+    animation: bgzoom 2s ease-in-out infinite alternate;
+}
+
+@keyframes bgzoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.08); }
+}
+
+.logo {
+    width: 35vw;
+    max-width: 220px;
+    min-width: 120px;
+    z-index: 3;
+    animation: pop 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pop {
+    0%   { transform: scale(1); }
+    100% { transform: scale(1.12); }
+}
+
+#content {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+#content.show {
+    opacity: 1;
+}
+
+/*Main content*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+#content {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background-image: url(/client/public/images/picss/BG\ ELEMENTS.png);
+}
+
+/* Custom Scrollbar for Entire Website */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #32A928 #dff5df;
+}
+
+::-webkit-scrollbar {
+    width: 14px;
+}
+
+::-webkit-scrollbar-track {
+    background: #dff5df;
+    border-radius: 10px;
+    margin: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #32A928;
+    border-radius: 10px;
+    border: 3px solid #dff5df;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2a8f22;
+}
+
+::-webkit-scrollbar-corner {
+    background: #dff5df;
+}
+
+.content-area {
+    scrollbar-width: thin;
+    scrollbar-color: #32A928 #f0f0f0;
+}
+
+.content-area::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+.content-area::-webkit-scrollbar-thumb {
+    border: 3px solid #f0f0f0;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* MAIN BOX */
+.basket-container {
+    width: 380px;
+    margin: 40px auto;
+    padding: 15px;
+    background: #fff;
+    border-radius: 15px;
+    position: relative;
+}
+
+.basket-title {
+    width: 160px;
+    display: block;
+    margin: 0 auto 15px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 28px;
+    cursor: pointer;
+}
+
+.product-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.product-img {
+    width: 62px;
+    height: 62px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+roduct-info {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.price {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.price-box {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #777;
+    font-size: 14px;
+}
+
+.new-price {
+    color: #32A928;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.qty-controls img {
+    width: 25px;
+    cursor: pointer;
+}
+
+.qty {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.checkout-btn {
+    background: #32A928;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 14px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 20px;
+    cursor: pointer;
+}

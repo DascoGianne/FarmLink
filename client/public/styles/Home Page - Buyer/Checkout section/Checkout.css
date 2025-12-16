@@ -1,4 +1,4 @@
-/* screen loader */
+/* ===================== SCREEN LOADER ===================== */
 #loader {
     position: fixed;
     inset: 0;
@@ -12,7 +12,8 @@
     z-index: 999999;
     opacity: 1;
     transform: scale(1);
-    transition: transform 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19), opacity 0.4s ease;
+    transition: transform 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19),
+                opacity 0.4s ease;
 }
 
 #loader.done {
@@ -26,14 +27,13 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
     z-index: 1;
     animation: bgzoom 2s ease-in-out infinite alternate;
 }
 
 @keyframes bgzoom {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.08); }
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
 }
 
 .logo {
@@ -45,22 +45,14 @@
 }
 
 @keyframes pop {
-    0%   { transform: scale(1); }
-    100% { transform: scale(1.12); }
+    from { transform: scale(1); }
+    to   { transform: scale(1.12); }
 }
 
-#content {
-    opacity: 0;
-    transition: opacity 0.8s ease;
-}
-
-#content.show {
-    opacity: 1;
-}
-
-
+/* ===================== PAGE BASE ===================== */
 body {
     margin: 0;
+    font-family: 'Poppins', sans-serif;
     background-image: url("/client/public/images/My Account/BG ELEMENTS.png");
     background-size: cover;
     background-position: center;
@@ -68,18 +60,20 @@ body {
     background-attachment: fixed;
 }
 
-
-/* Main content */
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 #content {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    overflow-x: hidden;
+    opacity: 0;
+    transition: opacity 0.8s ease;
 }
 
-/* Custom Scrollbar for Entire Website */
+#content.show {
+    opacity: 1;
+}
+/* ===================== CUSTOM SCROLLBAR ===================== */
 html {
+    overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #32A928 #dff5df;
 }
@@ -91,7 +85,6 @@ html {
 ::-webkit-scrollbar-track {
     background: #dff5df;
     border-radius: 10px;
-    margin: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -102,23 +95,6 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #2a8f22;
-}
-
-::-webkit-scrollbar-corner {
-    background: #dff5df;
-}
-
-.content-area {
-    scrollbar-width: thin;
-    scrollbar-color: #32A928 #f0f0f0;
-}
-
-.content-area::-webkit-scrollbar-track {
-    background: #f0f0f0;
-}
-
-.content-area::-webkit-scrollbar-thumb {
-    border: 3px solid #f0f0f0;
 }
 
 /* Top */
@@ -134,7 +110,7 @@ html {
     z-index: 999;
 }
 
-.left-group, .right-group {
+.left-group {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -143,45 +119,6 @@ html {
 .icon-box {
     position: relative;
     width: fit-content;
-}
-
-/* Base badge style */
-.glow-badge {
-    position: absolute;
-    bottom: 25px;
-    right: 5px;
-    width: 26px;
-    height: 26px;
-    background: red;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    font-weight: 700;
-    border-radius: 50%;
-    pointer-events: none;
-    box-shadow: 0 0 12px rgba(255, 0, 0, 0.7),
-                0 0 20px rgba(255, 0, 0, 0.5);
-}
-
-.glow-badge.green {
-    background: #5DFF43;
-    color: #0a0a0a;
-    box-shadow: 0 0 12px rgba(93, 255, 67, 0.7),
-                0 0 20px rgba(93, 255, 67, 0.5);
-}
-
-#top h3 a {
-    margin: 0 10px;
-    font-size: 30px;
-    color: #32A928;
-    text-decoration: none;
-}
-
-#top img {
-    height: 110px;
-    cursor: pointer;
 }
 
 /* Sidebar */
@@ -195,7 +132,7 @@ html {
     backdrop-filter: blur(4px);
     box-shadow: 2px 0 5px rgba(0,0,0,0.2);
     transition: left 0.3s ease;
-    z-index: 1001;
+    z-index: 999;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 0;
@@ -410,149 +347,305 @@ html {
     background: #2a8f22;
 }
 
-
-/*main*/
-.Deliveries-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 150px 20px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.Background {
-    width: 100%;
-    max-width: 1200px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+/* ===================== ORDER PLACED MODAL ===================== */
+.checko {
     position: relative;
-}
-
-.deliveries-header {
-    position: absolute;
-    top: 28%; /* Adjust this value to move the title up/down */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 25px;
+    margin: 140px auto 40px; /* stays below fixed top */
+    box-shadow: 0 30px 50px rgba(0, 0, 0, 0.15);
+    width: 1100px;
+    max-width: 95%;
     z-index: 1;
-    width: 100%;
 }
 
-
-.deliveries-header h1 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2.3rem;
-    font-weight: 800;
-    color: #32A928;
-    margin: 0;
+/* ===== Background Blur ===== */
+.background-container {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
 }
 
+.background-container .Background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 220%;
+    height: 220%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    filter: blur(30px) brightness(1.1);
+}
 
+/* ===================== CHECKOUT PAGE ===================== */
 
-.delivery-item-container {
-    background-color: white;
-    border-radius: 15px;
-    padding: 20px;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 1200px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.checko {
+    position: relative;    
     display: flex;
-    flex-direction: column;
-    position: relative;
-    box-sizing: border-box;
-    transform: translateY(-700px);
+    justify-content: center;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 25px;
+    margin: 40px auto;
+    box-shadow: 0 30px 50px rgba(0, 0, 0, 0.15);
+    width: 1100px;
+    max-width: 95%;
 }
 
 
-/* Row layout for each delivery item */
-.comfirm, .In-Transit{
+
+.checkout-container {
+    width: 95%;
+    max-width: 1100px;
+    margin: 40px auto;
+    pointer-events: auto;
+}
+
+.checkout-title {
+    text-align: center;
+    color: #32A928;
+    margin-bottom: 25px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 30px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+    color: #32A928;
+}
+
+/* Orders */
+.order-item {
     display: flex;
     align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.order-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.item-name {
+    font-weight: 600;
+}
+
+.item-price {
+    color: #32A928;
+    font-size: 14px;
+}
+
+/* Two column layout */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/*payment*/
+.payment-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 15px;
+    max-width: 420px;
+    font-family: Poppins, sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.payment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-weight: 600;
+    color: #2aa52a;
+}
+
+.status {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status.pending {
+    color: orange;
+}
+
+.status.paid {
+    color: green;
+}
+
+/* Buttons */
+.payment-options {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.pay-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    background: #eee;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.pay-btn.active {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+
+/* Content */
+.payment-content {
+    display: none;
+}
+
+.payment-content.show {
+    display: block;
+}
+
+.info-box {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.info-box h4 {
+    margin-bottom: 5px;
+}
+
+.form-box {
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.note {
+    font-size: 12px;
+    color: #777;
+}
+
+/* Upload */
+.upload-box {
+    position: relative;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.upload-box span {
+    color: #888;
+    font-size: 13px;
+}
+
+.upload-box img.receipt-preview {
+    position: absolute;
+    inset: 0;
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+    border-radius: 8px;
+}
+
+
+/* Bank layout */
+.bank-layout {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+/* lock upload box size */
+.bank-layout .upload-box {
+    flex-shrink: 0;
+    width: 120px;
+    height: 80px;
+}
+
+/* ensure preview never breaks layout */
+.upload-box img.receipt-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+
+/* Options */
+.option {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1.5px solid #ccc;
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
     justify-content: space-between;
 }
 
-/* New: Stack name + p vertically */
-.text-group {
+.option.active {
+    border-color: #32A928;
+    background: #eaffea;
+}
+
+/* Summary */
+.summary {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.text-group p{
-    margin-left: 10px; 
-    color: #555;   
+.finish-btn {
+    padding: 12px 25px;
+    border-radius: 10px;
+    background: #32A928;
+    border: none;
+    color: white;
+    cursor: pointer;
 }
 
-/* Profile icon styling */
-.profile.icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: -350px;
+/* Close button */
+.close-btn {
+    position: absolute;     
+    top: 20px;
+    right: 150px;
 }
 
-/* Name styling */
-.name {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
+.close-btn a {
+    font-size: 30px;
+    font-weight: bold;
     color: #32A928;
-}
-
-/* Delivery icon styling */
-.delivery-icon {
-    width: 350px;
-    height: 50px;
-    object-fit: contain;
-}
-
-/* Hover effect */
-.delivery-item-container:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-}
-
-.comment {
-    background: #f1f1f1;
-    padding: 15px 20px;
-    border-radius: 20px;
-    border: 2px solid black;
-    width: 100%;   /* full width of container */
-    display: flex;
-    align-items: center; /* Center vertically */
-    gap: 15px; /* Adjust spacing */
-    margin-top: 15px;
-    box-sizing: border-box;
-}
-
-.profile-message {
-    width: 45px; /* Slightly larger */
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0; /* Prevent shrinking */
-}
-
-.comment .text-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center text vertically */
-}
-
-.comment h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #5E5E5E;
-    margin-bottom: 4px; /* Small space between name and message */
-}
-
-.comment p {
-    margin: 0;
-    color: #5E5E5E;
-    line-height: 1.4;
+    text-decoration: none;
 }

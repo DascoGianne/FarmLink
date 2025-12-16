@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmLink</title>
+    <link rel="shortcut icon" href="/client/public/images/pictures - resources/FARMLINK LOGO.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/client/public/styles/Home Page - Buyer/MyBasket.css">
+</head>
+
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <img src="/client/public/images/pictures - resources/BG ELEMENTS.png" class="bg">
+        <img src="/client/public/images/pictures - resources/LANDING PAGE LOGO.png" class="logo">
+    </div>
+
+    <div class="content" id="content">
+        <div class="basket-container">
+
+            <a href="Home.html">
+                <img src="/client/public/images/My Basket/Close Icon.png" class="close-btn">
+            </a>
+
+            <img src="/client/public/images/My Basket/Your Basket (1).png" class="basket-title">
+
+            <div class="product-card">
+                <img src="/client/public/images/My Basket/Kamote.png" class="product-img">
+
+                <div class="product-info">
+                    <h3>Kamote</h3>
+                    <p class="location">Ilocos Norte, Brgy. Lumangbayan</p>
+                    <p class="price">40.00</p>
+                </div>
+
+                <div class="qty-controls" data-id="kamote">
+                    <img src="/client/public/images/My Basket/Minus of the same Product.png" class="minus-btn">
+                    <span class="qty">1</span>
+                    <img src="/client/public/images/My Basket/Add More of the same Product.png" class="add-btn">
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="/client/public/images/My Basket/Orange.png" class="product-img">
+
+                <div class="product-info">
+                    <h3>Oranges</h3>
+                    <p class="location">Ilocos Norte, Brgy. Lumangbayan</p>
+
+                    <div class="price-box">
+                        <span class="old-price">200.00</span>
+                        <span class="new-price">100.00</span>
+                    </div>
+
+                    <p class="rating">3.8</p>
+                </div>
+
+                <div class="qty-controls" data-id="oranges">
+                    <img src="/client/public/images/My Basket/Minus of the same Product.png" class="minus-btn">
+                    <span class="qty">1</span>
+                    <img src="/client/public/images/My Basket/Add More of the same Product.png" class="add-btn">
+                </div>
+            </div>
+
+            <!-- CHECKOUT BUTTON -->
+            <div class="checkout-btn">
+                Checkout - <span id="totalAmount">140.00</span>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="/client/public/js/Home Page - Buyer/MyBasket.js"></script>
+
+</body>
+</html>
