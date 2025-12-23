@@ -1,3 +1,7 @@
+require('dotenv').config();
+console.log("PORT =", process.env.PORT);
+const db = require('./db/db'); 
+
 const http = require('node:http');
 
 const hostname = '127.0.0.1';
