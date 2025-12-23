@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmLink</title>
+    <link rel="shortcut icon" href="/client/public/images/pictures - resources/FARMLINK LOGO.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/client/public/styles/Home Page - Buyer/Checkout section/Checkout.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loader">
+        <img src="/client/public/images/pictures - resources/BG ELEMENTS.png" class="bg">
+        <img src="/client/public/images/pictures - resources/LANDING PAGE LOGO.png" class="logo">
+    </div>
+
+    <!-- Top Bar -->
+    <div id="top">
+        <div class="left-group">
+            <img src="/client/public/images/MAIN PAGE/Sidebar Button.png" class="sidebar-toggle-btn">
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <!-- Top -->
+        <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Header.png" class="sidebar-header">
+        <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Logo.png" class="sidebar-logo">
+        <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Quote.png" class="sidebar-quote">
+        <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Close.png" class="sidebar-close" id="sidebar-close-btn">
+
+        <!-- Search area -->
+        <div class="sidebar-search">
+            <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="search-box">
+            <div class="search-wrapper">
+                <img src="/client/public/images/MAIN PAGE/Search.png" class="search-icon">
+                <input type="text" class="search-input" placeholder="Search...">
+            </div>
+        </div>
+
+        <!-- Account -->
+        <h4 class="account-title">Account</h4>
+        <div class="account-info">
+            <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Profile Picture.png" class="account-icon">
+            <h2 class="account-name">Test Name</h2>
+        </div>
+
+        <!-- Menu -->
+        <h4 class="menu-title">Main Menu</h4>
+        <ul id="sidebar-menu">
+            <li>
+                <a href="/client/views/layouts/Home page - Buyer/MyProfile.html">
+                    <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Account Icon.png">
+                    My Account
+                </a>
+            </li>
+            <li>
+                <a href="/client/views/layouts/Home page - Buyer/MyBasket.html">
+                    <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Basket Icon.png">
+                    My Basket
+                </a>
+                <div class="notif-wrapper">
+                    <img class="notif-badge" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Notification Badge Background.png">
+                    <span class="notif-number">1</span>
+                </div>
+            </li>
+            <li>
+                <a href="/client/views/layouts/Home page - Buyer/MyDeliveries.html">
+                    <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Deliveries Icon.png">
+                    My Deliveries
+                </a>
+                <div class="notif-wrapper">
+                    <img class="notif-badge" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Notification Badge Background.png">
+                    <span class="notif-number">1</span>
+                </div>
+            </li>
+            <li>
+                <a href="/client/views/layouts/Home page - Buyer/Marketplace.html">
+                    <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Marketplace Icon.png">
+                    Marketplace
+                </a>
+            </li>
+            <li>
+                <a href="/client/views/layouts/Home page - Buyer/Rescue.html" target="_blank">
+                    <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Rescue Alert Icon.png">
+                    What is Rescue Alert
+                </a>
+            </li>
+            <li>
+                <a href="/client/views/layouts/Home page - Buyer/Rating.html" target="_blank">
+                    <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Freshness Rating Icon.png">
+                    What is Freshness Rating
+                </a>
+            </li>
+            <li>
+                <a href="/client/views/layouts/Home page - Buyer/Terms.html">
+                    <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Terms and Conditions Icon.png">
+                    Terms and Conditions
+                </a>
+            </li>
+            <li>
+                <a href="/client/views/layouts/Home page - Buyer/about.html">
+                    <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/About FarmLink Icon.png">
+                    About FarmLink
+                </a>
+            </li>
+        </ul>
+
+        <!-- Sidebar buttons -->
+        <div class="sidebar-buttons">
+            <a href="/client/views/layouts/login.html">
+                <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Create New Account Button.png" alt="Create Account">
+            </a>
+            <a href="/client/views/layouts/login.html">
+                <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Log out Button.png" alt="Log Out">
+            </a>
+        </div>
+    </div>
+
+    <!-- Close button -->
+    <div class="close-btn">
+        <a href="/client/views/layouts/Home page - Buyer/Marketplace.html">X</a>
+    </div>
+
+    <!-- Checkout Section -->
+    <div class="checko">
+        <div class="checkout-container">
+            <h1 class="checkout-title">Checkout</h1>
+
+            <!-- Delivery Details -->
+            <div class="card">
+                <h3>Delivery Details</h3>
+                <p><strong>Juan Pinoy</strong> (+63) 923 333 0000</p>
+                <p>765 McKinley St, Fort Bonifacio, Taguig, Metro Manila</p>
+            </div>
+
+            <!-- Orders -->
+            <div class="card">
+                <h3>Orders</h3>
+                <div class="order-item">
+                    <img src="/client/public/images/MAIN PAGE/Group 52489.png">
+                    <div>
+                        <p class="item-name">-</p>
+                        <p class="item-price">₱100.00</p>
+                    </div>
+                </div>
+                <div class="order-item">
+                    <img src="/client/public/images/sample/kamote.png">
+                    <div>
+                        <p class="item-name">Kamote</p>
+                        <p class="item-price">₱40.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery & Payment -->
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Delivery Method Available</h3>
+                    <button class="option">Courier Service (ETA: 2–3 Days) <span>₱55</span></button>
+                    <button class="option">Bus Shipping (ETA: Following Day) <span>₱20</span></button>
+                    <button class="option">Trucking (ETA: Following Day) <span>₱20</span></button>
+                </div>
+
+                <div class="card">
+<div class="payment-card">
+
+    <!-- HEADER -->
+    <div class="payment-header">
+        <span class="title">Payment Method</span>
+        <span class="status pending">Status: Pending</span>
+    </div>
+
+    <!-- OPTIONS -->
+    <div class="payment-options">
+        <button class="pay-btn active" data-target="cod">Cash On Delivery</button>
+        <button class="pay-btn" data-target="ewallet">E-Wallet</button>
+        <button class="pay-btn" data-target="bank">Bank Transfer</button>
+    </div>
+
+    <!-- CASH ON DELIVERY -->
+    <div class="payment-content show" id="cod">
+        <div class="info-box">
+            <h4>Cash On Delivery</h4>
+            <p>Applicable only to “Courier Service” Delivery Method</p>
+        </div>
+    </div>
+
+    <!-- E-WALLET -->
+   <!-- E-WALLET -->
+<div class="payment-content" id="ewallet">
+    <div class="form-box">
+        <p><strong>GCash No:</strong> 0999 9999 999</p>
+        <p><strong>Name:</strong> IKOLANDIA A.</p>
+        <p class="note">Please refer to subtotal for amount</p>
+
+        <div class="upload-box" onclick="this.querySelector('input').click()">
+            <span>Upload Receipt</span>
+            <input type="file" accept="image/*" hidden>
+            <img class="receipt-preview">
+        </div>
+    </div>
+</div>
+
+<!-- BANK TRANSFER -->
+<div class="payment-content" id="bank">
+    <div class="form-box bank-layout">
+        <div class="bank-info">
+            <p><strong>BPI:</strong> 0999 000 9999 000</p>
+            <p><strong>Name:</strong> IKOLANDIA A.</p>
+            <p class="note">Please refer to subtotal for amount</p>
+        </div>
+
+        <div class="upload-box" onclick="this.querySelector('input').click()">
+            <span>Upload Receipt</span>
+            <input type="file" accept="image/*" hidden>
+            <img class="receipt-preview">
+        </div>
+    </div>
+</div>
+
+</div>
+
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="summary">
+                <p>Subtotal: <strong>₱140.00</strong></p>
+                <button class="finish-btn">Finish Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/client/public/js/Home Page - Buyer/Checkout section/Checkout.js"></script>
+</body>
+</html>
