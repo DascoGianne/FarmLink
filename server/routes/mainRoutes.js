@@ -3,7 +3,8 @@ const router = express.Router();
 
 const mainController = require("../controllers/mainController");
 
-// route uses controller
-router.get("/", mainController.test);
+router.get("/", mainController.apiStatus);
+
+router.get("/listings", mainController.getAllListings);
 
 module.exports = router;
