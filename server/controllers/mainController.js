@@ -802,3 +802,83 @@ exports.updateNgoById = async (req, res) => {
     return res.status(500).json({ success: false, message: err.message });
   }
 };
+
+exports.getBuyerById = async (req, res) => {
+  const { buyer_id } = req.params;
+
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT buyer_id, username, email, contact_number,
+             region, province, municipality_city, barangay, street_no,
+             date_registered
+      FROM buyers
+      WHERE buyer_id = ?
+      LIMIT 1
+      `,
+      [buyer_id]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Buyer not found" });
+    }
+
+    return res.status(200).json({ success: true, data: rows[0] });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.updateBuyerById = async (req, res) => {
+  const { buyer_id } = req.params;
+
+  const {
+    username,
+    contact_number,
+    region,
+    province,
+    municipality_city,
+    barangay,
+    street_no,
+  } = req.body;
+
+  try {
+    const fields = [];
+    const values = [];
+
+    if (username !== undefined) { fields.push("username = ?"); values.push(username); }
+    if (contact_number !== undefined) { fields.push("contact_number = ?"); values.push(contact_number); }
+    if (region !== undefined) { fields.push("region = ?"); values.push(region); }
+    if (province !== undefined) { fields.push("province = ?"); values.push(province); }
+    if (municipality_city !== undefined) { fields.push("municipality_city = ?"); values.push(municipality_city); }
+    if (barangay !== undefined) { fields.push("barangay = ?"); values.push(barangay); }
+    if (street_no !== undefined) { fields.push("street_no = ?"); values.push(street_no); }
+
+    if (fields.length === 0) {
+      return res.status(400).json({ success: false, message: "No fields provided to update" });
+    }
+
+    values.push(buyer_id);
+
+    const [result] = await db.query(
+      `
+      UPDATE buyers
+      SET ${fields.join(", ")}
+      WHERE buyer_id = ?
+      `,
+      values
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "Buyer not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Buyer profile updated",
+      data: { buyer_id: Number(buyer_id) },
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};

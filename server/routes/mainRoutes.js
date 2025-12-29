@@ -49,6 +49,10 @@ router.post("/logistics", verifyToken, requireNgo, mainController.createLogistic
 router.get("/logistics/order/:order_id", verifyToken, requireNgo, mainController.getLogisticsByOrder);
 router.put("/logistics/order/:order_id", verifyToken, requireNgo, mainController.updateLogisticsByOrder);
 
+// Buyer Profile (BUYER only)
+router.get("/buyers/:buyer_id", verifyToken, requireBuyer, mainController.getBuyerById);
+router.put("/buyers/:buyer_id", verifyToken, requireBuyer, mainController.updateBuyerById);
+
 // NGO Profile (NGO only)
 router.get("/ngos/:ngo_id", verifyToken, requireNgo, mainController.getNgoById);
 router.put("/ngos/:ngo_id", verifyToken, requireNgo, mainController.updateNgoById);
