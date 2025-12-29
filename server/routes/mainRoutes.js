@@ -50,12 +50,34 @@ router.get("/logistics/order/:order_id", verifyToken, requireNgo, mainController
 router.put("/logistics/order/:order_id", verifyToken, requireNgo, mainController.updateLogisticsByOrder);
 
 // Buyer Profile (BUYER only)
-router.get("/buyers/:buyer_id", verifyToken, requireBuyer, mainController.getBuyerById);
-router.put("/buyers/:buyer_id", verifyToken, requireBuyer, mainController.updateBuyerById);
+router.get("/buyers/:buyer_id", verifyToken, requireBuyer, (req, res, next) => {
+  if (Number(req.params.buyer_id) !== Number(req.user.id)) {
+    return res.status(403).json({ success: false, message: "Forbidden (not your account)" });
+  }
+  next();
+}, mainController.getBuyerById);
+
+router.put("/buyers/:buyer_id", verifyToken, requireBuyer, (req, res, next) => {
+  if (Number(req.params.buyer_id) !== Number(req.user.id)) {
+    return res.status(403).json({ success: false, message: "Forbidden (not your account)" });
+  }
+  next();
+}, mainController.updateBuyerById);
+
 
 // NGO Profile (NGO only)
-router.get("/ngos/:ngo_id", verifyToken, requireNgo, mainController.getNgoById);
-router.put("/ngos/:ngo_id", verifyToken, requireNgo, mainController.updateNgoById);
+router.get("/ngos/:ngo_id", verifyToken, requireNgo, (req, res, next) => {
+  if (Number(req.params.ngo_id) !== Number(req.user.id)) {
+    return res.status(403).json({ success: false, message: "Forbidden (not your account)" });
+  }
+  next();
+}, mainController.getNgoById);
 
+router.put("/ngos/:ngo_id", verifyToken, requireNgo, (req, res, next) => {
+  if (Number(req.params.ngo_id) !== Number(req.user.id)) {
+    return res.status(403).json({ success: false, message: "Forbidden (not your account)" });
+  }
+  next();
+}, mainController.updateNgoById);
 
 module.exports = router;
