@@ -170,3 +170,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+
+import { getListings } from "./api/listings.js";
+
+async function loadListings() {
+  const listings = await getListings();
+  console.log(listings);
+
+  // example: show listings in HTML
+  const container = document.getElementById("listingsContainer");
+
+  listings.forEach(item => {
+    const div = document.createElement("div");
+    div.textContent = item.crop_name; // adjust based on DB columns
+    container.appendChild(div);
+  });
+}
+
+loadListings();

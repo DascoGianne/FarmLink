@@ -45,3 +45,33 @@ function setupToggle(inputId, iconId) {
 }
 
 setupToggle("password", "togglePass1");
+
+
+
+import { loginUser } from "./api/auth.js";
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("loginForm");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      const result = await loginUser({ email, password });
+
+      if (result.token) {
+        localStorage.setItem("token", result.token);
+        alert("Login successful!");
+        window.location.href = "dashboard.html";
+      } else {
+        alert(result.message || "Login failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
+    }
+  });
+});
