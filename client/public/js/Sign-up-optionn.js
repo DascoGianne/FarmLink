@@ -1,3 +1,5 @@
+import { registerNgo } from "./api/auth.js";
+
 //loader
 window.onload = function() {
     const loader = document.getElementById("loader");
@@ -160,3 +162,42 @@ function setupToggle(inputId, iconId) {
 
 setupToggle("password", "togglePass1");
 setupToggle("password2", "togglePass2");
+
+const ngoForm = document.getElementById("ngoSignupForm");
+if (ngoForm) {
+    ngoForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const deliveryRadio = document.querySelector("input[name='delivery']:checked");
+        const delivery_method = deliveryRadio ? deliveryRadio.value : "";
+
+        const data = {
+            ngo_name: document.getElementById("ngo_name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            password: document.getElementById("password").value,
+            contact_number: document.getElementById("contact_number").value.trim(),
+            region: document.getElementById("region").value.trim(),
+            province: document.getElementById("province").value.trim(),
+            municipality_city: document.getElementById("municipality").value.trim(),
+            barangay: document.getElementById("barangay").value.trim(),
+            street_no: document.getElementById("street_no").value.trim(),
+            delivery_method,
+            delivery_method_other: delivery_method === "Others"
+                ? document.getElementById("otherText").value.trim()
+                : null,
+        };
+
+        try {
+            const result = await registerNgo(data);
+            if (result.success) {
+                alert("Registration successful! Please log in.");
+                window.location.href = "login.html";
+            } else {
+                alert(result.message || "Registration failed");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Server error");
+        }
+    });
+}

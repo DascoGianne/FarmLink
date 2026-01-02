@@ -1,21 +1,41 @@
 import API_BASE_URL from "./config.js";
 
-export async function getListings() {
-  const response = await fetch(`${API_BASE_URL}/listings`);
-  return response.json();
+async function fetchJson(path) {
+  const res = await fetch(`${API_BASE_URL}${path}`);
+  const data = await res.json();
+  if (!res.ok) throw data;
+  return data;
 }
 
-export async function createListing(data) {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(`${API_BASE_URL}/listings`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
-
-  return response.json();
+function getListings() {
+  return fetchJson("/listings");
 }
+
+function getListingById(id) {
+  return fetchJson(`/listings/${id}`);
+}
+
+function getPricingByListing(listingId) {
+  return fetchJson(`/pricing/listing/${listingId}`);
+}
+
+function getTraceabilityByListing(listingId) {
+  return fetchJson(`/traceability/listing/${listingId}`);
+}
+
+function getRescueAlertsByListing(listingId) {
+  return fetchJson(`/rescue-alerts/listing/${listingId}`);
+}
+
+function getRescueListings() {
+  return fetchJson("/listings/rescue");
+}
+
+export {
+  getListings,
+  getListingById,
+  getPricingByListing,
+  getTraceabilityByListing,
+  getRescueAlertsByListing,
+  getRescueListings,
+};

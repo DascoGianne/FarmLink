@@ -1,3 +1,6 @@
+import { getMe } from "../api/me.js";
+import { getBuyerById, updateBuyerById } from "../api/buyers.js";
+
 //loader
 window.onload = function() {
     const loader = document.getElementById("loader");
@@ -183,4 +186,103 @@ function showSection(sectionId) {
 document.addEventListener('DOMContentLoaded', function() {
     // Set initial active state
     showSection('edit-profile');
+});
+
+async function loadBuyerProfile() {
+    const usernameInput = document.getElementById("profile-username");
+    const emailInput = document.getElementById("profile-email");
+    const contactInput = document.getElementById("profile-contact");
+    const addressInput = document.getElementById("profile-address");
+
+    if (!usernameInput || !emailInput || !contactInput || !addressInput) return;
+
+    try {
+        const me = await getMe();
+        const buyerId = me?.user?.id;
+
+        if (!buyerId) {
+            alert("Please log in again.");
+            return;
+        }
+
+        const res = await getBuyerById(buyerId);
+        const buyer = res.data;
+
+        if (!buyer) {
+            alert("Buyer profile not found.");
+            return;
+        }
+
+        usernameInput.value = buyer.username || "";
+        emailInput.value = buyer.email || "";
+        contactInput.value = buyer.contact_number || "";
+        addressInput.value = [
+            buyer.street_no,
+            buyer.barangay,
+            buyer.municipality_city,
+            buyer.province,
+            buyer.region,
+        ].filter(Boolean).join(", ");
+    } catch (err) {
+        console.error("Failed to load buyer profile:", err);
+        alert(err?.message || "Failed to load profile");
+    }
+}
+
+async function handleProfileSave() {
+    const usernameInput = document.getElementById("profile-username");
+    const contactInput = document.getElementById("profile-contact");
+    const addressInput = document.getElementById("profile-address");
+    const saveBtn = document.getElementById("profile-save-btn");
+
+    if (!usernameInput || !contactInput || !addressInput || !saveBtn) return;
+
+    saveBtn.disabled = true;
+
+    try {
+        const me = await getMe();
+        const buyerId = me?.user?.id;
+
+        if (!buyerId) {
+            alert("Please log in again.");
+            return;
+        }
+
+        const parts = addressInput.value.split(",").map((part) => part.trim()).filter(Boolean);
+        const [street_no, barangay, municipality_city, province, region] = parts;
+
+        const payload = {
+            username: usernameInput.value.trim(),
+            contact_number: contactInput.value.trim(),
+            street_no: street_no || "",
+            barangay: barangay || "",
+            municipality_city: municipality_city || "",
+            province: province || "",
+            region: region || "",
+        };
+
+        const res = await updateBuyerById(buyerId, payload);
+        if (res.success) {
+            alert("Profile updated.");
+        } else {
+            alert(res.message || "Failed to update profile.");
+        }
+    } catch (err) {
+        console.error("Failed to update buyer profile:", err);
+        alert(err?.message || "Failed to update profile");
+    } finally {
+        saveBtn.disabled = false;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadBuyerProfile();
+
+    const saveBtn = document.getElementById("profile-save-btn");
+    if (saveBtn) {
+        saveBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            handleProfileSave();
+        });
+    }
 });

@@ -182,7 +182,6 @@ exports.getRescueDealListings = async (req, res) => {
 
 exports.createOrder = async (req, res) => {
   const {
-    buyer_id,
     ngo_id,
     listing_id,
     quantity,
@@ -195,6 +194,8 @@ exports.createOrder = async (req, res) => {
     barangay,
     street_no
   } = req.body;
+
+  const buyer_id = req.user?.id;
 
   // Basic validation
   if (!buyer_id || !ngo_id || !listing_id || !quantity) {
@@ -397,12 +398,13 @@ exports.getPaymentByOrder = async (req, res) => {
   try {
     const [rows] = await db.query(
       `
-      SELECT payment_id, order_id, payment_method, amount_paid, payment_date, payment_status
-      FROM payments
-      WHERE order_id = ?
+      SELECT p.payment_id, p.order_id, p.payment_method, p.amount_paid, p.payment_date, p.payment_status
+      FROM payments p
+      JOIN orders o ON o.order_id = p.order_id
+      WHERE p.order_id = ? AND o.buyer_id = ?
       LIMIT 1
       `,
-      [order_id]
+      [order_id, req.user.id]
     );
 
     if (rows.length === 0) {

@@ -1,16 +1,13 @@
-import API_BASE_URL from "./config.js";
+import { getAuthJson, postAuthJson } from "./http.js";
 
-export async function createOrder(data) {
-  const token = localStorage.getItem("token");
+export function createOrder(data) {
+  return postAuthJson("/orders", data);
+}
 
-  const response = await fetch(`${API_BASE_URL}/orders`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
+export function getOrdersByBuyer(buyerId) {
+  return getAuthJson(`/orders/buyer/${buyerId}`);
+}
 
-  return response.json();
+export function getOrdersByNgo(ngoId) {
+  return getAuthJson(`/orders/ngo/${ngoId}`);
 }

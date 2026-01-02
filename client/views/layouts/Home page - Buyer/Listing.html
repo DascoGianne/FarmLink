@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FarmLink - Listing Details</title>
+  <link rel="shortcut icon" href="../../../public/images/pictures - resources/FARMLINK LOGO.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../public/styles/Home Page - Buyer/Listing.css">
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <a class="back-link" href="./Marketplace.html">Back to Marketplace</a>
+      <h1>Listing Details</h1>
+    </header>
+
+    <div id="errorMessage" class="error-message"></div>
+
+    <section class="card">
+      <h2 id="listingTitle">Loading...</h2>
+      <p id="listingCategory" class="muted"></p>
+      <p id="listingDescription"></p>
+      <div class="meta">
+        <span id="listingStatus"></span>
+        <span id="listingDate"></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Pricing</h3>
+      <ul id="pricingList" class="list"></ul>
+    </section>
+
+    <section class="card">
+      <h3>Traceability</h3>
+      <div id="traceabilityBox" class="trace-box"></div>
+    </section>
+  </div>
+
+  <script type="module" src="../../../public/js/Home Page - Buyer/Listing.js"></script>
+</body>
+</html>

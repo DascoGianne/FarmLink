@@ -46,3 +46,45 @@ searchInput.addEventListener('input', function () {
         }
     });
 });
+
+
+import { getListings } from "../api/listings.js";
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await getListings();
+    console.log("LISTINGS:", res);
+
+    const container = document.getElementById("listingsContainer");
+    if (!container) {
+      console.warn("Missing #listingsContainer in HTML");
+      return;
+    }
+
+    container.innerHTML = "";
+
+    res.data.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "listing-card";
+      div.innerHTML = `
+        <h3>${item.crop_name}</h3>
+        <p>${item.description || ""}</p>
+        <small>Stocks: ${item.total_stocks}</small>
+      `;
+      container.appendChild(div);
+    });
+  } catch (err) {
+    console.error("Failed to load listings:", err);
+    alert("Failed to load listings");
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loader = document.getElementById("loader");
+  const content = document.getElementById("content");
+
+  setTimeout(() => {
+    if (loader) loader.style.display = "none";
+    if (content) content.classList.add("show");
+  }, 1500);
+});

@@ -131,27 +131,14 @@
             <!-- Delivery Details -->
             <div class="card">
                 <h3>Delivery Details</h3>
-                <p><strong>Juan Pinoy</strong> (+63) 923 333 0000</p>
-                <p>765 McKinley St, Fort Bonifacio, Taguig, Metro Manila</p>
+                <p id="deliveryName"><strong>Loading...</strong></p>
+                <p id="deliveryAddress"></p>
             </div>
 
             <!-- Orders -->
             <div class="card">
                 <h3>Orders</h3>
-                <div class="order-item">
-                    <img src="/client/public/images/MAIN PAGE/Group 52489.png">
-                    <div>
-                        <p class="item-name">-</p>
-                        <p class="item-price">₱100.00</p>
-                    </div>
-                </div>
-                <div class="order-item">
-                    <img src="/client/public/images/sample/kamote.png">
-                    <div>
-                        <p class="item-name">Kamote</p>
-                        <p class="item-price">₱40.00</p>
-                    </div>
-                </div>
+                <div id="orderItems"></div>
             </div>
 
             <!-- Delivery & Payment -->
@@ -169,7 +156,7 @@
     <!-- HEADER -->
     <div class="payment-header">
         <span class="title">Payment Method</span>
-        <span class="status pending">Status: Pending</span>
+        <span class="status pending" id="paymentStatus">Status: Pending</span>
     </div>
 
     <!-- OPTIONS -->
@@ -227,12 +214,13 @@
 
             <!-- Summary -->
             <div class="summary">
-                <p>Subtotal: <strong>₱140.00</strong></p>
-                <button class="finish-btn">Finish Order</button>
+                <p>Delivery Fee: <strong id="deliveryFee">0.00</strong></p>
+                <p>Subtotal: <strong id="orderSubtotal">0.00</strong></p>
+                <button class="finish-btn" id="finishPaymentBtn">Finish Order</button>
             </div>
         </div>
     </div>
 
-    <script src="/client/public/js/Home Page - Buyer/Checkout section/Checkout.js"></script>
+    <script type="module" src="/client/public/js/Home Page - Buyer/Checkout section/Checkout.js"></script>
 </body>
 </html>

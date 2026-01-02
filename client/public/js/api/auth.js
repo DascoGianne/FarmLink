@@ -1,27 +1,70 @@
 import API_BASE_URL from "./config.js";
 
-/* REGISTER */
-export async function registerUser(data) {
-  const response = await fetch(`${API_BASE_URL}/auth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  return response.json();
+/* ---------------- TOKEN HELPERS ---------------- */
+export function setToken(token) {
+  localStorage.setItem("token", token);
 }
 
-/* LOGIN */
-export async function loginUser(data) {
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+export function getToken() {
+  return localStorage.getItem("token");
+}
+
+export function clearToken() {
+  localStorage.removeItem("token");
+}
+
+/* ---------------- REQUEST HELPERS ---------------- */
+async function postJson(path, data) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
-  return response.json();
+  const result = await response.json();
+  if (!response.ok) throw result;
+  return result;
+}
+
+async function getAuthJson(path) {
+  const token = getToken();
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const result = await response.json();
+  if (!response.ok) throw result;
+  return result;
+}
+
+/* ---------------- AUTH API ---------------- */
+export function registerNgo(data) {
+  return postJson("/auth/register/ngo", data);
+}
+
+export function registerBuyer(data) {
+  return postJson("/auth/register/buyer", data);
+}
+
+export function registerUser(data, role) {
+  if (role === "ngo") return registerNgo(data);
+  if (role === "buyer") return registerBuyer(data);
+  throw new Error("role must be 'ngo' or 'buyer'");
+}
+
+export async function loginUser(data) {
+  const result = await postJson("/auth/login", data);
+
+  // IMPORTANT: save token after login
+  if (result.token) setToken(result.token);
+
+  return result;
+}
+
+export function getMe() {
+  return getAuthJson("/auth/me");
 }

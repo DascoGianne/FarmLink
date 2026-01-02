@@ -34,7 +34,12 @@ router.get("/auth/me", verifyToken, (req, res) => {
 
 // Orders (BUYER only)
 router.post("/orders", verifyToken, requireBuyer, mainController.createOrder);
-router.get("/orders/buyer/:buyer_id", verifyToken, requireBuyer, mainController.getOrdersByBuyer);
+router.get("/orders/buyer/:buyer_id", verifyToken, requireBuyer, (req, res, next) => {
+  if (Number(req.params.buyer_id) !== Number(req.user.id)) {
+    return res.status(403).json({ success: false, message: "Forbidden (not your account)" });
+  }
+  next();
+}, mainController.getOrdersByBuyer);
 
 // Orders (NGO only)
 router.get("/orders/ngo/:ngo_id", verifyToken, requireNgo, mainController.getOrdersByNgo);

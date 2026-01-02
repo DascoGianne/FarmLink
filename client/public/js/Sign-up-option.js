@@ -1,3 +1,5 @@
+import { registerBuyer } from "./api/auth.js";
+
 //Loading 
 document.addEventListener("DOMContentLoaded", () => {
     const loader = document.getElementById("loader");
@@ -164,3 +166,35 @@ function setupToggle(inputId, iconId) {
 
 setupToggle("password", "togglePass1");
 setupToggle("password2", "togglePass2");
+
+const buyerForm = document.getElementById("buyerSignupForm");
+if (buyerForm) {
+    buyerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const data = {
+            username: document.getElementById("username").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            password: document.getElementById("password").value,
+            contact_number: document.getElementById("contact").value.trim(),
+            region: document.getElementById("region").value.trim(),
+            province: document.getElementById("province").value.trim(),
+            municipality_city: document.getElementById("municipality").value.trim(),
+            barangay: document.getElementById("barangay").value.trim(),
+            street_no: document.getElementById("street_no").value.trim(),
+        };
+
+        try {
+            const result = await registerBuyer(data);
+            if (result.success) {
+                alert("Registration successful! Please log in.");
+                window.location.href = "login.html";
+            } else {
+                alert(result.message || "Registration failed");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Server error");
+        }
+    });
+}
