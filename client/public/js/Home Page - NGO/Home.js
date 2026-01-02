@@ -1,3 +1,6 @@
+import { getMe } from "../api/me.js";
+import { clearToken } from "../api/token.js";
+
 //loader
 window.onload = function() {
     const loader = document.getElementById("loader");
@@ -46,3 +49,18 @@ searchInput.addEventListener('input', function () {
         }
     });
 });
+
+async function ensureNgoSession() {
+    try {
+        const res = await getMe();
+        if (res?.user?.role !== "NGO") {
+            clearToken();
+            window.location.href = "/client/views/layouts/login.html";
+        }
+    } catch (err) {
+        clearToken();
+        window.location.href = "/client/views/layouts/login.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", ensureNgoSession);

@@ -1,3 +1,6 @@
+import { getMe } from "../api/me.js";
+import { getNgoById, updateNgoById } from "../api/ngos.js";
+
 //loader
 window.onload = function() {
     const loader = document.getElementById("loader");
@@ -194,4 +197,103 @@ function showSection(sectionId) {
 document.addEventListener('DOMContentLoaded', function() {
     // Set initial active state
     showSection('edit-profile');
+});
+
+async function loadNgoProfile() {
+    const nameInput = document.getElementById("profile-ngo-name");
+    const emailInput = document.getElementById("profile-email");
+    const contactInput = document.getElementById("profile-contact");
+    const addressInput = document.getElementById("profile-address");
+
+    if (!nameInput || !emailInput || !contactInput || !addressInput) return;
+
+    try {
+        const me = await getMe();
+        const ngoId = me?.user?.id;
+
+        if (!ngoId) {
+            alert("Please log in again.");
+            return;
+        }
+
+        const res = await getNgoById(ngoId);
+        const ngo = res.data;
+
+        if (!ngo) {
+            alert("NGO profile not found.");
+            return;
+        }
+
+        nameInput.value = ngo.ngo_name || "";
+        emailInput.value = ngo.email || "";
+        contactInput.value = ngo.contact_number || "";
+        addressInput.value = [
+            ngo.street_no,
+            ngo.barangay,
+            ngo.municipality_city,
+            ngo.province,
+            ngo.region,
+        ].filter(Boolean).join(", ");
+    } catch (err) {
+        console.error("Failed to load NGO profile:", err);
+        alert(err?.message || "Failed to load profile");
+    }
+}
+
+async function handleProfileSave() {
+    const nameInput = document.getElementById("profile-ngo-name");
+    const contactInput = document.getElementById("profile-contact");
+    const addressInput = document.getElementById("profile-address");
+    const saveBtn = document.getElementById("profile-save-btn");
+
+    if (!nameInput || !contactInput || !addressInput || !saveBtn) return;
+
+    saveBtn.disabled = true;
+
+    try {
+        const me = await getMe();
+        const ngoId = me?.user?.id;
+
+        if (!ngoId) {
+            alert("Please log in again.");
+            return;
+        }
+
+        const parts = addressInput.value.split(",").map((part) => part.trim()).filter(Boolean);
+        const [street_no, barangay, municipality_city, province, region] = parts;
+
+        const payload = {
+            ngo_name: nameInput.value.trim(),
+            contact_number: contactInput.value.trim(),
+            street_no: street_no || "",
+            barangay: barangay || "",
+            municipality_city: municipality_city || "",
+            province: province || "",
+            region: region || "",
+        };
+
+        const res = await updateNgoById(ngoId, payload);
+        if (res.success) {
+            alert("Profile updated.");
+        } else {
+            alert(res.message || "Failed to update profile.");
+        }
+    } catch (err) {
+        console.error("Failed to update NGO profile:", err);
+        alert(err?.message || "Failed to update profile");
+    } finally {
+        saveBtn.disabled = false;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadNgoProfile();
+
+    const saveBtn = document.getElementById("profile-save-btn");
+    if (saveBtn) {
+        saveBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            handleProfileSave();
+        });
+    }
 });

@@ -49,3 +49,16 @@ export async function putAuthJson(path, body) {
   if (!res.ok) throw data;
   return data;
 }
+
+export async function deleteAuthJson(path) {
+  const token = getToken();
+  const res = await fetch(`${API_BASE_URL}${path}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) throw data;
+  return data;
+}

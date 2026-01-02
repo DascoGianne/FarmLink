@@ -1,5 +1,6 @@
 import { getMe } from "../api/me.js";
-import { getOrdersByNgo } from "../api/orders.js";
+import { clearToken } from "../api/token.js";
+import { getOrdersByNgo, updateOrderStatus } from "../api/orders.js";
 import { createLogistics, getLogisticsByOrder, updateLogisticsByOrder } from "../api/logistics.js";
 
 //loader
@@ -64,6 +65,7 @@ function renderLogisticsForm(order, logistics) {
                 <img src="/client/public/images/My Account/Defaut Profile Picture.png" class="profile icon">
                 <div class="text-group">
                     <h3 class="name">${order.username || "Buyer"}</h3>
+                    <p>Contact: ${order.contact_number || "N/A"}</p>
                     <p>${order.crop_name} (${order.quantity})</p>
                     <p>Status: ${order.order_status}</p>
                 </div>
@@ -86,6 +88,12 @@ function renderLogisticsForm(order, logistics) {
                     <label>Delivery Date</label>
                     <input type="date" class="logistics-date" value="${delivered}">
 
+                    <div class="order-status-actions">
+                        <button class="order-status-btn" data-order-id="${order.order_id}" data-status="Confirmed">Confirm</button>
+                        <button class="order-status-btn" data-order-id="${order.order_id}" data-status="Delivering">Delivering</button>
+                        <button class="order-status-btn" data-order-id="${order.order_id}" data-status="Completed">Completed</button>
+                    </div>
+
                     <button class="save-logistics-btn" data-order-id="${order.order_id}">Save Logistics</button>
                 </div>
             </div>
@@ -98,6 +106,11 @@ async function loadNgoOrders() {
 
     try {
         const me = await getMe();
+        if (me?.user?.role !== "NGO") {
+            clearToken();
+            window.location.href = "/client/views/layouts/login.html";
+            return;
+        }
         const ngoId = me?.user?.id;
 
         if (!ngoId) {
@@ -127,6 +140,28 @@ async function loadNgoOrders() {
         ngoOrdersList.innerHTML = orders
             .map((order, index) => renderLogisticsForm(order, logistics[index]))
             .join("");
+
+        ngoOrdersList.querySelectorAll(".order-status-btn").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                const orderId = btn.dataset.orderId;
+                const status = btn.dataset.status;
+                btn.disabled = true;
+
+                try {
+                    await updateOrderStatus(orderId, status);
+                    btn.textContent = "Updated";
+                    setTimeout(() => {
+                        btn.textContent = status;
+                        btn.disabled = false;
+                    }, 1200);
+                    await loadNgoOrders();
+                } catch (err) {
+                    console.error("Order status update error:", err);
+                    alert(err?.message || "Failed to update order status.");
+                    btn.disabled = false;
+                }
+            });
+        });
 
         ngoOrdersList.querySelectorAll(".save-logistics-btn").forEach((btn) => {
             btn.addEventListener("click", async () => {

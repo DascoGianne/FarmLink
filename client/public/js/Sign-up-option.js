@@ -198,3 +198,6 @@ if (buyerForm) {
         }
     });
 }
+
+window.goWholesale = goWholesale;
+window.goRetail = goRetail;

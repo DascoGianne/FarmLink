@@ -201,3 +201,6 @@ if (ngoForm) {
         }
     });
 }
+
+window.goBuyer = goBuyer;
+window.goNGO = goNGO;

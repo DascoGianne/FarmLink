@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 
@@ -18,6 +19,9 @@ try {
 } catch (err) {
   console.log("⚠️ DB not loaded, running without DB");
 }
+
+// Static uploads
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Default Route
 app.get("/", (req, res) => {

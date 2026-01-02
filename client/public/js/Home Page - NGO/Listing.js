@@ -1,3 +1,8 @@
+import API_BASE_URL from "../api/config.js";
+import { getMe } from "../api/me.js";
+import { getToken, clearToken } from "../api/token.js";
+import { createListing, deleteListing, getListingsByNgo, updateListing } from "../api/ngoListings.js";
+
 //loader
 window.onload = function() {
     const loader = document.getElementById("loader");
@@ -48,39 +53,123 @@ searchInput.addEventListener('input', function () {
     });
 });
 
-// OPEN MODAL
-document.querySelector('.top-add-listing-btn').addEventListener('click', () => {
-    document.getElementById('addListingModal').style.display = 'flex';
-});
+const addModal = document.getElementById("addListingModal");
+const openModalBtn = document.querySelector(".top-add-listing-btn");
+const cancelBtn = document.getElementById("cancelListingBtn");
+const saveBtn = document.getElementById("saveListingBtn");
+const listingsRows = document.getElementById("ngoListingsRows");
+const imageInput = document.getElementById("listingImageInput");
+const imageBox = imageInput ? imageInput.closest(".upload-box") : null;
 
-// CLOSE MODAL
-document.querySelector('.cancel-btn').addEventListener('click', () => {
-    document.getElementById('addListingModal').style.display = 'none';
-});
+const cropNameInput = document.getElementById("cropNameInput");
+const categoryInput = document.getElementById("categoryInput");
+const priceInput = document.getElementById("priceInput");
+const totalStocksInput = document.getElementById("totalStocksInput");
+const descriptionInput = document.getElementById("descriptionInput");
+const statusInput = document.getElementById("statusInput");
 
-// CLICK OUTSIDE TO CLOSE
-document.getElementById('addListingModal').addEventListener('click', (e) => {
-    if (e.target.id === 'addListingModal') {
-        e.currentTarget.style.display = 'none';
+let currentListingId = null;
+let currentImageUrl = "";
+
+function setImagePreview(url) {
+    if (!imageBox) return;
+    const span = imageBox.querySelector("span");
+    let preview = imageBox.querySelector("img.listing-preview");
+    if (!preview) {
+        preview = document.createElement("img");
+        preview.className = "listing-preview";
+        imageBox.appendChild(preview);
     }
-});
+    if (url) {
+        preview.src = url;
+        preview.style.display = "block";
+        if (span) span.style.display = "none";
+    } else {
+        preview.style.display = "none";
+        if (span) span.style.display = "block";
+    }
+}
+
+function openModal(listing) {
+    if (!addModal) return;
+    currentListingId = listing?.listing_id || null;
+    if (cropNameInput) cropNameInput.value = listing?.crop_name || "";
+    if (categoryInput) categoryInput.value = listing?.category || "";
+    if (priceInput) priceInput.value = listing?.price || "0.00";
+    if (totalStocksInput) totalStocksInput.value = listing?.total_stocks || "";
+    if (descriptionInput) descriptionInput.value = listing?.description || "";
+    if (statusInput) statusInput.value = listing?.status || "Active";
+    currentImageUrl = listing?.image_1 || "";
+    setImagePreview(currentImageUrl);
+    addModal.style.display = "flex";
+}
+
+function closeModal() {
+    if (!addModal) return;
+    addModal.style.display = "none";
+    currentListingId = null;
+    currentImageUrl = "";
+    setImagePreview("");
+}
+
+if (openModalBtn) {
+    openModalBtn.addEventListener("click", () => openModal(null));
+}
+
+if (cancelBtn) {
+    cancelBtn.addEventListener("click", closeModal);
+}
+
+if (addModal) {
+    addModal.addEventListener("click", (e) => {
+        if (e.target.id === "addListingModal") {
+            closeModal();
+        }
+    });
+}
 
 // ENABLE IMAGE UPLOAD PREVIEW
-document.querySelectorAll('.upload-box input[type="file"]').forEach(input => {
-    input.addEventListener('change', function () {
+document.querySelectorAll('.upload-box input[type="file"]').forEach((input, index) => {
+    input.addEventListener('change', async function () {
         const file = this.files[0];
         if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = () => {
-            const img = document.createElement('img');
-            img.src = reader.result;
+        const box = this.parentElement;
+        const span = box.querySelector("span");
+        let preview = box.querySelector("img");
+        if (!preview) {
+            preview = document.createElement("img");
+            preview.className = "listing-preview";
+            box.appendChild(preview);
+        }
 
-            const box = this.parentElement;
-            box.innerHTML = '';
-            box.appendChild(img);
-        };
-        reader.readAsDataURL(file);
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+        if (span) span.style.display = "none";
+
+        if (index !== 0) return;
+
+        try {
+            const token = getToken();
+            const formData = new FormData();
+            formData.append("image", file);
+
+            const res = await fetch(`${API_BASE_URL}/uploads/listing-image`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw data;
+
+            currentImageUrl = data.url || "";
+        } catch (err) {
+            console.error("Image upload failed:", err);
+            alert(err?.message || "Failed to upload image.");
+        }
     });
 });
 
@@ -172,20 +261,133 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-import { getListings } from "./api/listings.js";
-
 async function loadListings() {
-  const listings = await getListings();
-  console.log(listings);
+    if (!listingsRows) return;
 
-  // example: show listings in HTML
-  const container = document.getElementById("listingsContainer");
+    try {
+        const me = await getMe();
+        if (me?.user?.role !== "NGO") {
+            clearToken();
+            window.location.href = "/client/views/layouts/login.html";
+            return;
+        }
+        const ngoId = me?.user?.id;
+        if (!ngoId) return;
 
-  listings.forEach(item => {
-    const div = document.createElement("div");
-    div.textContent = item.crop_name; // adjust based on DB columns
-    container.appendChild(div);
-  });
+        const res = await getListingsByNgo(ngoId);
+        const listings = res.data || [];
+
+        if (listings.length === 0) {
+            listingsRows.innerHTML = "<div class=\"table-row\"><span>No listings yet.</span></div>";
+            return;
+        }
+
+        listingsRows.innerHTML = listings.map((item) => `
+            <div class="table-row" data-listing-id="${item.listing_id}">
+                <span>${item.listing_id}</span>
+                <span class="crop">
+                    <img src="${item.image_1 || "/client/public/images/pictures - resources/orange.png"}">
+                    ${item.crop_name}
+                </span>
+                <span>${item.category || "N/A"}</span>
+                <span>${item.total_stocks || 0}</span>
+                <span>${item.price || "N/A"}</span>
+                <span>${item.freshness_score || "N/A"}</span>
+                <span>
+                    <select class="status-select">
+                        <option value="Active" ${item.status === "Active" ? "selected" : ""}>Active</option>
+                        <option value="Sold out" ${item.status === "Sold out" ? "selected" : ""}>Sold out</option>
+                        <option value="Inactive" ${item.status === "Inactive" ? "selected" : ""}>Inactive</option>
+                    </select>
+                </span>
+                <span class="actions">
+                    <button class="edit">Edit</button>
+                    <button class="delete">Delete</button>
+                </span>
+            </div>
+        `).join("");
+
+        listingsRows.querySelectorAll(".edit").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const row = btn.closest(".table-row");
+                const listingId = row?.dataset?.listingId;
+                const listing = listings.find((entry) => String(entry.listing_id) === String(listingId));
+                if (listing) openModal(listing);
+            });
+        });
+
+        listingsRows.querySelectorAll(".delete").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                const row = btn.closest(".table-row");
+                const listingId = row?.dataset?.listingId;
+                if (!listingId) return;
+                if (!confirm("Delete this listing?")) return;
+                try {
+                    await deleteListing(listingId);
+                    await loadListings();
+                } catch (err) {
+                    console.error("Delete listing error:", err);
+                    alert(err?.message || "Failed to delete listing.");
+                }
+            });
+        });
+
+        listingsRows.querySelectorAll(".status-select").forEach((select) => {
+            select.addEventListener("change", async () => {
+                const row = select.closest(".table-row");
+                const listingId = row?.dataset?.listingId;
+                if (!listingId) return;
+                try {
+                    await updateListing(listingId, { status: select.value });
+                } catch (err) {
+                    console.error("Status update error:", err);
+                    alert(err?.message || "Failed to update status.");
+                }
+            });
+        });
+    } catch (err) {
+        console.error("Load listings error:", err);
+        if (listingsRows) listingsRows.innerHTML = "<div class=\"table-row\"><span>Failed to load listings.</span></div>";
+    }
 }
 
-loadListings();
+async function handleSaveListing() {
+    if (!cropNameInput || !categoryInput || !totalStocksInput) return;
+
+    const payload = {
+        crop_name: cropNameInput.value.trim(),
+        category: categoryInput.value.trim(),
+        total_stocks: Number(totalStocksInput.value || 0),
+        description: descriptionInput?.value.trim() || "",
+        status: statusInput?.value || "Active",
+        image_1: currentImageUrl || null,
+    };
+
+    if (!payload.crop_name || !payload.category || Number.isNaN(payload.total_stocks)) {
+        alert("Crop name, category, and total stocks are required.");
+        return;
+    }
+
+    if (saveBtn) saveBtn.disabled = true;
+
+    try {
+        if (currentListingId) {
+            await updateListing(currentListingId, payload);
+        } else {
+            await createListing(payload);
+        }
+        closeModal();
+        await loadListings();
+    } catch (err) {
+        console.error("Save listing error:", err);
+        alert(err?.message || "Failed to save listing.");
+    } finally {
+        if (saveBtn) saveBtn.disabled = false;
+    }
+}
+
+if (saveBtn) {
+    saveBtn.addEventListener("click", handleSaveListing);
+}
+
+document.addEventListener("DOMContentLoaded", loadListings);

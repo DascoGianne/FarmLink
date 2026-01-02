@@ -180,6 +180,187 @@ exports.getRescueDealListings = async (req, res) => {
   }
 };
 
+exports.getListingsByNgo = async (req, res) => {
+  const { ngo_id } = req.params;
+
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT listing_id, ngo_id, promo_id, crop_name, category, description,
+             total_stocks, date_listed, status, image_1
+      FROM crop_listings
+      WHERE ngo_id = ?
+      ORDER BY listing_id DESC
+      `,
+      [ngo_id]
+    );
+
+    return res.status(200).json({ success: true, data: rows });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.createListing = async (req, res) => {
+  const {
+    crop_name,
+    category,
+    description,
+    total_stocks,
+    status,
+    image_1
+  } = req.body;
+
+  const ngo_id = req.user?.id;
+
+  if (!ngo_id || !crop_name || !category || total_stocks === undefined || total_stocks === null) {
+    return res.status(400).json({
+      success: false,
+      message: "ngo_id, crop_name, category, and total_stocks are required",
+    });
+  }
+
+  try {
+    const [result] = await db.query(
+      `
+      INSERT INTO crop_listings (
+        ngo_id, crop_name, category, description,
+        total_stocks, date_listed, status, image_1
+      )
+      VALUES (?, ?, ?, ?, ?, CURDATE(), ?, ?)
+      `,
+      [
+        ngo_id,
+        crop_name,
+        category,
+        description || "",
+        total_stocks,
+        status || "Active",
+        image_1 || null
+      ]
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: "Listing created",
+      data: { listing_id: result.insertId },
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.updateListing = async (req, res) => {
+  const { listing_id } = req.params;
+  const {
+    crop_name,
+    category,
+    description,
+    total_stocks,
+    status,
+    image_1
+  } = req.body;
+
+  try {
+    const [ownership] = await db.query(
+      `
+      SELECT listing_id
+      FROM crop_listings
+      WHERE listing_id = ? AND ngo_id = ?
+      LIMIT 1
+      `,
+      [listing_id, req.user.id]
+    );
+
+    if (ownership.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden (not your listing)",
+      });
+    }
+
+    const fields = [];
+    const values = [];
+
+    if (crop_name !== undefined) { fields.push("crop_name = ?"); values.push(crop_name); }
+    if (category !== undefined) { fields.push("category = ?"); values.push(category); }
+    if (description !== undefined) { fields.push("description = ?"); values.push(description); }
+    if (total_stocks !== undefined) { fields.push("total_stocks = ?"); values.push(total_stocks); }
+    if (status !== undefined) { fields.push("status = ?"); values.push(status); }
+    if (image_1 !== undefined) { fields.push("image_1 = ?"); values.push(image_1); }
+
+    if (fields.length === 0) {
+      return res.status(400).json({ success: false, message: "No fields provided to update" });
+    }
+
+    values.push(listing_id);
+
+    const [result] = await db.query(
+      `
+      UPDATE crop_listings
+      SET ${fields.join(", ")}
+      WHERE listing_id = ?
+      `,
+      values
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "Listing not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Listing updated",
+      data: { listing_id: Number(listing_id) },
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.deleteListing = async (req, res) => {
+  const { listing_id } = req.params;
+
+  try {
+    const [ownership] = await db.query(
+      `
+      SELECT listing_id
+      FROM crop_listings
+      WHERE listing_id = ? AND ngo_id = ?
+      LIMIT 1
+      `,
+      [listing_id, req.user.id]
+    );
+
+    if (ownership.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden (not your listing)",
+      });
+    }
+
+    const [result] = await db.query(
+      `
+      DELETE FROM crop_listings
+      WHERE listing_id = ?
+      `,
+      [listing_id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "Listing not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Listing deleted",
+      data: { listing_id: Number(listing_id) },
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 exports.createOrder = async (req, res) => {
   const {
     ngo_id,
@@ -324,6 +505,23 @@ exports.updateOrderStatus = async (req, res) => {
   }
 
   try {
+    const [ownership] = await db.query(
+      `
+      SELECT order_id
+      FROM orders
+      WHERE order_id = ? AND ngo_id = ?
+      LIMIT 1
+      `,
+      [order_id, req.user.id]
+    );
+
+    if (ownership.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden (not your order)",
+      });
+    }
+
     const [result] = await db.query(
       `
       UPDATE orders
@@ -427,7 +625,8 @@ exports.getPaymentByOrder = async (req, res) => {
 };
 
 exports.createLogistics = async (req, res) => {
-  const { order_id, ngo_id, delivery_method, delivery_status, estimated_arrival, delivery_date } = req.body;
+  const { order_id, delivery_method, delivery_status, estimated_arrival, delivery_date } = req.body;
+  const ngo_id = req.user?.id;
 
   if (!order_id || !ngo_id || !delivery_method) {
     return res.status(400).json({
@@ -437,6 +636,23 @@ exports.createLogistics = async (req, res) => {
   }
 
   try {
+    const [ownership] = await db.query(
+      `
+      SELECT order_id
+      FROM orders
+      WHERE order_id = ? AND ngo_id = ?
+      LIMIT 1
+      `,
+      [order_id, ngo_id]
+    );
+
+    if (ownership.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden (not your order)",
+      });
+    }
+
     const status = delivery_status || "Preparing";
     const eta = estimated_arrival || null;
     const delivered = delivery_date || null;
@@ -469,6 +685,29 @@ exports.getLogisticsByOrder = async (req, res) => {
   const { order_id } = req.params;
 
   try {
+    const role = req.user?.role;
+    const userId = req.user?.id;
+    let ownershipQuery = "";
+    let ownershipParams = [];
+
+    if (role === "NGO") {
+      ownershipQuery = "SELECT order_id FROM orders WHERE order_id = ? AND ngo_id = ? LIMIT 1";
+      ownershipParams = [order_id, userId];
+    } else if (role === "BUYER") {
+      ownershipQuery = "SELECT order_id FROM orders WHERE order_id = ? AND buyer_id = ? LIMIT 1";
+      ownershipParams = [order_id, userId];
+    } else {
+      return res.status(403).json({ success: false, message: "Forbidden" });
+    }
+
+    const [ownership] = await db.query(ownershipQuery, ownershipParams);
+    if (ownership.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden (not your order)",
+      });
+    }
+
     const [rows] = await db.query(
       `
       SELECT logistics_id, order_id, ngo_id, delivery_method, delivery_status, estimated_arrival, delivery_date
@@ -512,6 +751,23 @@ exports.updateLogisticsByOrder = async (req, res) => {
   }
 
   try {
+    const [ownership] = await db.query(
+      `
+      SELECT order_id
+      FROM orders
+      WHERE order_id = ? AND ngo_id = ?
+      LIMIT 1
+      `,
+      [order_id, req.user.id]
+    );
+
+    if (ownership.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden (not your order)",
+      });
+    }
+
     // Build dynamic update (only update fields provided)
     const fields = [];
     const values = [];
