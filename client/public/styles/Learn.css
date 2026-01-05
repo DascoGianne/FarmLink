@@ -114,6 +114,7 @@ html, body {
     justify-content: flex-start;
     overflow-y:auto;
     overflow-x: hidden;
+    position: relative;
 }
 
 .tc-box::-webkit-scrollbar{
@@ -135,6 +136,49 @@ html, body {
 }
 
 /*header*/
+
+.top-bar {
+    width: 95%;
+    max-width: 1500px;
+    height: 80px;
+    margin: 0px;
+    background: white;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 35px;
+    position: relative;
+    box-shadow: 
+        0 0 40px rgba(154, 255, 80, 0.6),
+        inset 0 0 30px rgba(154, 255, 80, 0.4);
+}
+
+.top-btn {
+    padding: 14px 36px;
+    font-size: 22px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-btn {
+    background: #32A928;
+    color: white;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.learn-btn {
+    background: #79ca40;
+    color: white;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.top-btn:hover {
+    transform: scale(1.05);
+}
+
 .scroll-wrapper {
     height: 100vh;       
     overflow-y: auto;    
@@ -145,37 +189,6 @@ html, body {
     max-width: none;
     margin-top: -850px;
     display: block;
-}
-
-.login {
-    position: absolute;
-    top: 20px;
-    left: 25px;
-    font-size: 35px;
-    margin: 0;
-    font-weight: bolder;
-}
-
-.login a{
-    color:#32A928;
-    text-decoration:none;
-    font-weight: inherit;
-}
-
-.Sign{
-    position: absolute;
-    top: 20px;
-    right: 50px;
-    font-size: 30px;
-    margin: 0;
-    color: white;
-    font-weight: bolder;
-}
-
-.Sign a{
-    color: white;
-    margin-left: 5px;
-    font-weight: inherit;
 }
 
 .title{
@@ -426,7 +439,7 @@ html, body {
 }
 
 .buttom{
-    width: 150%;
+    width: 140%;
     max-width: none;
     margin-top: -270px;
     display: block;
@@ -438,7 +451,7 @@ html, body {
     align-items: center;            
     width: 100%;                   
     padding: 0 20px;
-    margin-top: -1350px;                
+    margin-top: -400px;                
 }
 
 .bottom-text p {
@@ -448,19 +461,3 @@ html, body {
     color: white;
 }
 
-.Sign1{
-    position: absolute;
-    top: 2890px;
-    right: 450px;
-    text-align: center;
-    font-size: 30px;
-    margin: 0;
-    color: white;
-    font-weight: bolder;
-}
-
-.Sign1 a{
-    color: white;
-    margin-left: 5px;
-    font-weight: inherit;
-}

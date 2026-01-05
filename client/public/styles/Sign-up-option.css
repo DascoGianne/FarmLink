@@ -79,23 +79,49 @@ html, body {
     overflow-x: hidden;
 }
 
-.top-links{
-    width: 97%;
-    margin: 0 auto;
+.top-bar {
+    width: 95%;
+    max-width: 1500px;
+    height: 80px;
+    margin: 30px auto 0;
+    background: white;
+    border-radius: 50px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding: 20 40px;
-    margin-top: 20px;
+    padding: 0 35px;
+    position: relative;
+    box-shadow: 
+        0 0 40px rgba(154, 255, 80, 0.6),
+        inset 0 0 30px rgba(154, 255, 80, 0.4);
 }
 
-
-.top-links a{
-    font-size: 35px;
+.top-btn {
+    padding: 14px 36px;
+    font-size: 22px;
     font-weight: 600;
-    color: #32A928;
     text-decoration: none;
-    font-family:'poppins';
+    border-radius: 30px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.login-btn {
+    background: #32A928;
+    color: white;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.learn-btn {
+    background: #79ca40;
+    color: white;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.top-btn:hover {
+    transform: scale(1.05);
+}
+
+
 
 #choices{
     margin-top: -5px;

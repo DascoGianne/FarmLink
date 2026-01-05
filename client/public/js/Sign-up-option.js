@@ -1,19 +1,19 @@
 import { registerBuyer } from "./api/auth.js";
 
 //Loading 
-document.addEventListener("DOMContentLoaded", () => {
-    const loader = document.getElementById("loader");
-    const content = document.getElementById("content");
+window.onload = function () {
+  const loader = document.getElementById("loader");
+  const content = document.getElementById("content");
+
+  setTimeout(() => {
+    loader.classList.add("done");
 
     setTimeout(() => {
-        loader.classList.add("done");
-
-        setTimeout(() => {
-            loader.style.display = "none";
-            content.classList.add("show");
-        }, 600);
-    }, 5000);
-});
+      loader.style.display = "none";
+      content.classList.add("show");
+    }, 600);
+  }, 1000);
+}; // <-- correct close
 
 
 //form popup

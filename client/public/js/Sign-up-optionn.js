@@ -1,6 +1,7 @@
 import { registerNgo } from "./api/auth.js";
 
 //loader
+
 window.onload = function() {
     const loader = document.getElementById("loader");
     const content = document.getElementById("content");

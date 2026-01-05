@@ -16,69 +16,28 @@ window.onload = function() {
 };
 
 /*fixes the scroll bug*/
-(function() {
-  const container = document.querySelector('.tc-box');
-  const signUp = document.querySelector('.Sign1');
-
-  if (!container || !signUp) return; // nothing to do
-
-  function getMaxScroll() {
-    const signBottom = signUp.offsetTop + signUp.offsetHeight;
-    const max = Math.max(0, signBottom - container.clientHeight);
-    return max;
-  }
+/* fixes scrollbar click glitch by clamping to the real max scroll */
+(function () {
+  const container = document.querySelector(".tc-box");
+  if (!container) return;
 
   function clampScroll() {
-    const max = getMaxScroll();
-    if (container.scrollTop > max) {
-      container.scrollTop = max;
-    }
+    const max = container.scrollHeight - container.clientHeight;
+    if (container.scrollTop > max) container.scrollTop = max;
+    if (container.scrollTop < 0) container.scrollTop = 0;
   }
 
-  function onWheel(e) {
-    const delta = e.deltaY;
-    const max = getMaxScroll();
+  // Clamp after any kind of scroll (wheel, drag thumb, click track, keyboard, etc.)
+  container.addEventListener("scroll", clampScroll);
 
-    if (delta > 0 && container.scrollTop >= max - 1) {
-      e.preventDefault();
-      e.stopPropagation();
-      container.scrollTop = max;
-    }
-  }
+  // Clamp after layout changes
+  window.addEventListener("resize", clampScroll);
+  window.addEventListener("load", clampScroll);
 
-  let touchStartY = null;
-  function onTouchStart(e) {
-    if (e.touches && e.touches.length) touchStartY = e.touches[0].clientY;
-  }
-  function onTouchMove(e) {
-    if (!touchStartY) return;
-    const touchY = e.touches[0].clientY;
-    const delta = touchStartY - touchY; 
-    const max = getMaxScroll();
-
-    if (delta > 0 && container.scrollTop >= max - 1) {
-      e.preventDefault();
-      e.stopPropagation();
-      container.scrollTop = max;
-    }
-    touchStartY = touchY;
-  }
-  container.addEventListener('scroll', clampScroll, { passive: true });
-
-  container.addEventListener('wheel', onWheel, { passive: false });
-
-  container.addEventListener('touchstart', onTouchStart, { passive: true });
-  container.addEventListener('touchmove', onTouchMove, { passive: false });
-
-  window.addEventListener('resize', clampScroll);
-  window.addEventListener('load', clampScroll);
-
-  const imgs = container.querySelectorAll('img');
-  imgs.forEach(img => {
-    if (!img.complete) img.addEventListener('load', clampScroll);
+  // Clamp after images load (because images change scrollHeight)
+  container.querySelectorAll("img").forEach((img) => {
+    if (!img.complete) img.addEventListener("load", clampScroll);
   });
-
-  window.__tcBoxClampScroll = clampScroll;
 
   clampScroll();
 })();

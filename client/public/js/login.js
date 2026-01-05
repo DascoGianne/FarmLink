@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loader.style.display = "none";
       content.classList.add("show");
     }, 600);
-  }, 5000);
+  }, 2000);
 
   // Toggle Password Visibility
   function setupToggle(inputId, iconId) {
