@@ -187,7 +187,7 @@ exports.getListingsByNgo = async (req, res) => {
     const [rows] = await db.query(
       `
       SELECT listing_id, ngo_id, promo_id, crop_name, category, description,
-             total_stocks, date_listed, status, image_1
+             total_stocks, date_listed, status, image_1, image_2, image_3, image_4, image_5, image_6
       FROM crop_listings
       WHERE ngo_id = ?
       ORDER BY listing_id DESC
@@ -208,7 +208,12 @@ exports.createListing = async (req, res) => {
     description,
     total_stocks,
     status,
-    image_1
+    image_1,
+    image_2,
+    image_3,
+    image_4,
+    image_5,
+    image_6
   } = req.body;
 
   const ngo_id = req.user?.id;
@@ -225,9 +230,9 @@ exports.createListing = async (req, res) => {
       `
       INSERT INTO crop_listings (
         ngo_id, crop_name, category, description,
-        total_stocks, date_listed, status, image_1
+        total_stocks, date_listed, status, image_1, image_2, image_3, image_4, image_5, image_6
       )
-      VALUES (?, ?, ?, ?, ?, CURDATE(), ?, ?)
+      VALUES (?, ?, ?, ?, ?, CURDATE(), ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         ngo_id,
@@ -236,7 +241,12 @@ exports.createListing = async (req, res) => {
         description || "",
         total_stocks,
         status || "Active",
-        image_1 || null
+        image_1 || null,
+        image_2 || null,
+        image_3 || null,
+        image_4 || null,
+        image_5 || null,
+        image_6 || null
       ]
     );
 
@@ -258,7 +268,12 @@ exports.updateListing = async (req, res) => {
     description,
     total_stocks,
     status,
-    image_1
+    image_1,
+    image_2,
+    image_3,
+    image_4,
+    image_5,
+    image_6
   } = req.body;
 
   try {
@@ -288,6 +303,11 @@ exports.updateListing = async (req, res) => {
     if (total_stocks !== undefined) { fields.push("total_stocks = ?"); values.push(total_stocks); }
     if (status !== undefined) { fields.push("status = ?"); values.push(status); }
     if (image_1 !== undefined) { fields.push("image_1 = ?"); values.push(image_1); }
+    if (image_2 !== undefined) { fields.push("image_2 = ?"); values.push(image_2); }
+    if (image_3 !== undefined) { fields.push("image_3 = ?"); values.push(image_3); }
+    if (image_4 !== undefined) { fields.push("image_4 = ?"); values.push(image_4); }
+    if (image_5 !== undefined) { fields.push("image_5 = ?"); values.push(image_5); }
+    if (image_6 !== undefined) { fields.push("image_6 = ?"); values.push(image_6); }
 
     if (fields.length === 0) {
       return res.status(400).json({ success: false, message: "No fields provided to update" });

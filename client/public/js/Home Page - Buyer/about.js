@@ -1,3 +1,5 @@
+import { updateBadges } from "../api/badges.js";
+
 //loader
 window.onload = function() {
     const loader = document.getElementById("loader");
@@ -14,6 +16,10 @@ window.onload = function() {
         }, 600); 
     }, 1000); // 1 second delay for demo
 };
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateBadges();
+});
 
 /*fixes the scroll bug*/
 (function() {

@@ -2,6 +2,7 @@ import { getMe } from "../api/me.js";
 import { getBuyerById } from "../api/buyers.js";
 import { createOrder } from "../api/orders.js";
 import { getCart, updateCartQuantity, removeFromCart, clearCart } from "../api/cart.js";
+import { updateBadges } from "../api/badges.js";
 
 
 const basketItems = document.getElementById("basketItems");
@@ -23,6 +24,7 @@ function renderCart() {
     if (cart.length === 0) {
         basketItems.innerHTML = "<p>Your basket is empty.</p>";
         if (totalAmount) totalAmount.textContent = "0.00";
+        updateBadges();
         return;
     }
 
@@ -63,6 +65,7 @@ function renderCart() {
             updateCartQuantity(listingId, nextQty);
             qtySpan.textContent = nextQty;
             if (totalAmount) totalAmount.textContent = computeTotal(getCart()).toFixed(2);
+            updateBadges();
         });
 
         addBtn.addEventListener("click", () => {
@@ -74,10 +77,12 @@ function renderCart() {
             updateCartQuantity(listingId, nextQty);
             qtySpan.textContent = nextQty;
             if (totalAmount) totalAmount.textContent = computeTotal(getCart()).toFixed(2);
+            updateBadges();
         });
     });
 
     if (totalAmount) totalAmount.textContent = computeTotal(cart).toFixed(2);
+    updateBadges();
 }
 
 async function handleCheckout() {

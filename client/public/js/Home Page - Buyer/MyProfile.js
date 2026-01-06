@@ -1,5 +1,6 @@
 import { getMe } from "../api/me.js";
 import { getBuyerById, updateBuyerById } from "../api/buyers.js";
+import { updateBadges } from "../api/badges.js";
 
 /* =========================
    Sidebar (PERMANENT OPEN)
@@ -25,6 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateBadges();
 });
 
 /* =========================
