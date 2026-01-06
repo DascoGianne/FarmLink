@@ -49,8 +49,10 @@ searchInput.addEventListener('input', function () {
 
 
 import { getListings } from "../api/listings.js";
+import { updateBadges } from "../api/badges.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await updateBadges();
   try {
     const res = await getListings();
     console.log("LISTINGS:", res);

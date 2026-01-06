@@ -1,7 +1,9 @@
 import { getRescueListings, getListings, getRescueAlertsByListing } from "../api/listings.js";
 import { addToCart } from "../api/cart.js";
+import { updateBadges } from "../api/badges.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await updateBadges();
   // ================= LOADER (GUARANTEED HIDE) =================
   const loader = document.getElementById("loader");
   const content = document.getElementById("content");
@@ -109,6 +111,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             category: listing.category,
             image_1: listing.image_1 || "",
           });
+
+          updateBadges();
 
           btn.textContent = "Added";
           btn.disabled = true;

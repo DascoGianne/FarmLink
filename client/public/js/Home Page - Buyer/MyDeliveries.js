@@ -2,6 +2,7 @@ import { getMe } from "../api/me.js";
 import { getOrdersByBuyer } from "../api/orders.js";
 import { getPaymentByOrder } from "../api/payments.js";
 import { getLogisticsByOrder } from "../api/logistics.js";
+import { updateBadges } from "../api/badges.js";
 
 //loader
 window.onload = function() {
@@ -147,5 +148,8 @@ async function loadOrders() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", loadOrders);
+document.addEventListener("DOMContentLoaded", async () => {
+    await updateBadges();
+    await loadOrders();
+});
 
