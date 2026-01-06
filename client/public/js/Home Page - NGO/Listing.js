@@ -1,7 +1,8 @@
 import API_BASE_URL from "../api/config.js";
 import { getMe } from "../api/me.js";
-import { getToken, clearToken } from "../api/token.js";
+import { clearToken } from "../api/token.js";
 import { createListing, deleteListing, getListingsByNgo, updateListing } from "../api/ngoListings.js";
+import { uploadListingImage } from "../api/uploads.js";
 
 //loader
 window.onload = function() {
@@ -58,8 +59,11 @@ const openModalBtn = document.querySelector(".top-add-listing-btn");
 const cancelBtn = document.getElementById("cancelListingBtn");
 const saveBtn = document.getElementById("saveListingBtn");
 const listingsRows = document.getElementById("ngoListingsRows");
-const imageInput = document.getElementById("listingImageInput");
-const imageBox = imageInput ? imageInput.closest(".upload-box") : null;
+const imageInputs = Array.from(document.querySelectorAll('.upload-box input[type="file"]'));
+const imageBoxes = imageInputs.map((input) => input.closest(".upload-box"));
+const currentImageUrls = imageInputs.map(() => "");
+const previewObjectUrls = imageInputs.map(() => "");
+const pendingFiles = imageInputs.map(() => null);
 
 const cropNameInput = document.getElementById("cropNameInput");
 const categoryInput = document.getElementById("categoryInput");
@@ -69,25 +73,81 @@ const descriptionInput = document.getElementById("descriptionInput");
 const statusInput = document.getElementById("statusInput");
 
 let currentListingId = null;
-let currentImageUrl = "";
 
-function setImagePreview(url) {
-    if (!imageBox) return;
-    const span = imageBox.querySelector("span");
-    let preview = imageBox.querySelector("img.listing-preview");
+const API_ORIGIN = (() => {
+    try {
+        return new URL(API_BASE_URL).origin;
+    } catch (err) {
+        return "";
+    }
+})();
+
+function resolveImageUrl(url) {
+    if (!url) return "";
+    if (url.startsWith("blob:") || url.startsWith("data:")) return url;
+    if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    if (/^\/?uploads\//.test(url)) {
+        if (!API_ORIGIN) return url;
+        const normalized = url.startsWith("/") ? url : `/${url}`;
+        return `${API_ORIGIN}${normalized}`;
+    }
+    return url;
+}
+
+function revokePreviewObjectUrl(index) {
+    const objectUrl = previewObjectUrls[index];
+    if (!objectUrl) return;
+    URL.revokeObjectURL(objectUrl);
+    previewObjectUrls[index] = "";
+}
+
+function setImagePreview(index, url) {
+    const box = imageBoxes[index];
+    if (!box) return;
+    const span = box.querySelector("span");
+    let preview = box.querySelector("img.listing-preview");
     if (!preview) {
         preview = document.createElement("img");
         preview.className = "listing-preview";
-        imageBox.appendChild(preview);
+        box.appendChild(preview);
     }
     if (url) {
-        preview.src = url;
+        preview.src = resolveImageUrl(url);
         preview.style.display = "block";
         if (span) span.style.display = "none";
     } else {
+        preview.removeAttribute("src");
         preview.style.display = "none";
         if (span) span.style.display = "block";
     }
+}
+
+function resetImagePreviews() {
+    imageInputs.forEach((input, index) => {
+        input.value = "";
+        currentImageUrls[index] = "";
+        pendingFiles[index] = null;
+        revokePreviewObjectUrl(index);
+        setImagePreview(index, "");
+    });
+}
+
+function loadListingImages(listing) {
+    const urls = [
+        listing?.image_1 || "",
+        listing?.image_2 || "",
+        listing?.image_3 || "",
+        listing?.image_4 || "",
+        listing?.image_5 || "",
+        listing?.image_6 || "",
+    ];
+
+    urls.forEach((url, index) => {
+        currentImageUrls[index] = url;
+        pendingFiles[index] = null;
+        revokePreviewObjectUrl(index);
+        setImagePreview(index, url);
+    });
 }
 
 function openModal(listing) {
@@ -99,8 +159,10 @@ function openModal(listing) {
     if (totalStocksInput) totalStocksInput.value = listing?.total_stocks || "";
     if (descriptionInput) descriptionInput.value = listing?.description || "";
     if (statusInput) statusInput.value = listing?.status || "Active";
-    currentImageUrl = listing?.image_1 || "";
-    setImagePreview(currentImageUrl);
+    resetImagePreviews();
+    if (listing) {
+        loadListingImages(listing);
+    }
     addModal.style.display = "flex";
 }
 
@@ -108,8 +170,7 @@ function closeModal() {
     if (!addModal) return;
     addModal.style.display = "none";
     currentListingId = null;
-    currentImageUrl = "";
-    setImagePreview("");
+    resetImagePreviews();
 }
 
 if (openModalBtn) {
@@ -129,49 +190,32 @@ if (addModal) {
 }
 
 // ENABLE IMAGE UPLOAD PREVIEW
-document.querySelectorAll('.upload-box input[type="file"]').forEach((input, index) => {
-    input.addEventListener('change', async function () {
-        const file = this.files[0];
+imageInputs.forEach((input, index) => {
+    input.addEventListener("change", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const file = input.files?.[0];
         if (!file) return;
 
-        const box = this.parentElement;
-        const span = box.querySelector("span");
-        let preview = box.querySelector("img");
-        if (!preview) {
-            preview = document.createElement("img");
-            preview.className = "listing-preview";
-            box.appendChild(preview);
-        }
-
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = "block";
-        if (span) span.style.display = "none";
-
-        if (index !== 0) return;
-
-        try {
-            const token = getToken();
-            const formData = new FormData();
-            formData.append("image", file);
-
-            const res = await fetch(`${API_BASE_URL}/uploads/listing-image`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                body: formData,
-            });
-
-            const data = await res.json();
-            if (!res.ok) throw data;
-
-            currentImageUrl = data.url || "";
-        } catch (err) {
-            console.error("Image upload failed:", err);
-            alert(err?.message || "Failed to upload image.");
-        }
+        revokePreviewObjectUrl(index);
+        const objectUrl = URL.createObjectURL(file);
+        previewObjectUrls[index] = objectUrl;
+        setImagePreview(index, objectUrl);
+        pendingFiles[index] = file;
     });
 });
+
+async function uploadPendingImages() {
+    for (let index = 0; index < pendingFiles.length; index += 1) {
+        const file = pendingFiles[index];
+        if (!file) continue;
+        const data = await uploadListingImage(file);
+        currentImageUrls[index] = data.url || "";
+        pendingFiles[index] = null;
+        revokePreviewObjectUrl(index);
+        setImagePreview(index, currentImageUrls[index]);
+    }
+}
 
 
 
@@ -282,11 +326,22 @@ async function loadListings() {
             return;
         }
 
-        listingsRows.innerHTML = listings.map((item) => `
+        listingsRows.innerHTML = listings.map((item) => {
+            const imageUrl = resolveImageUrl(
+                item.image_1 ||
+                item.image_2 ||
+                item.image_3 ||
+                item.image_4 ||
+                item.image_5 ||
+                item.image_6 ||
+                "/client/public/images/pictures - resources/orange.png"
+            );
+
+            return `
             <div class="table-row" data-listing-id="${item.listing_id}">
                 <span>${item.listing_id}</span>
                 <span class="crop">
-                    <img src="${item.image_1 || "/client/public/images/pictures - resources/orange.png"}">
+                    <img src="${imageUrl}">
                     ${item.crop_name}
                 </span>
                 <span>${item.category || "N/A"}</span>
@@ -305,7 +360,8 @@ async function loadListings() {
                     <button class="delete">Delete</button>
                 </span>
             </div>
-        `).join("");
+        `;
+        }).join("");
 
         listingsRows.querySelectorAll(".edit").forEach((btn) => {
             btn.addEventListener("click", () => {
@@ -354,16 +410,15 @@ async function loadListings() {
 async function handleSaveListing() {
     if (!cropNameInput || !categoryInput || !totalStocksInput) return;
 
-    const payload = {
+    const payloadBase = {
         crop_name: cropNameInput.value.trim(),
         category: categoryInput.value.trim(),
         total_stocks: Number(totalStocksInput.value || 0),
         description: descriptionInput?.value.trim() || "",
         status: statusInput?.value || "Active",
-        image_1: currentImageUrl || null,
     };
 
-    if (!payload.crop_name || !payload.category || Number.isNaN(payload.total_stocks)) {
+    if (!payloadBase.crop_name || !payloadBase.category || Number.isNaN(payloadBase.total_stocks)) {
         alert("Crop name, category, and total stocks are required.");
         return;
     }
@@ -371,6 +426,27 @@ async function handleSaveListing() {
     if (saveBtn) saveBtn.disabled = true;
 
     try {
+        await uploadPendingImages();
+
+        const normalizedImages = currentImageUrls.map((url) => url || null);
+        if (!normalizedImages[0]) {
+            const fallbackIndex = normalizedImages.findIndex((url) => url);
+            if (fallbackIndex > -1) {
+                normalizedImages[0] = normalizedImages[fallbackIndex];
+                normalizedImages[fallbackIndex] = null;
+            }
+        }
+
+        const payload = {
+            ...payloadBase,
+            image_1: normalizedImages[0],
+            image_2: normalizedImages[1],
+            image_3: normalizedImages[2],
+            image_4: normalizedImages[3],
+            image_5: normalizedImages[4],
+            image_6: normalizedImages[5],
+        };
+
         if (currentListingId) {
             await updateListing(currentListingId, payload);
         } else {
