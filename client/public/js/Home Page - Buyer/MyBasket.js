@@ -3,20 +3,6 @@ import { getBuyerById } from "../api/buyers.js";
 import { createOrder } from "../api/orders.js";
 import { getCart, updateCartQuantity, removeFromCart, clearCart } from "../api/cart.js";
 
-//loader
-window.onload = function() {
-    const loader = document.getElementById("loader");
-    const content = document.getElementById("content");
-
-    setTimeout(() => {
-        loader.classList.add("done");
-
-        setTimeout(() => {
-            loader.style.display = "none"; 
-            content.classList.add("show");
-        }, 600); 
-    }, 1000);
-};
 
 const basketItems = document.getElementById("basketItems");
 const totalAmount = document.getElementById("totalAmount");

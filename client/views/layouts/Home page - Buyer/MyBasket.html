@@ -10,13 +10,6 @@
 </head>
 
 <body>
-
-    <!-- Loading Screen -->
-    <div id="loader">
-        <img src="/client/public/images/pictures - resources/BG ELEMENTS.png" class="bg">
-        <img src="/client/public/images/pictures - resources/LANDING PAGE LOGO.png" class="logo">
-    </div>
-
     <div class="content" id="content">
         <div class="basket-container">
 
@@ -24,10 +17,19 @@
                 <img src="/client/public/images/My Basket/Close Icon.png" class="close-btn">
             </a>
 
-            <img src="/client/public/images/My Basket/Your Basket (1).png" class="basket-title">
+<div class="basket-header">
+  <div class="basket-title-wrap">
+    <img src="/client/public/images/My Basket/Your Basket (1).png"
+         class="basket-title"
+         alt="Your Basket">
 
-            <div id="basketItems"></div>
+    <div class="basket-badge">
+      <span id="basketCount">0</span>
+    </div>
+  </div>
+</div>
 
+<div id="basketItems" class="basket-items"></div>
             <!-- CHECKOUT BUTTON -->
             <button class="checkout-btn" id="checkoutBtn" type="button">
                 Checkout - <span id="totalAmount">0.00</span>
