@@ -9,34 +9,38 @@
     <link rel="stylesheet" href="/client/public/styles/Home Page - Buyer/Terms.css">
 </head>
 <body>
-    <!--Loading Screen-->
-    <div id="loader">
-        <img src="/client/public/images/picss/BG ELEMENTS.png" class="bg">
-        <img src="/client/public/images/picss/LANDING PAGE LOGO.png" class="logo">
-    </div>
-
     <!--Content-->
     <div id="content">
         <div class="tc-box">
-            <div id="top">
-            <div class="left-group">
-                <img src="/client/public/images/MAIN PAGE/Sidebar Button.png">
-                <h3 class="Home"><a href="/client/views/layouts/Home page - Buyer/Home.html">Home</a></h3>
-                <h3 class="Market"><a href="/client/views/layouts/Home page - Buyer/Marketplace.html">MARKETPLACE</a></h3>
-            </div>
+<div id="top">
+  <div class="navbar">
+    <div class="nav-left">
+      <img src="/client/public/images/MAIN PAGE/Sidebar Button.png" class="sidebar-btn" alt="Menu" />
 
-            <div class="right-group">
-                <a href="/client/views/layouts/Home page - Buyer/MyDeliveries.html" class="icon-box">
-                    <img src="/client/public/images/MAIN PAGE/Deliveries Button.png" class="Deliveries">
-                    <span id="deliveriesBadge" class="glow-badge">0</span>
-                </a>
+      <div class="nav-divider"></div>
 
-                <a href="/client/views/layouts/Home page - Buyer/MyBasket.html" class="icon-box">
-                    <img src="/client/public/images/MAIN PAGE/My Basket Button.png" class="Basket">
-                    <span id="basketBadge" class="glow-badge green">0</span>
-                </a>
-            </div>
-        </div>
+      <a class="nav-link active" href="/client/views/layouts/Home page - Buyer/Home.html">HOME</a>
+
+      <div class="nav-divider"></div>
+
+      <a class="nav-link" href="/client/views/layouts/Home page - Buyer/Marketplace.html">MARKETPLACE</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="/client/views/layouts/Home page - Buyer/MyDeliveries.html" class="icon-box">
+        <img src="/client/public/images/MAIN PAGE/Deliveries Button.png" class="nav-icon" alt="Deliveries" />
+        <span id="deliveriesBadge" class="glow-badge red">0</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <a href="/client/views/layouts/Home page - Buyer/MyBasket.html" class="icon-box">
+        <img src="/client/public/images/MAIN PAGE/My Basket Button.png" class="nav-icon" alt="Basket" />
+        <span id="basketBadge" class="glow-badge green">0</span>
+      </a>
+    </div>
+  </div>
+</div>
            <img src="/client/public/images/picss/Rectangle 11167.png" class="headback">
            <img src="/client/public/images/picss/FARMLINK _From Farm to table,made simple_.png" class="headlogo">
            <img src="/client/public/images/picss/Fair prices for farmers, Fresh produce for you..png" class="headtext">
@@ -113,111 +117,102 @@
            </p>
 
         </div>
-        <!-- Sidebar -->
+
+        <!-- ✅ Sidebar -->
         <div id="sidebar">
+          <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Header.png" class="sidebar-header" alt="Sidebar Header" />
+          <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Logo.png" class="sidebar-logo" alt="Sidebar Logo" />
+          <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Quote.png" class="sidebar-quote" alt="Sidebar Quote" />
+          <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Close.png" class="sidebar-close" alt="Close Sidebar" />
 
-            <!-- Top -->
-            <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Header.png" class="sidebar-header">
-            <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Logo.png" class="sidebar-logo">
-            <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Quote.png" class="sidebar-quote">
-            <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Close.png" class="sidebar-close">
-
-            <!-- Search area -->
-            <div class="sidebar-search">
-                <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="search-box">
-
-                <div class="search-wrapper">
-                    <img src="/client/public/images/MAIN PAGE/Search.png" class="search-icon">
-                    <input type="text" class="search-input" placeholder="Search...">
-                </div>
+          <!-- Search area -->
+          <div class="sidebar-search">
+            <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="search-bg" alt="Search Background" />
+            <div class="search-wrapper">
+              <img src="/client/public/images/MAIN PAGE/Search.png" class="search-icon" alt="Search Icon" />
+              <input type="text" class="search-input" placeholder="Search..." />
             </div>
+          </div>
 
-            <!-- Account -->
-            <h4 class="account-title">Account</h4>
+          <!-- Account -->
+          <h4 class="account-title">Account</h4>
+          <div class="account-info">
+            <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Profile Picture.png" class="account-icon" alt="Profile" />
+            <h2 class="account-name">Test Name</h2>
+          </div>
 
-            <div class="account-info">
-                <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Profile Picture.png" class="account-icon">
-                <h2 class="account-name">Test Name</h2>
-            </div>
-
-            <!-- Menu -->
-            <h4 class="menu-title">Main Menu</h4>
-
-            <ul id="sidebar-menu">
-
-                <li>
-                    <a href="/client/views/layouts/Home page - Buyer/MyProfile.html">
-                        <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Account Icon.png">
-                        My Account
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/client/views/layouts/Home page - Buyer/MyBasket.html">
-                        <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Basket Icon.png">
-                        My Basket
-                    </a>
-                    <div class="notif-wrapper">
-                        <img class="notif-badge" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Notification Badge Background.png">
-                        <span class="notif-number">1</span>
-                    </div>
-                </li>
-
-                <li>
-                    <a href="/client/views/layouts/Home page - Buyer/MyDeliveries.html">
-                        <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Deliveries Icon.png">
-                        My Deliveries
-                    </a>
-                    <div class="notif-wrapper">
-                        <img class="notif-badge" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Notification Badge Background.png">
-                        <span class="notif-number">1</span>
-                    </div>
-                </li>
-
-                <li>
-                    <a href="/client/views/layouts/Home page - Buyer/Marketplace.html">
-                        <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Marketplace Icon.png">
-                        Marketplace
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/client/views/layouts/Home page - Buyer/Rescue.html" target="_blank">
-                        <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Rescue Alert Icon.png">
-                        What is Rescue Alert
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/client/views/layouts/Home page - Buyer/Rating.html" target="_blank">
-                        <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Freshness Rating Icon.png">
-                        What is Freshness Rating
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/client/views/layouts/Home page - Buyer/Terms.html">
-                        <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Terms and Conditions Icon.png">
-                        Terms and Conditions
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/client/views/layouts/Home page - Buyer/about.html">
-                        <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/About FarmLink Icon.png">
-                        About FarmLink
-                    </a>
-                </li>
-
-            </ul>
-
-            <!-- Account buttons -->
-            <div class="sidebar-buttons">
-              <a href="/client/views/layouts/login.html">
-                <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Create New Account Button.png">
-                <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Log out Button.png">
+          <!-- Menu -->
+          <h4 class="menu-title">Main Menu</h4>
+          <ul id="sidebar-menu">
+            <li>
+              <a href="/client/views/layouts/Home page - Buyer/MyProfile.html">
+                <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Account Icon.png" alt="My Account" />
+                My Account
               </a>
-            </div>
+            </li>
+
+            <li>
+              <a href="/client/views/layouts/Home page - Buyer/Marketplace.html">
+                <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Marketplace Icon.png" alt="Marketplace" />
+                Marketplace
+              </a>
+            </li>
+
+            <li>
+              <a href="/client/views/layouts/Home page - Buyer/MyBasket.html">
+                <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Basket Icon.png" alt="My Basket" />
+                My Basket
+              </a>
+              <span class="sidebar-badge">5</span>
+            </li>
+
+            <li>
+              <a href="/client/views/layouts/Home page - Buyer/MyDeliveries.html">
+                <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Deliveries Icon.png" alt="My Deliveries" />
+                My Deliveries
+              </a>
+              <span class="sidebar-badge">2</span>
+            </li>
+
+            <li>
+              <a href="/client/views/layouts/Home page - Buyer/about.html">
+                <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/About FarmLink Icon.png" alt="About FarmLink" />
+                About FarmLink
+              </a>
+            </li>
+
+            <li>
+              <a href="/client/views/layouts/Home page - Buyer/Rescue.html" target="_blank">
+                <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Rescue Alert Icon.png" alt="Rescue Alert" />
+                What is Rescue Alert
+              </a>
+            </li>
+
+            <li>
+              <a href="/client/views/layouts/Home page - Buyer/Rating.html" target="_blank">
+                <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Freshness Rating Icon.png" alt="Freshness Rating" />
+                What is Freshness Rating
+              </a>
+            </li>
+
+            <li>
+              <a href="/client/views/layouts/Home page - Buyer/Terms.html">
+                <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Terms and Conditions Icon.png" alt="Terms and Conditions" />
+                Terms and Conditions
+              </a>
+            </li>
+          </ul>
+
+          <!-- Account buttons -->
+          <div class="sidebar-buttons">
+            <a href="/client/views/layouts/register.html">
+              <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Create New Account Button.png" alt="Create New Account" />
+            </a>
+
+            <a href="/client/views/layouts/login.html">
+              <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Log out Button.png" alt="Log out" />
+            </a>
+          </div>
         </div>
         
     </div>

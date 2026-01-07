@@ -1,40 +1,37 @@
 import { updateBadges } from "../api/badges.js";
 
-//loader
-window.onload = function() {
-    const loader = document.getElementById("loader");
-    const content = document.getElementById("content");
-
-    // Optional: wait a bit before starting animation
-    setTimeout(() => {
-        loader.classList.add("done");
-
-        // Wait for CSS transition to finish
-        setTimeout(() => {
-            loader.style.display = "none"; 
-            content.classList.add("show");
-        }, 600); 
-    }, 1000); // 1 second delay for demo
-};
-
 document.addEventListener("DOMContentLoaded", () => {
     updateBadges();
 });
 
+//sidebar
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
+  const sidebarBtn = document.querySelector(".sidebar-btn"); // ✅ correct selector
+  const closeBtn = document.querySelector(".sidebar-close");
 
-// Sidebar
-const sidebar = document.getElementById('sidebar');
-const sidebarBtn = document.querySelector('#top .left-group img');
-const closeBtn = document.querySelector('.sidebar-close');
+  if (!sidebar || !sidebarBtn || !closeBtn) {
+    console.error("Sidebar elements not found:", { sidebar, sidebarBtn, closeBtn });
+    return;
+  }
 
-sidebarBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
+  sidebarBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+  });
+
+  // (Optional) close when clicking outside sidebar
+  document.addEventListener("click", (e) => {
+    const clickedInsideSidebar = sidebar.contains(e.target);
+    const clickedMenuButton = sidebarBtn.contains(e.target);
+    if (!clickedInsideSidebar && !clickedMenuButton) {
+      sidebar.classList.remove("open");
+    }
+  });
 });
-
-closeBtn.addEventListener('click', () => {
-    sidebar.classList.remove('open');
-});
-
 
 // Sidebar search functionality
 const searchInput = document.querySelector('.search-input');
