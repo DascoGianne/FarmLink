@@ -1,205 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FarmLink</title>
 
   <!-- ✅ FIXED PATHS (Marketplace.html is inside /views/layouts/Home page - Buyer/) -->
-  <link rel="shortcut icon" href="../../../public/images/pictures - resources/FARMLINK LOGO.png" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../../public/styles/Home Page - Buyer/Marketplace.css">
+  <link rel="shortcut icon" href="../../../public/images/pictures - resources/FARMLINK LOGO.png" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../public/styles/Home Page - Buyer/Marketplace.css" />
 </head>
 
 <body>
+  <!-- PAGE WRAPPER (Sidebar + Main) -->
+  <div class="page">
 
-  <!-- Loading Screen -->
-  <div id="loader">
-    <img src="../../../public/images/pictures - resources/BG ELEMENTS.png" class="bg">
-    <img src="../../../public/images/pictures - resources/LANDING PAGE LOGO.png" class="logo">
-  </div>
-
-  <div id="content">
-
-    <div id="top">
-      <div class="left-group">
-        <img src="../../../public/images/MAIN PAGE/Sidebar Button.png" id="sidebarBtn">
-        <!-- ✅ use relative links within same folder -->
-        <h3 class="Home"><a href="./Home.html">Home</a></h3>
-        <h3 class="Market"><a href="./Marketplace.html">MARKETPLACE</a></h3>
-      </div>
-
-      <div class="right-group">
-        <a href="./MyDeliveries.html" class="icon-box">
-          <img src="../../../public/images/MAIN PAGE/Deliveries Button.png" class="Deliveries">
-          <span id="deliveriesBadge" class="glow-badge">0</span>
-        </a>
-
-        <a href="./MyBasket.html" class="icon-box">
-          <img src="../../../public/images/MAIN PAGE/My Basket Button.png" class="Basket">
-          <span id="basketBadge" class="glow-badge green">0</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div id="sidebar">
-
+    <!-- SIDEBAR (always visible) -->
+    <aside id="sidebar" class="open">
       <!-- Top -->
-      <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Header.png" class="sidebar-header">
-      <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Logo.png" class="sidebar-logo">
-      <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Quote.png" class="sidebar-quote">
-      <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Close.png" class="sidebar-close">
+      <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Header.png" class="sidebar-header" alt="Sidebar Header" />
+      <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Logo.png" class="sidebar-logo" alt="FarmLink Logo" />
+      <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Quote.png" class="sidebar-quote" alt="Quote" />
 
       <!-- Search area -->
       <div class="sidebar-search">
-        <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="search-box">
-
+        <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="search-box" alt="Search Background" />
         <div class="search-wrapper">
-          <img src="../../../public/images/MAIN PAGE/Search.png" class="search-icon">
-          <!-- ✅ add id so JS knows sidebar search -->
-          <input type="text" id="sidebarSearch" class="search-input" placeholder="Search...">
+          <img src="../../../public/images/MAIN PAGE/Search.png" class="search-icon" alt="Search Icon" />
+          <!-- ✅ important: unique id so JS can target sidebar search -->
+          <input type="text" id="sidebarSearch" class="search-input" placeholder="Search..." />
         </div>
       </div>
 
       <!-- Account -->
       <h4 class="account-title">Account</h4>
-
       <div class="account-info">
-        <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Profile Picture.png" class="account-icon">
+        <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Profile Picture.png" class="account-icon" alt="Profile" />
         <h2 class="account-name">Test Name</h2>
       </div>
 
       <!-- Menu -->
       <h4 class="menu-title">Main Menu</h4>
-
       <ul id="sidebar-menu">
         <li>
           <a href="./MyProfile.html">
-            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Account Icon.png">
+            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Account Icon.png" alt="" />
             My Account
           </a>
         </li>
 
         <li>
-          <a href="./MyBasket.html">
-            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Basket Icon.png">
-            My Basket
-          </a>
-          <div class="notif-wrapper">
-            <img class="notif-badge" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Notification Badge Background.png">
-            <span class="notif-number">1</span>
-          </div>
-        </li>
-
-        <li>
-          <a href="./MyDeliveries.html">
-            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Deliveries Icon.png">
-            My Deliveries
-          </a>
-          <div class="notif-wrapper">
-            <img class="notif-badge" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Notification Badge Background.png">
-            <span class="notif-number">1</span>
-          </div>
-        </li>
-
-        <li>
           <a href="./Marketplace.html">
-            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Marketplace Icon.png">
+            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Marketplace Icon.png" alt="" />
             Marketplace
           </a>
         </li>
 
         <li>
+          <a href="./MyBasket.html">
+            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Basket Icon.png" alt="" />
+            My Basket
+          </a>
+          <span class="sidebar-badge" id="sidebarBasketBadge">0</span>
+        </li>
+
+        <li>
+          <a href="./MyDeliveries.html">
+            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Deliveries Icon.png" alt="" />
+            My Deliveries
+          </a>
+          <span class="sidebar-badge" id="sidebarDeliveriesBadge">0</span>
+        </li>
+
+        <li>
+          <a href="./about.html">
+            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/About FarmLink Icon.png" alt="" />
+            About FarmLink
+          </a>
+        </li>
+
+        <li>
           <a href="./Rescue.html" target="_blank">
-            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Rescue Alert Icon.png">
+            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Rescue Alert Icon.png" alt="" />
             What is Rescue Alert
           </a>
         </li>
 
         <li>
           <a href="./Rating.html" target="_blank">
-            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Freshness Rating Icon.png">
+            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Freshness Rating Icon.png" alt="" />
             What is Freshness Rating
           </a>
         </li>
 
         <li>
           <a href="./Terms.html">
-            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Terms and Conditions Icon.png">
+            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Terms and Conditions Icon.png" alt="" />
             Terms and Conditions
-          </a>
-        </li>
-
-        <li>
-          <a href="./about.html">
-            <img class="menu-icon" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/About FarmLink Icon.png">
-            About FarmLink
           </a>
         </li>
       </ul>
 
       <!-- Account buttons -->
       <div class="sidebar-buttons">
-        <!-- login.html is one folder up: /views/layouts/login.html -->
+        <a href="../register.html">
+          <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Create New Account Button.png" alt="Create New Account" />
+        </a>
+
         <a href="../login.html">
-          <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Create New Account Button.png">
-          <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Log out Button.png">
+          <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Log out Button.png" alt="Log out" />
         </a>
       </div>
-    </div>
+    </aside>
 
-    <!--Main-->
-    <div class="top-section">
-      <img src="../../../public/images/MAIN PAGE/Advertisement 1.png" class="Advertisement1">
-      <img src="../../../public/images/MAIN PAGE/Advertisement 2 (Under Search Box).png" class="Advertisement2">
-    </div>
+    <!-- MAIN CONTENT -->
+    <main class="main" id="content">
 
-    <div class="top-search">
-      <img src="../../../public/images/MAIN PAGE/Search Box.png" class="top-search-bg">
-      <div class="search-wrapper top-search-wrapper">
-        <img src="../../../public/images/MAIN PAGE/Search.png" class="search-icon">
-        <!-- ✅ add id so JS knows top search -->
-        <input type="text" id="topSearch" class="search-input" placeholder="Search...">
-      </div>
-    </div>
+      <!-- TOP NAV -->
+      <div id="top">
+        <div class="left-group">
+          <!-- ✅ not needed when sidebar is always open (CSS can hide it) -->
+          <img src="../../../public/images/MAIN PAGE/Sidebar Button.png" id="sidebarBtn" alt="Sidebar Button" />
 
-    <div class="market-section">
+          <h3 class="Home"><a href="./Home.html">Home</a></h3>
 
-      <div class="rescue-deals">
-        <h3>Rescue Deals!!!</h3>
-        <!-- JS will append rescue cards here -->
-      </div>
+          <!-- ✅ separator between Home and Marketplace -->
+          <span class="nav-separator" aria-hidden="true"></span>
 
-      <div class="listings-section">
-        <h3>Listings</h3>
-        <div class="listings">
-          <!-- JS will render listing cards here -->
+          <h3 class="Market"><a href="./Marketplace.html">MARKETPLACE</a></h3>
+        </div>
+
+        <div class="right-group">
+          <a href="./MyDeliveries.html" class="icon-box">
+            <img src="../../../public/images/MAIN PAGE/Deliveries Button.png" class="Deliveries" alt="Deliveries" />
+            <span id="deliveriesBadge" class="glow-badge">0</span>
+          </a>
+
+          <a href="./MyBasket.html" class="icon-box">
+            <img src="../../../public/images/MAIN PAGE/My Basket Button.png" class="Basket" alt="Basket" />
+            <span id="basketBadge" class="glow-badge green">0</span>
+          </a>
         </div>
       </div>
 
-      <div class="categories-section">
-        <h3>Categories</h3>
-        <div class="categories">
-          <img src="../../../public/images/MAIN PAGE/Greens Category.png" alt="Greens">
-          <img src="../../../public/images/MAIN PAGE/Grains Category.png" alt="Grains">
-          <img src="../../../public/images/MAIN PAGE/Fruits Category.png" alt="Fruits">
-          <img src="../../../public/images/MAIN PAGE/Root Crops Category.png" alt="Root Crops">
-          <img src="../../../public/images/MAIN PAGE/Native Category.png" alt="Native">
-        </div>
-      </div>
+      <!-- HERO SECTION (matches target layout) -->
+      <section class="hero">
+        <!-- Left big banner -->
+        <img src="../../../public/images/MAIN PAGE/Advertisement 1.png" class="hero-banner" alt="Advertisement 1" />
 
-      <div class="results-section">
-        <h3>Results</h3>
-        <div class="results">
-          <!-- optional -->
-        </div>
-      </div>
+        <!-- Right column: search + ad -->
+        <div class="hero-right">
+          <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="searchbg" alt="Search Background" />
+          <div class="hero-search">
+            <img src="../../../public/images/MAIN PAGE/Search.png" class="search-icon" alt="Search Icon" />
+            <input type="text" id="topSearch" placeholder="Search Product..." />
+          </div>
 
-    </div>
+          <img src="../../../public/images/MAIN PAGE/Advertisement 2 (Under Search Box).png" class="hero-ad" alt="Advertisement 2" />
+        </div>
+      </section>
+
+      <!-- MARKET CONTENT -->
+      <div class="market-section">
+
+        <div class="rescue-deals">
+          <h3>Rescue Deals!!!</h3>
+          <!-- JS will append rescue cards here -->
+        </div>
+
+        <div class="listings-section">
+          <h3>Listings</h3>
+          <div class="listings">
+            <!-- JS will render listing cards here -->
+          </div>
+        </div>
+
+        <div class="categories-section">
+          <h3>Categories</h3>
+          <div class="categories">
+            <img src="../../../public/images/MAIN PAGE/Greens Category.png" alt="Greens" />
+            <img src="../../../public/images/MAIN PAGE/Grains Category.png" alt="Grains" />
+            <img src="../../../public/images/MAIN PAGE/Fruits Category.png" alt="Fruits" />
+            <img src="../../../public/images/MAIN PAGE/Root Crops Category.png" alt="Root Crops" />
+            <img src="../../../public/images/MAIN PAGE/Native Category.png" alt="Native" />
+          </div>
+        </div>
+
+        <div class="results-section">
+          <h3>Results</h3>
+          <div class="results">
+            <!-- optional -->
+          </div>
+        </div>
+
+      </div>
+    </main>
+
   </div>
 
   <!-- ✅ MUST BE module so we can import api/listings.js -->
- <script type="module" src="../../../public/js/Home Page - Buyer/Marketplace.js"></script>
+  <script type="module" src="../../../public/js/Home Page - Buyer/Marketplace.js"></script>
 </body>
 </html>
