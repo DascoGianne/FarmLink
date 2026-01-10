@@ -502,6 +502,40 @@ html {
     z-index: 4;
 }
 
+/* =========================
+   SIDE OPTIONS – COOL BORDER CARD
+   ========================= */
+
+.side-options {
+    position: absolute;
+    top: 190px;
+    left: 50px;
+    width: 220px;
+    z-index: 3;
+
+    /* ✨ New styling */
+    background: rgba(255, 255, 255, 0.85);
+    border: 2px solid rgba(50, 169, 40, 0.45);
+    border-radius: 18px;
+    padding: 18px 14px 16px 14px;
+
+    backdrop-filter: blur(6px);
+    box-shadow:
+        0 8px 20px rgba(50, 169, 40, 0.18),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* subtle hover lift */
+.side-options:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 28px rgba(50, 169, 40, 0.25),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+
 /* divider line inside card */
 .edit-Profile-section .divider{
     position: absolute;

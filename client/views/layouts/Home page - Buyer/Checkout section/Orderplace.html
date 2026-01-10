@@ -1,55 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FarmLink</title>
-    <link rel="shortcut icon" href="/client/public/images/pictures - resources/FARMLINK LOGO.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/client/public/styles/Home Page - Buyer/Checkout section/Orderplace.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmLink</title>
+
+  <link rel="shortcut icon" href="/client/public/images/pictures - resources/FARMLINK LOGO.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/client/public/styles/Home Page - Buyer/Checkout section/Orderplace.css">
 </head>
+
 <body>
-    <!-- Loading Screen -->
-    <div id="loader">
-        <img src="/client/public/images/pictures - resources/BG ELEMENTS.png" class="bg">
-        <img src="/client/public/images/pictures - resources/LANDING PAGE LOGO.png" class="logo">
+  <!-- Main Content -->
+  <div id="content">
+
+    <!-- ✅ TOP BAR (same as your working version) -->
+    <div id="top">
+      <div class="left-group">
+        <h3 class="Home">
+          <a href="/client/views/layouts/Home page - Buyer/Home.html">HOME</a>
+        </h3>
+
+        <span class="top-divider"></span>
+
+        <h3 class="Market">
+          <a href="/client/views/layouts/Home page - Buyer/Marketplace.html">MARKETPLACE</a>
+        </h3>
+      </div>
+
+      <div class="right-group">
+        <a href="/client/views/layouts/Home page - Buyer/MyDeliveries.html" class="top-icon">
+          <div class="top-icon-img">
+            <img src="/client/public/images/MAIN PAGE/Deliveries Button.png" class="Deliveries" />
+            <span id="deliveriesBadge" class="glow-badge">0</span>
+          </div>
+        </a>
+
+        <a href="/client/views/layouts/Home page - Buyer/MyBasket.html" class="top-icon">
+          <div class="top-icon-img">
+            <img src="/client/public/images/MAIN PAGE/My Basket Button.png" class="Basket" />
+            <span id="basketBadge" class="glow-badge green">0</span>
+          </div>
+        </a>
+      </div>
     </div>
 
-       <!--Main-->
-<div id="content">
-    <div class="Orderp">
-        <div class="close-btn"><a href="/client/views/layouts/Home page - Buyer/Marketplace.html">X</a></div>
-        <div class="content-wrapper">
-            <div class="logo-container">
-                <img src="/client/public/images/BUYER SIGN UP/SIGNUP PAGE LOGO.png" class="orderplogo" alt="FarmLink">
-            </div>
-            <h1>Order Placed!</h1>
-            <p>Allow sellers to have 2 to 4 hours to confirm your order and discuss your Orders' Delivery!</p>
+    <!-- ✅ SIDEBAR (permanent open - same as your working version) -->
+    <div id="sidebar" class="open">
+      <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Header.png" class="sidebar-header">
+      <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Logo.png" class="sidebar-logo">
+      <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Quote.png" class="sidebar-quote">
 
-            <div class="button-container">
-                <button class="cancel-btn">Cancel Order</button>
-                <button class="continue-btn">
-                    <a href="/client/views/layouts/Home page - Buyer/Marketplace.html">Continue Shopping!</a>
-                </button>
-            </div>
+      <div class="sidebar-search">
+        <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="search-box">
+        <div class="search-wrapper">
+          <img src="/client/public/images/MAIN PAGE/Search.png" class="search-icon">
+          <input type="text" class="search-input" placeholder="Search...">
         </div>
-    </div>
-    <!-- Cancel Feedback Modal -->
-<div id="cancelModal" class="cancel-modal">
-    <div class="cancel-card">
-        <div class="cancel-close">&times;</div>
+      </div>
 
+      <h4 class="account-title">Account</h4>
+      <div class="account-info">
+        <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Profile Picture.png" class="account-icon">
+        <h2 class="account-name">Juan Pinoy</h2>
+      </div>
+
+      <h4 class="menu-title">Main Menu</h4>
+      <ul id="sidebar-menu">
+        <li>
+          <a href="/client/views/layouts/Home page - Buyer/MyProfile.html">
+            <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Account Icon.png">
+            My Account
+          </a>
+        </li>
+
+        <li>
+          <a href="/client/views/layouts/Home page - Buyer/Marketplace.html">
+            <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Marketplace Icon.png">
+            Marketplace
+          </a>
+        </li>
+
+        <li>
+          <a href="/client/views/layouts/Home page - Buyer/MyBasket.html">
+            <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Basket Icon.png">
+            My Basket
+          </a>
+          <span class="sidebar-badge" id="sidebarBasketBadge">0</span>
+        </li>
+
+        <li>
+          <a href="/client/views/layouts/Home page - Buyer/MyDeliveries.html">
+            <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/My Deliveries Icon.png">
+            My Deliveries
+          </a>
+          <span class="sidebar-badge" id="sidebarDeliveriesBadge">0</span>
+        </li>
+
+        <li>
+          <a href="/client/views/layouts/Home page - Buyer/about.html">
+            <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/About FarmLink Icon.png">
+            About FarmLink
+          </a>
+        </li>
+
+        <li>
+          <a href="/client/views/layouts/Home page - Buyer/Rescue.html" target="_blank">
+            <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Rescue Alert Icon.png">
+            What is Rescue Alert
+          </a>
+        </li>
+
+        <li>
+          <a href="/client/views/layouts/Home page - Buyer/Rating.html" target="_blank">
+            <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/What is Freshness Rating Icon.png">
+            What is Freshness Rating
+          </a>
+        </li>
+
+        <li>
+          <a href="/client/views/layouts/Home page - Buyer/Terms.html">
+            <img class="menu-icon" src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Terms and Conditions Icon.png">
+            Terms and Conditions
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-buttons">
+        <a href="/client/views/layouts/register.html">
+          <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Create New Account Button.png" alt="Create New Account">
+        </a>
+
+        <a href="/client/views/layouts/login.html">
+          <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/Log out Button.png" alt="Log out">
+        </a>
+      </div>
+    </div>
+
+    <!-- ✅ ORDER PLACED MAIN -->
+    <div class="Order-main">
+      <!-- big rounded base panel like your screenshot -->
+      <div class="Order-card">
+        <div class="Order-icon-wrap">
+          <!-- use your own image if you have the order placed icon -->
+          <img src="/client/public/images/BUYER SIGN UP/SIGNUP PAGE LOGO.png" class="Order-icon" alt="">
+        </div>
+
+        <h1 class="Order-title">Order Placed!</h1>
+        <p class="Order-sub">
+          Allow sellers to have 2 to 4 hours to confirm your order and discuss your Orders' Delivery!
+        </p>
+
+        <div class="Order-actions">
+          <button class="cancel-btn" id="openCancel">Cancel Order</button>
+
+          <button class="continue-btn">
+            <a href="/client/views/layouts/Home page - Buyer/Marketplace.html">Continue Shopping!</a>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ Cancel Feedback Modal -->
+    <div id="cancelModal" class="cancel-modal" aria-hidden="true">
+      <div class="cancel-card" role="dialog" aria-modal="true">
+        <button class="cancel-close" id="closeCancel" aria-label="Close">&times;</button>
         <h2>Let us know the issue...</h2>
-
-        <textarea placeholder="Type your concern here..."></textarea>
-
-        <button class="submit-btn">Submit</button>
+        <textarea id="cancelReason" placeholder="Type your concern here..."></textarea>
+        <button class="submit-btn" id="submitCancel">Submit</button>
+      </div>
     </div>
-</div>
 
-</div>
+  </div>
 
-
-    <script src="/client/public/js/Home Page - Buyer/Checkout section/Orderplace.js"></script>
+  <script type="module" src="/client/public/js/Home Page - Buyer/Checkout section/Orderplace.js"></script>
 </body>
 </html>

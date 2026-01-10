@@ -1,35 +1,116 @@
-//loader
-window.onload = function() {
-    const loader = document.getElementById("loader");
-    const content = document.getElementById("content");
+import { updateBadges } from "../api/badges.js";
 
-    // Optional: wait a bit before starting animation
-    setTimeout(() => {
-        loader.classList.add("done");
+/* =========================
+   Helpers
+========================= */
+function setBadge(el, value) {
+  if (!el) return;
 
-        // Wait for CSS transition to finish
-        setTimeout(() => {
-            loader.style.display = "none"; 
-            content.classList.add("show");
-        }, 600); 
-    }, 1000); // 1 second delay for demo
-};
+  const num = Number(value ?? 0);
 
-const cancelBtn = document.querySelector(".cancel-btn");
-const cancelModal = document.getElementById("cancelModal");
-const cancelClose = document.querySelector(".cancel-close");
+  // hide if 0 (optional UI behavior)
+  if (!Number.isFinite(num) || num <= 0) {
+    el.textContent = "0";
+    el.style.display = "none";
+    return;
+  }
 
-cancelBtn.addEventListener("click", () => {
-    cancelModal.classList.add("show");
-});
+  el.textContent = String(num);
+  el.style.display = "flex";
+}
 
-cancelClose.addEventListener("click", () => {
-    cancelModal.classList.remove("show");
-});
+function getBadgeNumber(el) {
+  if (!el) return 0;
+  const num = Number(el.textContent);
+  return Number.isFinite(num) ? num : 0;
+}
 
-// close when clicking outside the card
-cancelModal.addEventListener("click", (e) => {
-    if (e.target === cancelModal) {
-        cancelModal.classList.remove("show");
+/* =========================
+   Main
+========================= */
+document.addEventListener("DOMContentLoaded", async () => {
+  /* ===== Sidebar open + search filter ===== */
+  const sidebar = document.getElementById("sidebar");
+  if (sidebar) sidebar.classList.add("open");
+
+  const searchInput = document.querySelector(".search-input");
+  const menuItems = document.querySelectorAll("#sidebar-menu li");
+
+  if (searchInput && menuItems.length) {
+    searchInput.addEventListener("input", () => {
+      const filter = searchInput.value.toLowerCase();
+
+      menuItems.forEach((item) => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? "block" : "none";
+      });
+    });
+  }
+
+  /* ===== Badges ===== */
+  try {
+    // This should talk to backend through badges.js
+    await updateBadges();
+
+    const basketTop = document.getElementById("basketBadge");
+    const delTop = document.getElementById("deliveriesBadge");
+
+    const basketSide = document.getElementById("sidebarBasketBadge");
+    const delSide = document.getElementById("sidebarDeliveriesBadge");
+
+    // Mirror top -> sidebar (works even if updateBadges only updates DOM)
+    setBadge(basketSide, getBadgeNumber(basketTop));
+    setBadge(delSide, getBadgeNumber(delTop));
+  } catch (e) {
+    console.error("updateBadges failed:", e);
+  }
+
+  /* ===== Cancel modal ===== */
+  const modal = document.getElementById("cancelModal");
+  const openBtn = document.getElementById("openCancel");
+  const closeBtn = document.getElementById("closeCancel");
+  const submitBtn = document.getElementById("submitCancel");
+  const textarea = document.getElementById("cancelReason");
+
+  const openModal = () => {
+    if (!modal) return;
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+    textarea?.focus();
+  };
+
+  const closeModal = () => {
+    if (!modal) return;
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+    if (textarea) textarea.value = ""; // clear after close
+  };
+
+  openBtn?.addEventListener("click", openModal);
+  closeBtn?.addEventListener("click", closeModal);
+
+  modal?.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // ESC to close
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal?.classList.contains("show")) closeModal();
+  });
+
+  submitBtn?.addEventListener("click", () => {
+    const reason = textarea?.value?.trim() || "";
+
+    // Basic validation (so user doesn't submit blank)
+    if (!reason) {
+      alert("Please type your concern before submitting.");
+      textarea?.focus();
+      return;
     }
+
+    // If you later create an API endpoint, call it here:
+    // await cancelOrder(orderId, reason);
+
+    closeModal();
+  });
 });
