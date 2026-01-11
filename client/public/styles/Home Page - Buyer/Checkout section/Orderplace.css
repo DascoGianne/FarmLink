@@ -409,12 +409,18 @@ body {
   text-align: center;
   position: relative;
   box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  right: -100px;
 }
+.cancel-modal {
+  left: 0;
+  width: 100vw;
+}
+
 
 .cancel-close {
   position: absolute;
   top: 12px;
-  right: 14px;
+  right: 20px;
   font-size: 28px;
   font-weight: bold;
   color: #32A928;
