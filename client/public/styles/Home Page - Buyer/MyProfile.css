@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
 body {
     margin: 0;
     background-image: url("/client/public/images/My Account/BG ELEMENTS.png");
@@ -5,10 +7,8 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    font-family: "Poppins", sans-serif;
 }
-
-/* Main content */
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 /* IMPORTANT: Sidebar is permanent, so push content to the right */
 #content {
@@ -26,33 +26,22 @@ html {
     scrollbar-width: thin;
     scrollbar-color: #32A928 #dff5df;
 }
-
-::-webkit-scrollbar {
-    width: 14px;
-}
-
+::-webkit-scrollbar { width: 14px; }
 ::-webkit-scrollbar-track {
     background: #dff5df;
     border-radius: 10px;
     margin: 4px;
 }
-
 ::-webkit-scrollbar-thumb {
     background: #32A928;
     border-radius: 10px;
     border: 3px solid #dff5df;
 }
-
-::-webkit-scrollbar-thumb:hover {
-    background: #2a8f22;
-}
-
-::-webkit-scrollbar-corner {
-    background: #dff5df;
-}
+::-webkit-scrollbar-thumb:hover { background: #2a8f22; }
+::-webkit-scrollbar-corner { background: #dff5df; }
 
 /* =========================
-   ✅ TOP BAR (MATCH PIC 2)
+   ✅ TOP BAR (MATCH TARGET)
    ========================= */
 #top {
     position: fixed;
@@ -107,7 +96,6 @@ html {
 /* HOME / MARKETPLACE */
 #top h3 {
     margin: 0;
-    font-family: "Poppins", sans-serif;
     font-weight: 800;
     letter-spacing: 0.5px;
 }
@@ -197,7 +185,6 @@ html {
 }
 
 #sidebar.open { left: 0; }
-
 .sidebar-close { display: none; }
 
 .sidebar-header {
@@ -263,7 +250,6 @@ html {
     outline: none;
     background: transparent;
     font-size: 14px;
-    font-family: 'Poppins';
 }
 
 /* Account */
@@ -272,7 +258,6 @@ html {
     margin-top: 30px;
     margin-bottom: 5px;
     color: #979797;
-    font-family: 'Poppins';
     font-size: 12px;
 }
 
@@ -293,7 +278,6 @@ html {
     font-size: 15px;
     margin: 0;
     color: #32A928;
-    font-family: 'Poppins';
 }
 
 /* Menu */
@@ -302,7 +286,6 @@ html {
     margin-top: 30px;
     margin-bottom: 5px;
     color: #979797;
-    font-family: 'Poppins';
     font-size: 12px;
 }
 
@@ -377,27 +360,20 @@ html {
 }
 
 /* Sidebar scrollbar */
-#sidebar::-webkit-scrollbar {
-    width: 14px;
-}
-
+#sidebar::-webkit-scrollbar { width: 14px; }
 #sidebar::-webkit-scrollbar-track {
     background: #dff5df;
     border-radius: 10px;
     margin: 10px 0;
 }
-
 #sidebar::-webkit-scrollbar-thumb {
     background: #32A928;
     border-radius: 10px;
 }
-
-#sidebar::-webkit-scrollbar-thumb:hover {
-    background: #2a8f22;
-}
+#sidebar::-webkit-scrollbar-thumb:hover { background: #2a8f22; }
 
 /* =========================
-   MAIN CONTENT (PROFILE) ✅ FIXED LIKE GOAL IMAGE
+   ✅ PROFILE PAGE (GRID FIX)
    ========================= */
 
 .Profile-main{
@@ -423,7 +399,6 @@ html {
     top: 95px;
     left: 50%;
     transform: translateX(-50%);
-    font-family: 'Poppins', sans-serif;
     font-size: 40px;
     font-weight: 800;
     color: #2a8f22;
@@ -433,91 +408,28 @@ html {
     width: 100%;
 }
 
-/* LEFT SIDE OPTIONS (My Account / Edit / Change) */
+/* ✅ NEW WRAPPER (grid) */
+.profile-layout{
+    position: relative;
+    z-index: 3;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 170px 40px 60px; /* pushes below title */
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 28px;
+    box-sizing: border-box;
+}
+
+/* LEFT CARD */
 .side-options{
-    position: absolute;
-    top: 190px;
-    left: 95px;          /* ✅ matches goal spacing */
-    width: 220px;
-    z-index: 3;
-}
+    position: relative;
+    width: 260px;
 
-.side-title{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    color: #32A928;
-    margin-bottom: 16px;
-}
-
-.side-title img{
-    width: 34px;
-    height: 34px;
-}
-
-.side-option{
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px;
-    color: #888;
-    padding: 10px 10px;
-    margin-left: 34px;  /* ✅ pushes options under the title like goal */
-    margin-top: 4px;
-}
-
-.side-option.active{
-    color: #32A928;
-    font-weight: 700;
-}
-
-/* PROFILE CARD (Edit Profile) ✅ centered/right like goal */
-.edit-Profile-section{
-    position: absolute;
-    top: 170px;
-    left: 320px;                          /* ✅ keeps space for side menu */
-    width: 980px;                         /* ✅ same “card size” look */
-    max-width: calc(100% - 420px);        /* ✅ responsive (prevents overflow) */
-    z-index: 3;
-}
-
-/* Card base image */
-.profile-bg{
-    width: 100%;
-    height: auto;
-    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
-}
-
-/* "Edit Profile" title inside the card */
-.edit-Profile-section > span{
-    position: absolute;
-    top: 28px;
-    left: 40px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    color: #32A928;
-    z-index: 4;
-}
-
-/* =========================
-   SIDE OPTIONS – COOL BORDER CARD
-   ========================= */
-
-.side-options {
-    position: absolute;
-    top: 190px;
-    left: 50px;
-    width: 220px;
-    z-index: 3;
-
-    /* ✨ New styling */
     background: rgba(255, 255, 255, 0.85);
     border: 2px solid rgba(50, 169, 40, 0.45);
     border-radius: 18px;
-    padding: 18px 14px 16px 14px;
+    padding: 18px 14px 16px;
 
     backdrop-filter: blur(6px);
     box-shadow:
@@ -527,31 +439,93 @@ html {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* subtle hover lift */
-.side-options:hover {
+.side-options:hover{
     transform: translateY(-2px);
     box-shadow:
         0 12px 28px rgba(50, 169, 40, 0.25),
         inset 0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 
-
-/* divider line inside card */
-.edit-Profile-section .divider{
-    position: absolute;
-    top: 62px;
-    left: 40px;
-    width: calc(100% - 80px);
-    z-index: 4;
+.side-title{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    color: #32A928;
+    margin-bottom: 14px;
 }
 
-/* FORM AREA (left side inside card) */
+.side-title img{
+    width: 34px;
+    height: 34px;
+}
+
+.side-option{
+    cursor: pointer;
+    font-size: 13px;
+    color: #888;
+    padding: 10px 10px;
+    margin-left: 34px;
+    margin-top: 4px;
+}
+
+.side-option.active{
+    color: #32A928;
+    font-weight: 700;
+}
+
+/* RIGHT COLUMN */
+.profile-sections{
+    position: relative;
+    width: 100%;
+}
+
+/* ✅ CARD: use PNG as background so it won't create huge height */
+.edit-Profile-section,
+.change-password-section{
+    position: relative;
+    width: 100%;
+    max-width: 980px;
+    box-sizing: border-box;
+
+    padding: 28px 40px 42px;
+
+    background-image: url("/client/public/images/My Account/Edit Profile Base.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
+}
+
+/* Show/hide behavior */
+.edit-Profile-section{ display: block; }
+.change-password-section{ display: none; }
+
+.active-section{ display: block !important; }
+
+/* Card title (Edit Profile / Change Password) */
+.section-title{
+    display: block;
+    font-size: 20px;
+    font-weight: 800;
+    color: #32A928;
+    margin-bottom: 10px;
+}
+
+/* Divider line */
+.edit-Profile-section .divider,
+.change-password-section .divider{
+    width: 100%;
+    display: block;
+    margin-bottom: 22px;
+}
+
+/* FORM AREA */
 .profile-form{
-    position: absolute;
-    top: 120px;
-    left: 40px;
-    width: 58%;            /* ✅ keeps form on left */
-    z-index: 5;
+    position: relative;
+    width: 62%;
+    z-index: 2;
 }
 
 .form-field{
@@ -563,7 +537,6 @@ html {
 
 .field-label{
     width: 120px;
-    font-family: 'Poppins';
     font-size: 12px;
     font-weight: 700;
     color: #7a7a7a;
@@ -575,7 +548,6 @@ html {
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     background: rgba(255,255,255,0.95);
-    font-family: 'Poppins';
     font-size: 14px;
     color: #333;
     box-sizing: border-box;
@@ -586,7 +558,7 @@ html {
     resize: none;
 }
 
-/* Save button (center-bottom like goal) */
+/* Save button */
 .save-btn-container{
     justify-content: center;
     margin-top: 12px;
@@ -598,7 +570,6 @@ html {
     color: white;
     border: none;
     border-radius: 6px;
-    font-family: 'Poppins', sans-serif;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
@@ -609,30 +580,28 @@ html {
     background: #2a8f22;
 }
 
-/* RIGHT SIDE PANEL (profile pic + info) ✅ like goal */
-
-.profile-pic-panel {
+/* RIGHT SIDE PANEL (profile pic + info) */
+.profile-pic-panel{
     position: absolute;
     top: 110px;
     right: 40px;
     width: 220px;
     height: calc(100% - 150px);
     text-align: center;
-    z-index: 10;
+    z-index: 5;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Avatar */
-.profile-pic-wrapper {
+.profile-pic-wrapper{
     position: relative;
     width: 160px;
     height: 160px;
     margin-bottom: 14px;
 }
 
-.profile-image {
+.profile-image{
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -640,8 +609,7 @@ html {
     object-fit: cover;
 }
 
-/* Upload (+) button */
-.upload-btn {
+.upload-btn{
     position: absolute;
     bottom: 6px;
     right: 6px;
@@ -658,29 +626,20 @@ html {
     cursor: pointer;
 }
 
-.upload-btn:hover {
-    background: #2a8f22;
-}
+.upload-btn:hover{ background: #2a8f22; }
+#profile-upload{ display: none; }
 
-#profile-upload {
-    display: none;
-}
-
-/* File info — directly under avatar */
-.upload-info {
+.upload-info{
     margin-top: 6px;
-    font-family: 'Poppins';
     font-size: 12px;
     color: #777;
     line-height: 1.4;
     text-align: center;
 }
 
-/* Date joined — bottom right of card */
-.date-joined {
+.date-joined{
     margin-top: auto;
     margin-bottom: 18px;
-    font-family: 'Poppins';
     font-size: 12px;
     color: #999;
     text-align: right;
@@ -688,115 +647,24 @@ html {
     padding-right: 6px;
 }
 
-.date-joined-title {
-    font-weight: 600;
-}
-
+.date-joined-title{ font-weight: 600; }
 
 /* =========================
-   CHANGE PASSWORD SECTION
-   (Clean + matches Edit Profile)
+   CHANGE PASSWORD (keep your eye icon + sizing)
    ========================= */
 
-.change-password-section {
-    position: absolute;
-    top: 34%;
-    right: 14%;
-    width: 55%;
-    z-index: 2;
-    display: none;
-    opacity: 1;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.change-password-section:not(.active-section) {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(20px);
-}
-
-.change-password-section.active-section {
-    display: block;
-    opacity: 1;
-    pointer-events: all;
-    transform: translateX(0);
-}
-
-/* Title */
-.change-password-section span {
-    position: absolute;
-    top: 20px;
-    left: 40px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 26px;
-    font-weight: 800;
-    color: #32A928;
-    z-index: 3;
-}
-
-/* Divider */
-.change-password-section .divider {
-    position: absolute;
-    top: 70px;
-    left: 40px;
-    width: calc(100% - 80px);
-    height: auto;
-    z-index: 3;
-}
-
-/* Form container */
-.change-password-section .profile-form {
-    position: absolute;
-    top: 130px;
-    left: 50px;
-    right: 50px;
-    z-index: 4;
-    padding-bottom: 40px;
-}
-
-/* Each field row */
-.change-password-section .form-field {
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-}
-
-/* Labels (same feel as Edit Profile) */
-.change-password-section .field-label {
-    width: 180px;
-    font-family: 'Poppins';
-    font-size: 14px;
-    font-weight: 700;
-    color: #666;
-}
-
-/* Input wrapper */
-.password-wrapper {
+.password-wrapper{
     position: relative;
-    width: 45%;
-}
-
-/* Inputs */
-.password-wrapper .field-input {
     width: 100%;
-    padding: 10px 14px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    background: #ffffff;
-    font-family: 'Poppins';
-    font-size: 14px;
-    color: #333;
-    transition: all 0.3s ease;
 }
 
-.password-wrapper .field-input:focus {
+.password-wrapper .field-input:focus{
     border-color: #32A928;
     box-shadow: 0 0 0 2px rgba(50, 169, 40, 0.2);
     outline: none;
 }
 
-/* Eye icon */
-.toggle-pass {
+.toggle-pass{
     position: absolute;
     right: 12px;
     top: 50%;
@@ -808,30 +676,49 @@ html {
     transition: opacity 0.2s ease;
 }
 
-.toggle-pass:hover {
-    opacity: 0.8;
-}
+.toggle-pass:hover{ opacity: 0.8; }
 
-/* Button container */
-.change-password-section .save-btn-container {
-    margin-top: 20px;
-}
-
-/* Smaller, clean button */
-.change-password-section .save-btn {
-    margin-left: 180px;
+/* Change password button alignment */
+.change-password-section .save-btn{
     padding: 10px 36px;
-    background: #32A928;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-.change-password-section .save-btn:hover {
-    background: #2a8f22;
+/* =========================
+   RESPONSIVE (so it won't overflow)
+   ========================= */
+@media (max-width: 1200px){
+    .profile-layout{
+        grid-template-columns: 240px 1fr;
+        padding: 170px 24px 60px;
+    }
+
+    .edit-Profile-section,
+    .change-password-section{
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 980px){
+    .profile-layout{
+        grid-template-columns: 1fr;
+    }
+
+    .side-options{
+        width: 100%;
+        max-width: 520px;
+    }
+
+    .profile-form{
+        width: 100%;
+    }
+
+    .profile-pic-panel{
+        position: relative;
+        top: auto;
+        right: auto;
+        width: 100%;
+        height: auto;
+        margin-top: 24px;
+        align-items: center;
+    }
 }

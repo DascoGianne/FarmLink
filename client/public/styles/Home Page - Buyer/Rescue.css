@@ -1,161 +1,184 @@
-/*Main content*/
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-#content {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    overflow: hidden;
+
+html, body{
+  height: 100%;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+/*Main wrapper*/
+#content{
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 16px;
+  box-sizing: border-box;
 }
 
 /* Blurred background layer */
-#content::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("/client/public/images/picss/BG ELEMENTS.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    filter: blur(12px);
-    transform: scale(1.05);    
-    z-index: 0;
+#content::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/client/public/images/picss/BG ELEMENTS.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(12px);
+  transform: scale(1.05);
+  z-index: 0;
 }
 
-#content > * {
-    position: relative;
-    z-index: 1;
+#content > *{
+  position: relative;
+  z-index: 1;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100%;
-    font-family: 'Poppins', sans-serif;
-}
-
-/*Container*/
+/* ✅ Container */
 .tc-box{
-    position: relative; /* ✅ IMPORTANT: so the X button anchors to this box */
-    width: 90%;
-    max-width: 1100px;
-    max-height: 80vh;
-    margin: 40px auto;
-    padding: 30px;
-    background: rgba(255, 255, 255, 0.85);
-    border: 2px solid #32A928;
-    border-radius: 15px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    gap:15px;
-    align-items: center;
-    justify-content: flex-start;
-    overflow-y:auto;
-    overflow-x: hidden;
+  width: min(1100px, 92vw);
+  max-height: min(760px, 86vh);
+  background: rgba(255, 255, 255, 0.88);
+  border: 2px solid rgba(50,169,40,0.55);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+  position: relative;
 }
 
-.tc-box::-webkit-scrollbar{
-    width: 14px;
+/* ✅ Header area */
+.tc-header{
+  position: relative;
+  height: 170px;
+  flex: 0 0 auto;
+  overflow: hidden;
 }
 
-.tc-box::-webkit-scrollbar-track{
-    background: #dff5df;
-    border-radius: 10px;
+/* background banner image */
+.headback{
+  width: 110%;
+  height: 170px;
+  object-fit: cover;
+  display: block;
 }
 
-.tc-box::-webkit-scrollbar-thumb{
-    background: #32A928;
-    border-radius: 10px;
+/* logo pinned left */
+.headlogo{
+  position: absolute;
+  left: 32px;
+  top: 30px;
+  width: 220px;
+  height: auto;
 }
 
-.tc-box::-webkit-scrollbar-thumb:hover{
-    background:#2a8f22;
+/* quote pinned right */
+.headtext{
+  position: absolute;
+  right: 28px;
+  top: 46px;
+  width: 260px;
+  height: auto;
 }
 
 /* ✅ CLOSE (X) BUTTON */
 .close-btn{
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    background: linear-gradient(135deg, #8cf35a, #2aa84a);
-    color: #fff;
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.20);
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #8cf35a, #2aa84a);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.20);
 }
-
 .close-btn:hover{
-    background: linear-gradient(135deg, #7ae84c, #239542);
+  background: linear-gradient(135deg, #7ae84c, #239542);
+}
+.close-btn:active{ transform: scale(0.96); }
+.close-btn:focus{ outline: none; }
+
+/* ✅ Scrollable body */
+.tc-body{
+  flex: 1;
+  overflow-y: auto;
+  padding: 26px 34px 30px;
 }
 
-.close-btn:active{
-    transform: scale(0.96);
+/* Scrollbar */
+.tc-body::-webkit-scrollbar{ width: 14px; }
+.tc-body::-webkit-scrollbar-track{
+  background: #dff5df;
+  border-radius: 10px;
+}
+.tc-body::-webkit-scrollbar-thumb{
+  background: #32A928;
+  border-radius: 10px;
+}
+.tc-body::-webkit-scrollbar-thumb:hover{ background: #2a8f22; }
+
+/* ✅ TEXT CONTENT (matches screenshot) */
+.tc-title{
+  margin: 10px 0 10px;
+  font-size: 44px;
+  font-weight: 800;
+  color: #7d7d7d;
+  text-align: center;
 }
 
-.close-btn:focus{
-    outline: none;
+.tc-paragraph{
+  margin: 0 auto 18px;
+  width: min(780px, 92%);
+  font-size: 15px;
+  line-height: 1.9;
+  color: #9b9b9b;
+  text-align: left;
 }
 
-/*header*/
-.headback{
-    width: 110%;
-    max-width: none;
-    margin-top: -50px;
-    display: block;
+.tc-paragraph.tc-subhead{
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
-.headlogo{
-    width: 30%;
-    max-height: 200px;
-    height: auto;
-    margin-top: -190px;
-    display: block;
-    position: relative;
-    left: -35%;
+.tc-list{
+  width: min(780px, 92%);
+  margin: 0 auto 18px;
+  padding-left: 18px;
+  color: #9b9b9b;
+  font-size: 15px;
+  line-height: 1.9;
 }
 
-.headtext{
-    width: 18%;
-    max-width: 500px;
-    height: auto;
-    text-align: center;
-    display: block;
-    margin-top: -130px;
-    margin-right: -875px;
+.tc-list li{
+  margin-bottom: 4px;
 }
 
-/*main context of terms and condition*/
-.title{
-    width: 50%;
-    max-width: 450px;
-    height: auto;
-    text-align: justify ;
-    display: block;
-    margin-top: 45px;
-    margin-right: 140px;
-    
-}
+/* ✅ responsive */
+@media (max-width: 780px){
+  .tc-header{ height: 150px; }
+  .headback{ height: 150px; }
+  .headlogo{ width: 180px; left: 18px; top: 28px; }
+  .headtext{ width: 200px; right: 18px; top: 52px; }
+  .tc-body{ padding: 18px 18px 22px; }
 
-.text {
-    color: #979797;
-    text-align: justify;               
-    font-size: 16px;
-    line-height: 1.8;
-    width: 85%;
-    max-width: 900px;
-    margin: 0 auto;                   
-    padding: 10px 0;
-    margin-right: -75px;
+  .tc-title{ font-size: 34px; }
+  .tc-paragraph, .tc-list{ width: 100%; }
 }

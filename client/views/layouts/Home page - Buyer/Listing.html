@@ -1,41 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FarmLink - Listing Details</title>
-  <link rel="shortcut icon" href="../../../public/images/pictures - resources/FARMLINK LOGO.png" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../../public/styles/Home Page - Buyer/Listing.css">
+  <link rel="shortcut icon" href="../../../public/images/pictures - resources/FARMLINK LOGO.png" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../public/styles/Home Page - Buyer/Listing.css" />
 </head>
+
 <body>
-  <div class="page">
-    <header class="page-header">
-      <a class="back-link" href="./Marketplace.html">Back to Marketplace</a>
-      <h1>Listing Details</h1>
-    </header>
+  <div class="overlay">
+    <div class="listing-modal" role="dialog" aria-modal="true" aria-label="Listing details">
+      <!-- Green header -->
+      <div class="modal-topbar">
+        <div class="topbar-left">
+          <div class="freshness">
+            <div class="freshness-label">Freshness Rating By FarmLink</div>
+            <div class="freshness-value">
+              <span class="leaf">🍃</span>
+              <span id="freshnessScore">—</span>
+            </div>
+            <div class="freshness-note">*Use within a week for best taste.*</div>
+          </div>
+        </div>
 
-    <div id="errorMessage" class="error-message"></div>
+        <div class="topbar-right">
+          <div class="harvest">
+            <div class="harvest-label">HARVEST DATE:</div>
+            <div id="harvestDate" class="harvest-value">—</div>
+          </div>
 
-    <section class="card">
-      <h2 id="listingTitle">Loading...</h2>
-      <p id="listingCategory" class="muted"></p>
-      <p id="listingDescription"></p>
-      <div class="meta">
-        <span id="listingStatus"></span>
-        <span id="listingDate"></span>
+          <button id="closeBtn" class="close-btn" aria-label="Close">×</button>
+        </div>
       </div>
-    </section>
 
-    <section class="card">
-      <h3>Pricing</h3>
-      <ul id="pricingList" class="list"></ul>
-    </section>
+      <!-- Main content -->
+      <div class="modal-body">
+        <!-- Left image panel -->
+        <div class="image-pane">
+          <div class="image-card">
+            <img
+              id="listingImage"
+              src="../../../public/images/pictures - resources/placeholder-produce.png"
+              alt="Listing image"
+            />
+          </div>
+        </div>
 
-    <section class="card">
-      <h3>Traceability</h3>
-      <div id="traceabilityBox" class="trace-box"></div>
-    </section>
+        <!-- Right details panel -->
+        <div class="details-pane">
+          <div class="seller-row">
+            <img
+              class="seller-avatar"
+              src="../../../public/images/pictures - resources/default-avatar.png"
+              alt="Seller avatar"
+            />
+            <div class="seller-meta">
+              <div id="farmName" class="seller-name">—</div>
+              <div id="farmerName" class="seller-sub">—</div>
+              <div id="farmAddress" class="seller-sub muted">—</div>
+            </div>
+          </div>
+
+          <h1 id="listingTitle" class="title">Loading…</h1>
+
+          <div class="price-row">
+            <div class="price-stack">
+              <div class="price-old" id="oldPrice"></div>
+              <div class="price-now">
+                <span class="currency">₱</span><span id="newPrice">—</span>
+              </div>
+            </div>
+
+            <div class="stock">
+              <div class="stock-label">Stocks left:</div>
+              <div id="stockLeft" class="stock-value">—</div>
+            </div>
+          </div>
+
+          <p id="listingCategory" class="muted" style="margin: 0 0 8px;"></p>
+          <p id="listingDescription" class="description">—</p>
+
+          <div class="quantity-block">
+            <div class="quantity-label">Quantity</div>
+            <div class="quantity-pills" id="quantityPills">
+              <button class="pill active" data-qty="1" data-unit="kg">1kg</button>
+              <button class="pill" data-qty="10" data-unit="kg">10kg</button>
+              <button class="pill" data-qty="50" data-unit="kg">50kg</button>
+            </div>
+          </div>
+
+          <!-- ✅ NEW ACTION BUTTONS -->
+          <div class="action-row">
+            <button id="checkoutBtn" class="btn btn-secondary" type="button">Checkout</button>
+            <button id="addToCartBtn" class="btn btn-primary" type="button">Add to Cart</button>
+          </div>
+
+          <div class="meta-line">
+            <span id="listingStatus" class="muted"></span>
+            <span id="listingDate" class="muted"></span>
+          </div>
+
+          <div id="errorMessage" class="error-message"></div>
+
+          <!-- Legacy (hidden) -->
+          <section class="card" style="display:none;">
+            <h3>Pricing</h3>
+            <ul id="pricingList" class="list"></ul>
+          </section>
+
+          <section class="card" style="display:none;">
+            <h3>Traceability</h3>
+            <div id="traceabilityBox" class="trace-box"></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Bottom promo strip -->
+      <div class="modal-bottombar">
+        <div class="promo-left">
+          <span class="badge">LIMITED STOCKS</span>
+          <span class="promo-strong">FREE SHIPPING</span>
+          <span class="promo-muted">within Metro Manila</span>
+        </div>
+        <div class="promo-right">
+          <span class="promo-discount">50% OFF</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script type="module" src="../../../public/js/Home Page - Buyer/Listing.js"></script>

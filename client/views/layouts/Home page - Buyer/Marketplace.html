@@ -163,9 +163,14 @@
       <!-- MARKET CONTENT -->
       <div class="market-section">
 
-        <div class="rescue-deals">
-          <h3>Rescue Deals!!!</h3>
-          <!-- JS will append rescue cards here -->
+        <!-- ✅ RESCUE SECTION (NO H3 — message will be below) -->
+        <div class="rescue-deals-section">
+          <div class="rescue-deals">
+            <!-- JS will append rescue cards here -->
+          </div>
+
+          <!-- JS should put empty/failed messages here -->
+          <div class="rescue-status" aria-live="polite"></div>
         </div>
 
         <div class="listings-section">
@@ -177,12 +182,39 @@
 
         <div class="categories-section">
           <h3>Categories</h3>
-          <div class="categories">
-            <img src="../../../public/images/MAIN PAGE/Greens Category.png" alt="Greens" />
-            <img src="../../../public/images/MAIN PAGE/Grains Category.png" alt="Grains" />
-            <img src="../../../public/images/MAIN PAGE/Fruits Category.png" alt="Fruits" />
-            <img src="../../../public/images/MAIN PAGE/Root Crops Category.png" alt="Root Crops" />
-            <img src="../../../public/images/MAIN PAGE/Native Category.png" alt="Native" />
+
+          <div class="categories-row">
+            <button class="cat" aria-label="Grains">
+              <img src="/client/public/images/Additional categories-20260111T080652Z-3-001/Additional categories/Grains.png" alt="Grains">
+            </button>
+
+            <button class="cat" aria-label="Fruits">
+              <img src="../../../public/images/MAIN PAGE/Fruits Category.png" alt="Fruits">
+            </button>
+
+            <button class="cat" aria-label="Root Crops">
+              <img src="../../../public/images/MAIN PAGE/Root Crops Category.png" alt="Root Crops">
+            </button>
+
+            <button class="cat" aria-label="Native">
+              <img src="../../../public/images/MAIN PAGE/Native Category.png" alt="Native">
+            </button>
+
+            <button class="cat" aria-label="Spices">
+              <img src="/client/public/images/Additional categories-20260111T080652Z-3-001/Additional categories/Spices.png" alt="Spices">
+            </button>
+
+            <button class="cat" aria-label="Vegetable">
+              <img src="/client/public/images/Additional categories-20260111T080652Z-3-001/Additional categories/Vegetable.png" alt="Vegetable">
+            </button>
+
+            <button class="cat" aria-label="Greens">
+              <img src="../../../public/images/MAIN PAGE/Greens Category.png" alt="Greens">
+            </button>
+
+            <button class="cat" aria-label="Exotic">
+              <img src="/client/public/images/Additional categories-20260111T080652Z-3-001/Additional categories/Exotic.png" alt="Exotic">
+            </button>
           </div>
         </div>
 

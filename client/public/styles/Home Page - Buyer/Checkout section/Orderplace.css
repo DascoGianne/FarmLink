@@ -290,27 +290,32 @@ body {
 }
 
 /* =========================
-   ORDER PLACED MAIN
+   ORDER PLACED MAIN (UPDATED)
+   - Center the card vertically + horizontally
    ========================= */
 .Order-main{
-  position: relative;
   min-height: calc(100vh - 110px);
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-/* center card */
+/* Bigger centered card */
 .Order-card{
-  position: absolute;
-  top: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 72%;
-  max-width: 980px;
-  min-height: 420px;
+  position: relative;       /* was absolute */
+  top: auto;
+  left: auto;
+  transform: none;
+
+  width: min(88%, 1120px);  /* bigger */
+  min-height: 520px;        /* taller */
   z-index: 2;
 
   background: rgba(220, 255, 220, 0.75);
-  border-radius: 26px;
+  border-radius: 30px;
   backdrop-filter: blur(10px);
   box-shadow: 0 18px 40px rgba(0,0,0,0.14);
 
@@ -318,32 +323,33 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 44px 26px 36px;
+  padding: 55px 32px 46px;
   text-align: center;
 }
 
 .Order-icon-wrap{
-  margin-top: -30px;
-  margin-bottom: 10px;
+  margin-top: -18px;
+  margin-bottom: 14px;
 }
+
 .Order-icon{
-  width: 170px;
+  width: 210px; /* bigger */
   height: auto;
   filter: drop-shadow(0 10px 14px rgba(0,0,0,0.14));
 }
 
 .Order-title{
-  margin: 10px 0 10px;
-  font-size: 34px;
+  margin: 10px 0 12px;
+  font-size: 42px; /* bigger */
   font-weight: 900;
   color: #2a8f22;
 }
 
 .Order-sub{
-  margin: 0 0 22px;
-  font-size: 12px;
+  margin: 0 0 26px;
+  font-size: 14px; /* bigger */
   color: #3f3f3f;
-  max-width: 520px;
+  max-width: 620px;
   line-height: 1.6;
 }
 
@@ -354,22 +360,22 @@ body {
   align-items: center;
 }
 
-/* buttons like screenshot */
+/* bigger buttons */
 .cancel-btn{
-  width: 240px;
-  padding: 10px 12px;
+  width: 280px;
+  padding: 12px 14px;
   border-radius: 4px;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.10);
   color: #2a8f22;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
 }
 
 .continue-btn{
-  width: 240px;
-  padding: 10px 12px;
+  width: 280px;
+  padding: 12px 14px;
   border-radius: 4px;
   background: #4aa83c;
   border: none;
@@ -378,11 +384,11 @@ body {
 .continue-btn a{
   text-decoration: none;
   color: white;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
 }
 
-/* ===================== CANCEL MODAL ===================== */
+/* ===================== CANCEL MODAL (UPDATED) ===================== */
 .cancel-modal {
   position: fixed;
   inset: 0;
@@ -390,10 +396,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 999999; /* make sure it sits on top */
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
+  left: 0;
+  width: 100vw;
 }
 .cancel-modal.show {
   opacity: 1;
@@ -409,13 +417,8 @@ body {
   text-align: center;
   position: relative;
   box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  right: -100px;
+  /* REMOVED: right: -100px; (this was pushing it off-center) */
 }
-.cancel-modal {
-  left: 0;
-  width: 100vw;
-}
-
 
 .cancel-close {
   position: absolute;

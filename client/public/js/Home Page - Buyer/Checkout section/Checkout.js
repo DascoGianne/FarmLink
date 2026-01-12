@@ -3,22 +3,6 @@ import { getBuyerById } from "../../api/buyers.js";
 import { getOrdersByBuyer } from "../../api/orders.js";
 import { createPayment, getPaymentByOrder } from "../../api/payments.js";
 
-//loader
-window.onload = function() {
-    const loader = document.getElementById("loader");
-    const content = document.getElementById("content");
-
-    // Optional: wait a bit before starting animation
-    setTimeout(() => {
-        loader.classList.add("done");
-
-        // Wait for CSS transition to finish
-        setTimeout(() => {
-            loader.style.display = "none"; 
-            content.classList.add("show");
-        }, 600); 
-    }, 1000); // 1 second delay for demo
-};
 
 
 
