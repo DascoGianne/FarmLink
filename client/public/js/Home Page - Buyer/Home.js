@@ -1,87 +1,75 @@
-//loader
-window.onload = function() {
-    const loader = document.getElementById("loader");
-    const content = document.getElementById("content");
-
-    // Optional: wait a bit before starting animation
-    setTimeout(() => {
-        loader.classList.add("done");
-
-        // Wait for CSS transition to finish
-        setTimeout(() => {
-            loader.style.display = "none"; 
-            content.classList.add("show");
-        }, 600); 
-    }, 1000); // 1 second delay for demo
-};
-
-// Sidebar
-const sidebar = document.getElementById('sidebar');
-const sidebarBtn = document.querySelector('#top .left-group img');
-const closeBtn = document.querySelector('.sidebar-close');
-
-sidebarBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-});
-
-closeBtn.addEventListener('click', () => {
-    sidebar.classList.remove('open');
-});
-
-
-// Sidebar search functionality
-const searchInput = document.querySelector('.search-input');
-const menuItems = document.querySelectorAll('#sidebar-menu li');
-
-searchInput.addEventListener('input', function () {
-    let filter = searchInput.value.toLowerCase();
-
-    menuItems.forEach(item => {
-        let text = item.textContent.toLowerCase();
-
-        if (text.includes(filter)) {
-            item.style.display = "block";   
-        } else {
-            item.style.display = "none"; 
-        }
-    });
-});
-
-
 import { getListings } from "../api/listings.js";
 import { updateBadges } from "../api/badges.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // ================= SIDEBAR (always open) =================
+  const sidebar = document.getElementById("sidebar");
+  if (sidebar) sidebar.classList.add("open");
+
+  // Sidebar menu search (ONLY sidebar input)
+  const sidebarSearch = document.getElementById("sidebarSearch");
+  const menuItems = document.querySelectorAll("#sidebar-menu li");
+
+  if (sidebarSearch && menuItems.length) {
+    sidebarSearch.addEventListener("input", () => {
+      const filter = sidebarSearch.value.toLowerCase().trim();
+      menuItems.forEach((item) => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? "flex" : "none";
+      });
+    });
+  }
+
+  // ================= BADGES (top icons) =================
   await updateBadges();
+
+  const topBasketBadge = document.getElementById("basketBadge");
+  const topDeliveriesBadge = document.getElementById("deliveriesBadge");
+  const sidebarBasketBadge = document.getElementById("sidebarBasketBadge");
+  const sidebarDeliveriesBadge = document.getElementById("sidebarDeliveriesBadge");
+
+  const mirrorBadgesToSidebar = () => {
+    if (sidebarBasketBadge && topBasketBadge) {
+      sidebarBasketBadge.textContent = topBasketBadge.textContent || "0";
+    }
+    if (sidebarDeliveriesBadge && topDeliveriesBadge) {
+      sidebarDeliveriesBadge.textContent = topDeliveriesBadge.textContent || "0";
+    }
+  };
+
+  mirrorBadgesToSidebar();
+
+  // ================= LISTINGS (if you still need it) =================
+  // NOTE: Your current Home.html you pasted does NOT have #listingsContainer.
+  // This code will safely do nothing if it's missing.
   try {
     const res = await getListings();
-    console.log("LISTINGS:", res);
-
     const container = document.getElementById("listingsContainer");
-    if (!container) {
-      console.warn("Missing #listingsContainer in HTML");
-      return;
+
+    if (container) {
+      container.innerHTML = "";
+
+      (res.data || []).forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "listing-card";
+        div.innerHTML = `
+          <h3>${item.crop_name}</h3>
+          <p>${item.description || ""}</p>
+          <small>Stocks: ${item.total_stocks}</small>
+        `;
+        container.appendChild(div);
+      });
+    } else {
+      // Not an error—Home page layout may not show listings.
+      console.warn("ℹ️ #listingsContainer not found (Home page may not render listings).");
     }
-
-    container.innerHTML = "";
-
-    res.data.forEach((item) => {
-      const div = document.createElement("div");
-      div.className = "listing-card";
-      div.innerHTML = `
-        <h3>${item.crop_name}</h3>
-        <p>${item.description || ""}</p>
-        <small>Stocks: ${item.total_stocks}</small>
-      `;
-      container.appendChild(div);
-    });
   } catch (err) {
     console.error("Failed to load listings:", err);
-    alert("Failed to load listings");
+    // Don't alert on Home page unless you really want it:
+    // alert("Failed to load listings");
   }
-});
 
-document.addEventListener("DOMContentLoaded", () => {
+  // ================= LOADER (safe) =================
   const loader = document.getElementById("loader");
   const content = document.getElementById("content");
 

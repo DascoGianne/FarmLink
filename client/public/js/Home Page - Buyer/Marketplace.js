@@ -251,35 +251,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ================= RESCUE DEALS =================
-  const rescueContainer = document.querySelector(".rescue-deals");
+// ================= RESCUE DEALS =================
+const rescueContainer = document.querySelector(".rescue-deals");
+const rescueStatus = document.querySelector(".rescue-status");
 
-  try {
-    const res = await getRescueListings();
-    const rescue = res.data || [];
+try {
+  const res = await getRescueListings();
+  const rescue = res.data || [];
 
-    if (rescueContainer) {
-      rescueContainer.innerHTML = `
-        <h3>Rescue Deals!!!</h3>
-        ${
-          rescue.length === 0
-            ? "<p>No rescue deals available.</p>"
-            : rescue
-                .map(
-                  (item) => `
-                    <div class="rescue-card">
-                      <h4>${item.crop_name}</h4>
-                      <p>Discount: ${item.discount_applied}%</p>
-                    </div>
-                  `
-                )
-                .join("")
-        }
-      `;
-    }
-
-    console.log("✅ Rescue deals loaded:", rescue.length);
-  } catch (err) {
-    console.error("❌ Error loading rescue deals:", err);
+  // render ONLY cards inside the flex row
+  if (rescueContainer) {
+    rescueContainer.innerHTML = rescue
+      .map(
+        (item) => `
+          <div class="rescue-card">
+            <h4>${item.crop_name}</h4>
+            <p>Discount: ${item.discount_applied}%</p>
+          </div>
+        `
+      )
+      .join("");
   }
+
+  // message goes BELOW (not inside the flex row)
+  if (rescueStatus) {
+    rescueStatus.innerHTML =
+      rescue.length === 0 ? "<p>No rescue deals available.</p>" : "";
+  }
+
+  console.log("✅ Rescue deals loaded:", rescue.length);
+} catch (err) {
+  console.error("❌ Error loading rescue deals:", err);
+
+  if (rescueStatus) {
+    rescueStatus.innerHTML = "<p>Failed to load rescue deals.</p>";
+  }
+}
+
 });
