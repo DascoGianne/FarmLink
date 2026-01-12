@@ -1,20 +1,29 @@
 {
-  "name": "farmlink",
-  "version": "1.0.0",
-  "description": "FarmLink is a digital marketplace that connects farmers directly to consumers and businesses with the support of LGUs and NGOs.",
-  "main": "index.js",
-  "scripts": {
-    "start": "node server/app.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.3",
-    "multer": "^1.4.5-lts.2",
-    "mysql2": "^3.15.3"
-  }
+    "name":  "farmlink",
+    "version":  "1.0.0",
+    "description":  "FarmLink is a digital marketplace that connects farmers directly to consumers and businesses with the support of LGUs and NGOs.",
+    "main":  "index.js",
+    "scripts":  {
+                    "start":  "node server/app.js",
+                    "server":  "node server/app.js",
+                    "client":  "npm --workspace client/react run dev",
+                    "dev":  "concurrently \"npm run server\" \"npm run client\""
+                },
+    "author":  "",
+    "license":  "ISC",
+    "dependencies":  {
+                         "bcryptjs":  "^3.0.3",
+                         "cors":  "^2.8.5",
+                         "dotenv":  "^17.2.3",
+                         "express":  "^5.1.0",
+                         "jsonwebtoken":  "^9.0.3",
+                         "multer":  "^1.4.5-lts.2",
+                         "mysql2":  "^3.15.3"
+                     },
+    "devDependencies":  {
+                            "concurrently":  "^9.0.0"
+                        },
+    "workspaces":  [
+                       "client/react"
+                   ]
 }

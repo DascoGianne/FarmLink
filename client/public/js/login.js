@@ -70,9 +70,17 @@ document.addEventListener("DOMContentLoaded", () => {
         // redirect based on role
         const role = result.data?.role;
         if (role === "BUYER") {
-        window.location.href = "./Home page - Buyer/Home.html";
-      } else if (role === "NGO") {
-         window.location.href = "./Home page - NGO/Home.html";
+          window.location.href = "./Home page - Buyer/Home.html";
+        } else if (role === "NGO") {
+          const { protocol, hostname } = window.location;
+          const isLocal = hostname === "localhost" || hostname === "127.0.0.1";
+          if (isLocal) {
+            const ngoUrl = new URL(`${protocol}//${hostname}:5173/ngo/`);
+            ngoUrl.searchParams.set("token", result.token);
+            window.location.href = ngoUrl.toString();
+          } else {
+            window.location.href = "/ngo";
+          }
         } else {
           // fallback
           window.location.href = "dashboard.html";

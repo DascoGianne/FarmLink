@@ -1,5 +1,6 @@
 require("dotenv").config();
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const cors = require("cors");
 
@@ -23,6 +24,24 @@ try {
 // Static uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Static UI (HTML)
+app.use("/client", express.static(path.join(__dirname, "..", "client")));
+
+// React NGO app (build output)
+const reactDist = path.join(__dirname, "..", "client", "react", "dist");
+const reactIndex = path.join(reactDist, "index.html");
+
+const sendReactOrRedirect = (req, res) => {
+  if (!fs.existsSync(reactIndex)) {
+    const target = `http://localhost:5173${req.originalUrl}`;
+    return res.redirect(302, target);
+  }
+  return res.sendFile(reactIndex);
+};
+
+app.use("/ngo", express.static(reactDist));
+app.get("/ngo", sendReactOrRedirect);
+app.get(/^\/ngo(\/.*)?$/, sendReactOrRedirect);
 // Default Route
 app.get("/", (req, res) => {
   res.send("FarmLink Backend is running...");

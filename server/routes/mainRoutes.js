@@ -111,6 +111,10 @@ router.get("/listings/ngo/:ngo_id", verifyToken, requireNgo, (req, res, next) =>
 router.post("/listings", verifyToken, requireNgo, mainController.createListing);
 router.put("/listings/:listing_id", verifyToken, requireNgo, mainController.updateListing);
 router.delete("/listings/:listing_id", verifyToken, requireNgo, mainController.deleteListing);
+router.put("/pricing/listing/:listing_id", verifyToken, requireNgo, mainController.replacePricingByListing);
+router.delete("/pricing/listing/:listing_id", verifyToken, requireNgo, mainController.deletePricingByListing);
+router.put("/traceability/listing/:listing_id", verifyToken, requireNgo, mainController.upsertTraceabilityByListing);
+router.delete("/traceability/listing/:listing_id", verifyToken, requireNgo, mainController.deleteTraceabilityByListing);
 
 // Buyer Profile (BUYER only)
 router.get("/buyers/:buyer_id", verifyToken, requireBuyer, (req, res, next) => {

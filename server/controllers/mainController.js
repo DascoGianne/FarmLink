@@ -2,6 +2,18 @@ const db = require("../db/db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const ownsListing = async (ngoId, listingId) => {
+  const [rows] = await db.query(
+    `
+    SELECT listing_id
+    FROM crop_listings
+    WHERE listing_id = ? AND ngo_id = ?
+    LIMIT 1
+    `,
+    [listingId, ngoId]
+  );
+  return rows.length > 0;
+};
 
 exports.apiStatus = (req, res) => {
   res.json({ success: true, message: "FarmLink API is working" });
@@ -10,10 +22,15 @@ exports.apiStatus = (req, res) => {
 exports.getAllListings = async (req, res) => {
   try {
     const [rows] = await db.query(`
-      SELECT listing_id, ngo_id, promo_id, crop_name, category, description,
-             total_stocks, date_listed, status, image_1
-      FROM crop_listings
-      ORDER BY listing_id DESC
+      SELECT cl.listing_id, cl.ngo_id, cl.promo_id, cl.crop_name, cl.category, cl.description,
+             cl.total_stocks, cl.date_listed, cl.status,
+             cl.image_1, cl.image_2, cl.image_3, cl.image_4, cl.image_5, cl.image_6,
+             n.ngo_name,
+             p.promo_name, p.discount_percent
+      FROM crop_listings cl
+      LEFT JOIN ngo n ON n.ngo_id = cl.ngo_id
+      LEFT JOIN promotions p ON p.promo_id = cl.promo_id
+      ORDER BY cl.listing_id DESC
     `);
 
     return res.status(200).json({ success: true, data: rows });
@@ -28,10 +45,13 @@ exports.getListingById = async (req, res) => {
   try {
     const [rows] = await db.query(
       `
-      SELECT listing_id, ngo_id, promo_id, crop_name, category, description,
-             total_stocks, date_listed, status, image_1, image_2, image_3, image_4, image_5, image_6
-      FROM crop_listings
-      WHERE listing_id = ?
+      SELECT cl.listing_id, cl.ngo_id, cl.promo_id, cl.crop_name, cl.category, cl.description,
+             cl.total_stocks, cl.date_listed, cl.status, cl.image_1, cl.image_2, cl.image_3,
+             cl.image_4, cl.image_5, cl.image_6, n.ngo_name, p.promo_name, p.discount_percent
+      FROM crop_listings cl
+      LEFT JOIN ngo n ON n.ngo_id = cl.ngo_id
+      LEFT JOIN promotions p ON p.promo_id = cl.promo_id
+      WHERE cl.listing_id = ?
       `,
       [id]
     );
@@ -82,6 +102,69 @@ exports.getPricingByListing = async (req, res) => {
   }
 };
 
+exports.replacePricingByListing = async (req, res) => {
+  const { listing_id } = req.params;
+  const entries = Array.isArray(req.body.entries) ? req.body.entries : null;
+
+  if (!entries) {
+    return res.status(400).json({ success: false, message: "entries array is required" });
+  }
+
+  try {
+    const isOwner = await ownsListing(req.user.id, listing_id);
+    if (!isOwner) {
+      return res.status(403).json({ success: false, message: "Forbidden (not your listing)" });
+    }
+
+    await db.query("DELETE FROM crop_pricing WHERE listing_id = ?", [listing_id]);
+
+    if (entries.length > 0) {
+      const values = entries.map((entry) => ([
+        listing_id,
+        Number(entry.quantity),
+        entry.unit,
+        Number(entry.price),
+      ]));
+      await db.query(
+        `
+        INSERT INTO crop_pricing (listing_id, quantity, unit, price)
+        VALUES ?
+        `,
+        [values]
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Pricing updated",
+      data: { listing_id: Number(listing_id) },
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.deletePricingByListing = async (req, res) => {
+  const { listing_id } = req.params;
+
+  try {
+    const isOwner = await ownsListing(req.user.id, listing_id);
+    if (!isOwner) {
+      return res.status(403).json({ success: false, message: "Forbidden (not your listing)" });
+    }
+
+    await db.query("DELETE FROM crop_pricing WHERE listing_id = ?", [listing_id]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Pricing deleted",
+      data: { listing_id: Number(listing_id) },
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 exports.getTraceabilityByListing = async (req, res) => {
   const { listing_id } = req.params;
 
@@ -113,6 +196,78 @@ exports.getTraceabilityByListing = async (req, res) => {
       success: false,
       message: err.message,
     });
+  }
+};
+
+exports.upsertTraceabilityByListing = async (req, res) => {
+  const { listing_id } = req.params;
+  const {
+    farmer_name,
+    farm_address,
+    harvest_date,
+    freshness_score,
+    freshness_countdown,
+  } = req.body;
+
+  try {
+    const isOwner = await ownsListing(req.user.id, listing_id);
+    if (!isOwner) {
+      return res.status(403).json({ success: false, message: "Forbidden (not your listing)" });
+    }
+
+    const harvestDate = harvest_date || new Date().toISOString().split("T")[0];
+
+    await db.query(
+      `
+      INSERT INTO traceability (
+        listing_id, farmer_name, farm_address, harvest_date, freshness_score, freshness_countdown
+      )
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        farmer_name = VALUES(farmer_name),
+        farm_address = VALUES(farm_address),
+        harvest_date = VALUES(harvest_date),
+        freshness_score = VALUES(freshness_score),
+        freshness_countdown = VALUES(freshness_countdown)
+      `,
+      [
+        listing_id,
+        farmer_name || null,
+        farm_address || null,
+        harvestDate,
+        freshness_score ?? null,
+        freshness_countdown || null,
+      ]
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Traceability saved",
+      data: { listing_id: Number(listing_id) },
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.deleteTraceabilityByListing = async (req, res) => {
+  const { listing_id } = req.params;
+
+  try {
+    const isOwner = await ownsListing(req.user.id, listing_id);
+    if (!isOwner) {
+      return res.status(403).json({ success: false, message: "Forbidden (not your listing)" });
+    }
+
+    await db.query("DELETE FROM traceability WHERE listing_id = ?", [listing_id]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Traceability deleted",
+      data: { listing_id: Number(listing_id) },
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -186,11 +341,14 @@ exports.getListingsByNgo = async (req, res) => {
   try {
     const [rows] = await db.query(
       `
-      SELECT listing_id, ngo_id, promo_id, crop_name, category, description,
-             total_stocks, date_listed, status, image_1, image_2, image_3, image_4, image_5, image_6
-      FROM crop_listings
-      WHERE ngo_id = ?
-      ORDER BY listing_id DESC
+      SELECT cl.listing_id, cl.ngo_id, cl.promo_id, cl.crop_name, cl.category, cl.description,
+             cl.total_stocks, cl.date_listed, cl.status,
+             cl.image_1, cl.image_2, cl.image_3, cl.image_4, cl.image_5, cl.image_6,
+             p.promo_name, p.discount_percent
+      FROM crop_listings cl
+      LEFT JOIN promotions p ON p.promo_id = cl.promo_id
+      WHERE cl.ngo_id = ?
+      ORDER BY cl.listing_id DESC
       `,
       [ngo_id]
     );
@@ -203,6 +361,7 @@ exports.getListingsByNgo = async (req, res) => {
 
 exports.createListing = async (req, res) => {
   const {
+    promo_id,
     crop_name,
     category,
     description,
@@ -226,21 +385,24 @@ exports.createListing = async (req, res) => {
   }
 
   try {
+    const computedStatus = Number(total_stocks) <= 0 ? "Sold Out" : (status || "Active");
+
     const [result] = await db.query(
       `
       INSERT INTO crop_listings (
-        ngo_id, crop_name, category, description,
+        ngo_id, promo_id, crop_name, category, description,
         total_stocks, date_listed, status, image_1, image_2, image_3, image_4, image_5, image_6
       )
-      VALUES (?, ?, ?, ?, ?, CURDATE(), ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, CURDATE(), ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         ngo_id,
+        promo_id || null,
         crop_name,
         category,
         description || "",
         total_stocks,
-        status || "Active",
+        computedStatus,
         image_1 || null,
         image_2 || null,
         image_3 || null,
@@ -263,6 +425,7 @@ exports.createListing = async (req, res) => {
 exports.updateListing = async (req, res) => {
   const { listing_id } = req.params;
   const {
+    promo_id,
     crop_name,
     category,
     description,
@@ -297,11 +460,20 @@ exports.updateListing = async (req, res) => {
     const fields = [];
     const values = [];
 
+    if (promo_id !== undefined) { fields.push("promo_id = ?"); values.push(promo_id); }
     if (crop_name !== undefined) { fields.push("crop_name = ?"); values.push(crop_name); }
     if (category !== undefined) { fields.push("category = ?"); values.push(category); }
     if (description !== undefined) { fields.push("description = ?"); values.push(description); }
-    if (total_stocks !== undefined) { fields.push("total_stocks = ?"); values.push(total_stocks); }
-    if (status !== undefined) { fields.push("status = ?"); values.push(status); }
+    if (total_stocks !== undefined) {
+      fields.push("total_stocks = ?");
+      values.push(total_stocks);
+      const computedStatus = Number(total_stocks) <= 0 ? "Sold Out" : "Active";
+      fields.push("status = ?");
+      values.push(computedStatus);
+    } else if (status !== undefined) {
+      fields.push("status = ?");
+      values.push(status);
+    }
     if (image_1 !== undefined) { fields.push("image_1 = ?"); values.push(image_1); }
     if (image_2 !== undefined) { fields.push("image_2 = ?"); values.push(image_2); }
     if (image_3 !== undefined) { fields.push("image_3 = ?"); values.push(image_3); }
@@ -358,6 +530,10 @@ exports.deleteListing = async (req, res) => {
         message: "Forbidden (not your listing)",
       });
     }
+
+    await db.query("DELETE FROM crop_pricing WHERE listing_id = ?", [listing_id]);
+    await db.query("DELETE FROM traceability WHERE listing_id = ?", [listing_id]);
+    await db.query("DELETE FROM rescue_alerts WHERE listing_id = ?", [listing_id]);
 
     const [result] = await db.query(
       `
@@ -458,7 +634,7 @@ exports.getOrdersByBuyer = async (req, res) => {
         n.ngo_name
       FROM orders o
       JOIN crop_listings cl ON cl.listing_id = o.listing_id
-      JOIN ngos n ON n.ngo_id = o.ngo_id
+      JOIN ngo n ON n.ngo_id = o.ngo_id
       WHERE o.buyer_id = ?
       ORDER BY o.order_date DESC
       `,
@@ -489,7 +665,7 @@ exports.getOrdersByNgo = async (req, res) => {
         o.region, o.province, o.municipality_city, o.barangay, o.street_no,
         o.order_date, o.order_status,
         cl.crop_name, cl.category, cl.image_1,
-        b.username, b.contact_number
+        b.username, b.email, b.contact_number
       FROM orders o
       JOIN crop_listings cl ON cl.listing_id = o.listing_id
       JOIN buyers b ON b.buyer_id = o.buyer_id
@@ -863,7 +1039,7 @@ exports.registerNgo = async (req, res) => {
 
     const [result] = await db.query(
       `
-      INSERT INTO ngos (
+      INSERT INTO ngo (
         ngo_name, email, password, contact_number,
         region, province, municipality_city, barangay, street_no,
         delivery_method, delivery_method_other, date_registered
@@ -935,7 +1111,7 @@ exports.login = async (req, res) => {
   try {
     // 1) Try NGO
     const [ngoRows] = await db.query(
-      `SELECT ngo_id AS id, ngo_name AS name, email, password FROM ngos WHERE email = ? LIMIT 1`,
+      `SELECT ngo_id AS id, ngo_name AS name, email, password FROM ngo WHERE email = ? LIMIT 1`,
       [email]
     );
 
@@ -998,7 +1174,7 @@ exports.getNgoById = async (req, res) => {
       SELECT ngo_id, ngo_name, email, contact_number,
              region, province, municipality_city, barangay, street_no,
              delivery_method, delivery_method_other, date_registered
-      FROM ngos
+      FROM ngo
       WHERE ngo_id = ?
       LIMIT 1
       `,
@@ -1060,7 +1236,7 @@ exports.updateNgoById = async (req, res) => {
 
     const [result] = await db.query(
       `
-      UPDATE ngos
+      UPDATE ngo
       SET ${fields.join(", ")}
       WHERE ngo_id = ?
       `,
