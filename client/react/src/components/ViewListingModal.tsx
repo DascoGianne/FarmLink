@@ -199,13 +199,13 @@ export function ViewListingModal({ product, onClose }: ViewListingModalProps) {
                   <>
                     <button
                       onClick={handlePrevImage}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition z-20"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition z-20 cursor-pointer"
                     >
                       <ChevronLeft size={24} className="text-gray-700" />
                     </button>
                     <button
                       onClick={handleNextImage}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition z-20"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition z-20 cursor-pointer"
                     >
                       <ChevronRight size={24} className="text-gray-700" />
                     </button>
@@ -226,7 +226,7 @@ export function ViewListingModal({ product, onClose }: ViewListingModalProps) {
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`relative w-[60px] h-[60px] rounded-[8px] border-2 transition overflow-hidden ${
+                    className={`relative w-[60px] h-[60px] rounded-[8px] border-2 transition overflow-hidden cursor-pointer ${
                       currentImageIndex === index 
                         ? 'border-[#32a928] border-[3px]' 
                         : 'border-gray-300 hover:border-gray-400'
