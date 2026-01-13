@@ -68,7 +68,7 @@ const USER_KEY = 'farmlink_user';
 const getLoginUrl = () => {
   if (typeof window === 'undefined') return '/client/views/layouts/login.html';
   const { protocol, hostname, port } = window.location;
-  if (port === '5173') {
+  if (port && port !== '3000') {
     return `${protocol}//${hostname}:3000/client/views/layouts/login.html`;
   }
   return `${protocol}//${hostname}${port ? `:${port}` : ''}/client/views/layouts/login.html`;
