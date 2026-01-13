@@ -767,7 +767,9 @@ export default function App() {
       const matchesCategory = filters.category.startsWith('All Categories') || listing.category === filters.category;
       
       // Status filter
-      const matchesStatus = filters.status === 'All Status' || listing.status === filters.status;
+      const matchesStatus =
+        filters.status === 'All Status' ||
+        (filters.status === 'Available' ? listing.status === 'Active' : listing.status === filters.status);
       
       // Price range filter
       let matchesPriceRange = true;

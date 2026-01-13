@@ -5,6 +5,7 @@ import imgHeaderBg from "figma:asset/f394064e8a6ce0cfed98517b9c37405371194eb2.pn
 import imgLeaf from "figma:asset/b2b29d891a360c1c20df9597a06fd413e7d10568.png";
 import imgEllipse971 from "figma:asset/ff1c3364a0ea8b0d0477ee0221561c76294067da.png";
 import { PromoBadges } from './PromoBadges';
+import Group52573 from '../imports/Group52573';
 
 interface QuantityPriceEntry {
   quantity: string;
@@ -57,6 +58,9 @@ export function ViewListingModal({ product, onClose }: ViewListingModalProps) {
   
   const hasFreshness = product.freshness && parseFloat(product.freshness) > 0;
   const freshnessRating = hasFreshness ? parseFloat(product.freshness) : 0;
+  const flashSaleBaseWidth = 147.428;
+  const flashSaleBaseHeight = 20.202;
+  const flashSaleScale = (45.841 * 0.7) / flashSaleBaseHeight;
 
   // Get the current price based on selected quantity
   const getCurrentPrice = () => {
@@ -80,6 +84,28 @@ export function ViewListingModal({ product, onClose }: ViewListingModalProps) {
     
     // Fallback to product.oldPrice if no specific entry found
     return product.oldPrice || null;
+  };
+
+  const getPromoBadges = () => {
+    const original = getOriginalPrice() || product.oldPrice;
+    const current = getCurrentPrice();
+    const originalValue = original ? Number(String(original).replace(/[^\d.]/g, '')) : NaN;
+    const currentValue = current ? Number(String(current).replace(/[^\d.]/g, '')) : NaN;
+    let discount25 = false;
+    let discount50 = false;
+
+    if (Number.isFinite(originalValue) && originalValue > 0 && Number.isFinite(currentValue)) {
+      const pct = Math.round((1 - currentValue / originalValue) * 100);
+      discount25 = pct === 25;
+      discount50 = pct === 50;
+    }
+
+    return {
+      limitedStocks: product.promos?.limitedStocks || false,
+      freeShipping: product.promos?.freeShipping || false,
+      discount25: product.promos?.discount25 || discount25,
+      discount50: product.promos?.discount50 || discount50,
+    };
   };
 
   const formatHarvestDate = () => {
@@ -212,13 +238,27 @@ export function ViewListingModal({ product, onClose }: ViewListingModalProps) {
                   </>
                 )}
 
-                {/* Promo Badges - Bottom Left */}
-                {product.promos && (
-                  <div className="absolute bottom-4 left-4 z-20">
-                    <PromoBadges selectedPromos={product.promos} showPlaceholder={false} />
-                  </div>
-                )}
-              </div>
+              {/* Promo Badges - Bottom Left */}
+              {getPromoBadges() && (
+                <div className="absolute bottom-4 left-4 z-20">
+                  <PromoBadges selectedPromos={getPromoBadges()} showPlaceholder={false} />
+                </div>
+              )}
+
+              {/* Flash Sale Badge - Top Right */}
+              {product.isRescueDeal && (
+                <div
+                  className="absolute right-0 top-0 origin-top-right z-20"
+                  style={{
+                    transform: `scale(${flashSaleScale})`,
+                    width: `${flashSaleBaseWidth}px`,
+                    height: `${flashSaleBaseHeight}px`,
+                  }}
+                >
+                  <Group52573 />
+                </div>
+              )}
+            </div>
 
               {/* Thumbnail Gallery - Centered at bottom */}
               <div className="flex gap-3 justify-center">
