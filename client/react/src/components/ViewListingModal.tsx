@@ -112,7 +112,7 @@ export function ViewListingModal({ product, onClose }: ViewListingModalProps) {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-3 top-3 z-30 text-white hover:text-gray-200 transition p-2"
+          className="absolute right-2 top-1 z-30 text-white hover:text-gray-200 transition p-2 cursor-pointer"
         >
           <X size={32} strokeWidth={3} />
         </button>
@@ -147,7 +147,7 @@ export function ViewListingModal({ product, onClose }: ViewListingModalProps) {
                   Freshness Rating By FarmLink
                 </p>
                 <p className="text-white text-[12px] italic">
-                  *Use within a week for best taste.
+                  *Consume within five days for best taste.
                 </p>
               </div>
 

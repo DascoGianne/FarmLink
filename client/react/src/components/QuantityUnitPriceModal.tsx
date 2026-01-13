@@ -22,7 +22,7 @@ interface QuantityUnitPriceModalProps {
 
 export function QuantityUnitPriceModal({ isOpen, onClose, onAddEntry, onRemoveEntry, entries, focusTrigger }: QuantityUnitPriceModalProps) {
   const [quantity, setQuantity] = useState('');
-  const [unit, setUnit] = useState('');
+  const [unit, setUnit] = useState('kg');
   const [priceWholePart, setPriceWholePart] = useState(''); // Store the whole number part
   const [priceDecimalPart, setPriceDecimalPart] = useState(''); // Store decimal part
   const [isEditingDecimals, setIsEditingDecimals] = useState(false);
@@ -31,6 +31,7 @@ export function QuantityUnitPriceModal({ isOpen, onClose, onAddEntry, onRemoveEn
   const quantityRef = useRef<HTMLInputElement>(null);
   const unitRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Auto-focus on quantity field when focusTrigger changes (not on modal open)
   useEffect(() => {
@@ -39,6 +40,12 @@ export function QuantityUnitPriceModal({ isOpen, onClose, onAddEntry, onRemoveEn
     }
   }, [focusTrigger]);
 
+  useEffect(() => {
+    if (isOpen) {
+      setUnit('kg');
+    }
+  }, [isOpen]);
+
   // Manage cursor position to keep it before the decimal point when editing whole numbers
   useEffect(() => {
     if (priceRef.current && !isEditingDecimals && priceWholePart !== '') {
@@ -46,6 +53,28 @@ export function QuantityUnitPriceModal({ isOpen, onClose, onAddEntry, onRemoveEn
       priceRef.current.setSelectionRange(cursorPos, cursorPos);
     }
   }, [priceWholePart, isEditingDecimals]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!isOpen) {
+      root.style.setProperty('--quantity-modal-height', '0px');
+      return;
+    }
+
+    root.style.setProperty('--quantity-modal-bottom', '350px');
+    const node = modalRef.current;
+    if (!node) return;
+
+    const updateHeight = () => {
+      const height = node.getBoundingClientRect().height;
+      root.style.setProperty('--quantity-modal-height', `${Math.round(height)}px`);
+    };
+
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isOpen, entries.length]);
 
   if (!isOpen) return null;
 
@@ -93,7 +122,7 @@ export function QuantityUnitPriceModal({ isOpen, onClose, onAddEntry, onRemoveEn
       onAddEntry({ quantity, unit, price: finalPrice });
       // Reset fields for next entry
       setQuantity('');
-      setUnit('');
+      setUnit('kg');
       setPriceWholePart('');
       setPriceDecimalPart('');
       setIsEditingDecimals(false);
@@ -175,7 +204,7 @@ export function QuantityUnitPriceModal({ isOpen, onClose, onAddEntry, onRemoveEn
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-end pointer-events-none">
       <div className="absolute bottom-[350px] right-[50px] pointer-events-auto">
-        <div className="relative w-[323px] bg-white rounded-[8px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] p-4 overflow-hidden">
+        <div ref={modalRef} className="relative w-[323px] bg-white rounded-[8px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] p-4 overflow-hidden">
           {/* Header */}
           <div className="mb-4">
             <p className="font-['Poppins',sans-serif] font-medium text-[#474747] text-[16px] tracking-[0.16px]">
@@ -246,7 +275,7 @@ export function QuantityUnitPriceModal({ isOpen, onClose, onAddEntry, onRemoveEn
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
-                    unitRef.current?.focus();
+                    priceRef.current?.focus();
                   }
                 }}
                 className="absolute inset-0 w-full h-full bg-transparent text-center text-[#353535] text-[20px] font-medium font-['Poppins',sans-serif] outline-none"
@@ -261,15 +290,9 @@ export function QuantityUnitPriceModal({ isOpen, onClose, onAddEntry, onRemoveEn
               <input
                 type="text"
                 value={unit}
-                onChange={(e) => setUnit(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    priceRef.current?.focus();
-                  }
-                }}
+                readOnly
+                tabIndex={-1}
                 className="absolute inset-0 w-full h-full bg-transparent text-center text-[#353535] text-[20px] font-medium font-['Poppins',sans-serif] outline-none"
-                placeholder="kg"
                 ref={unitRef}
               />
             </div>

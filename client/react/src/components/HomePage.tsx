@@ -180,7 +180,7 @@ export function HomePage({
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <button
                   onClick={onNavigateToMarketplace}
-                  className="bg-[#32a928] hover:bg-[#2a8f21] text-white font-semibold px-[60px] py-[12px] rounded-full shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105"
+                  className="bg-[#32a928] hover:bg-[#2a8f21] text-white font-semibold px-[60px] py-[12px] rounded-full shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 cursor-pointer"
                 >
                   Explore Marketplace
                 </button>
@@ -189,7 +189,7 @@ export function HomePage({
                   onClick={() => {
                     window.location.href = resolveStaticUrl("/client/views/layouts/Home page - Buyer/about.html");
                   }}
-                  className="bg-white hover:bg-gray-50 text-[#32a928] font-semibold px-[60px] py-[12px] rounded-full border-2 border-[#32a928] shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105"
+                  className="bg-white hover:bg-gray-50 text-[#32a928] font-semibold px-[60px] py-[12px] rounded-full border-2 border-[#32a928] shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105 cursor-pointer"
                 >
                   Learn About FarmLink
                 </button>
