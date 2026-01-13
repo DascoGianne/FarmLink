@@ -1,6 +1,7 @@
 import { getRescueListings, getListings, getRescueAlertsByListing } from "../api/listings.js";
 import { addToCart } from "../api/cart.js";
 import { updateBadges } from "../api/badges.js";
+import { hydrateBuyerSidebar } from "../api/sidebar.js";
 import API_BASE_URL from "../api/config.js";
 
 const FALLBACK_LISTING_IMAGE = "/client/public/images/pictures - resources/placeholder-produce.png";
@@ -43,6 +44,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   }
+
+  await hydrateBuyerSidebar();
 
   // ================= BADGES (top icons) =================
   await updateBadges();
@@ -111,8 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return allListings.filter((item) => {
       const crop = String(item.crop_name || "").toLowerCase();
       const cat = String(item.category || "").toLowerCase();
-      // add more fields if you want:
-      // const seller = String(item.seller_name || "").toLowerCase();
       return crop.includes(q) || cat.includes(q);
     });
   };
@@ -230,9 +231,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
 
-    console.log("✅ Listings loaded:", allListings.length);
+    console.log("• Listings loaded:", allListings.length);
   } catch (err) {
-    console.error("❌ Error loading listings:", err);
+    console.error("Error loading listings:", err);
   }
 
   // ================= TOP SEARCH -> RESULTS =================
@@ -285,41 +286,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-// ================= RESCUE DEALS =================
-const rescueContainer = document.querySelector(".rescue-deals");
-const rescueStatus = document.querySelector(".rescue-status");
+  // ================= RESCUE DEALS =================
+  const rescueContainer = document.querySelector(".rescue-deals");
+  const rescueStatus = document.querySelector(".rescue-status");
 
-try {
-  const res = await getRescueListings();
-  const rescue = res.data || [];
+  try {
+    const res = await getRescueListings();
+    const rescue = res.data || [];
 
-  // render ONLY cards inside the flex row
-  if (rescueContainer) {
-    rescueContainer.innerHTML = rescue
-      .map(
-        (item) => `
+    // render ONLY cards inside the flex row
+    if (rescueContainer) {
+      rescueContainer.innerHTML = rescue
+        .map(
+          (item) => `
           <div class="rescue-card">
             <h4>${item.crop_name}</h4>
             <p>Discount: ${item.discount_applied}%</p>
           </div>
         `
-      )
-      .join("");
+        )
+        .join("");
+    }
+
+    // message goes BELOW (not inside the flex row)
+    if (rescueStatus) {
+      rescueStatus.innerHTML =
+        rescue.length === 0 ? "<p>No rescue deals available.</p>" : "";
+    }
+
+    console.log("• Rescue deals loaded:", rescue.length);
+  } catch (err) {
+    console.error("Error loading rescue deals:", err);
+
+    if (rescueStatus) {
+      rescueStatus.innerHTML = "<p>Failed to load rescue deals.</p>";
+    }
   }
-
-  // message goes BELOW (not inside the flex row)
-  if (rescueStatus) {
-    rescueStatus.innerHTML =
-      rescue.length === 0 ? "<p>No rescue deals available.</p>" : "";
-  }
-
-  console.log("✅ Rescue deals loaded:", rescue.length);
-} catch (err) {
-  console.error("❌ Error loading rescue deals:", err);
-
-  if (rescueStatus) {
-    rescueStatus.innerHTML = "<p>Failed to load rescue deals.</p>";
-  }
-}
-
 });

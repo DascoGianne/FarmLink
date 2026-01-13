@@ -1,6 +1,8 @@
 import { updateBadges } from "../api/badges.js";
+import { hydrateBuyerSidebar } from "../api/sidebar.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await hydrateBuyerSidebar();
     updateBadges();
 });
 

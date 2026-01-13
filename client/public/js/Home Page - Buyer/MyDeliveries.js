@@ -3,6 +3,7 @@ import { getOrdersByBuyer } from "../api/orders.js";
 import { getPaymentByOrder } from "../api/payments.js";
 import { getLogisticsByOrder } from "../api/logistics.js";
 import { updateBadges } from "../api/badges.js";
+import { hydrateBuyerSidebar } from "../api/sidebar.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // ================= SIDEBAR (always open) =================
@@ -46,24 +47,38 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ordersList = document.getElementById("ordersList");
 
   // ---- ICONS for the tracker (adjust file names if needed)
-  const ICON_BASE = "/client/public/images/My Deliveries (Hard coded lang)";
-  const ICON_CONFIRMED = `${ICON_BASE}/Order Confirmed Icon.png`;
-  const ICON_TRUCK = `${ICON_BASE}/Order In Transit Icon.png`;
-  const ICON_DELIVERED = `${ICON_BASE}/Order Delivered Icon.png`; // if you don't have this, replace with another icon
-
-  // build dots html
-  const dots = (count, activeCount) =>
-    Array.from({ length: count })
-      .map((_, i) => `<span class="dot ${i < activeCount ? "on" : ""}"></span>`)
-      .join("");
+  const ICON_BASE = "../../images/My Deliveries (Hard coded lang)";
+  const iconUrl = (path) => new URL(path, import.meta.url).toString();
+  const ICON_CONFIRMED = iconUrl(`${ICON_BASE}/Order Confirmed Icon.png`);
+  const ICON_TRUCK = iconUrl(`${ICON_BASE}/Order In Transit Icon.png`);
+  const ICON_DELIVERED = iconUrl(`${ICON_BASE}/Order Ready for PickUp or Delivered.png`);
+  const FALLBACK_ICONS = {
+    confirmed: "data:image/svg+xml;utf8," + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#2ea21f"/><path d="M20 33l8 8 16-18" fill="none" stroke="#0b3d0b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ),
+    transit: "data:image/svg+xml;utf8," + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="6" y="22" width="34" height="18" rx="2" fill="#8b8b8b"/><rect x="40" y="28" width="16" height="12" rx="2" fill="#8b8b8b"/><circle cx="20" cy="46" r="6" fill="#6d6d6d"/><circle cx="46" cy="46" r="6" fill="#6d6d6d"/></svg>'
+    ),
+    delivered: "data:image/svg+xml;utf8," + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="10" y="24" width="44" height="26" rx="2" fill="#8b8b8b"/><path d="M10 24l22-12 22 12" fill="#9b9b9b"/><path d="M26 38l6 6 12-12" fill="none" stroke="#2ea21f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ),
+  };
 
   // convert statuses to stage:
-  // 0 = confirmed, 1 = delivering/in transit, 2 = delivered/completed
+  // -1 = pending, 0 = confirmed/approved, 1 = delivering/in transit, 2 = delivered/completed
   const computeStage = (orderStatusRaw, logisticsStatusRaw) => {
     const orderStatus = (orderStatusRaw || "").toLowerCase();
     const logisticsStatus = (logisticsStatusRaw || "").toLowerCase();
 
-    let stage = 0;
+    let stage = -1;
+
+    if (
+      orderStatus.includes("confirm") ||
+      orderStatus.includes("approve") ||
+      orderStatus.includes("approved")
+    ) {
+      stage = 0;
+    }
 
     // in transit keywords
     if (
@@ -151,9 +166,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             logisticsStatuses[index]?.delivery_status
           );
 
-          // dots: screenshot look (6 dots each side)
-          const leftDotsOn = stage >= 1 ? 6 : 0;
-          const rightDotsOn = stage >= 2 ? 6 : 0;
+          const progressStrip =
+            stage >= 2 ? ICON_DELIVERED : stage >= 1 ? ICON_TRUCK : ICON_CONFIRMED;
 
           // optional: keep your old localStorage method field (not shown in screenshot)
           let deliveryMethod = "Not selected";
@@ -164,9 +178,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               if (parsed.method) deliveryMethod = parsed.method;
             }
           } catch {}
-
-          // If you DON'T have Order Delivered Icon.png, fallback automatically:
-          const deliveredIconSafe = ICON_DELIVERED || ICON_CONFIRMED;
 
           return `
             <div class="delivery-card">
@@ -185,29 +196,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 <div class="tracker" aria-label="Delivery progress">
                   <img
-                    class="track-icon ${stage >= 0 ? "active" : ""}"
-                    src="${ICON_CONFIRMED}"
-                    alt="Confirmed"
-                  />
-
-                  <div class="track-dots">
-                    ${dots(6, leftDotsOn)}
-                  </div>
-
-                  <img
-                    class="track-icon ${stage >= 1 ? "active" : ""}"
-                    src="${ICON_TRUCK}"
-                    alt="In Transit"
-                  />
-
-                  <div class="track-dots">
-                    ${dots(6, rightDotsOn)}
-                  </div>
-
-                  <img
-                    class="track-icon ${stage >= 2 ? "active" : ""}"
-                    src="${deliveredIconSafe}"
-                    alt="Delivered"
+                    class="track-strip"
+                    src="${progressStrip}"
+                    alt="Delivery progress"
                   />
                 </div>
               </div>
@@ -239,12 +230,24 @@ document.addEventListener("DOMContentLoaded", async () => {
           `;
         })
         .join("");
+
+      ordersList.querySelectorAll(".track-icon").forEach((img) => {
+        img.addEventListener(
+          "error",
+          () => {
+            const key = img.dataset.icon || "confirmed";
+            img.src = FALLBACK_ICONS[key] || FALLBACK_ICONS.confirmed;
+          },
+          { once: true }
+        );
+      });
     } catch (err) {
       console.error("Failed to load orders:", err);
       ordersList.innerHTML = "<p>Failed to load orders.</p>";
     }
   }
 
+  await hydrateBuyerSidebar();
   await loadOrders();
   mirrorBadgesToSidebar(); // keep sidebar badges synced
 });

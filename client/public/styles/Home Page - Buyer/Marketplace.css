@@ -61,47 +61,57 @@ html {
   overflow: visible;
 }
 
-/* =========================
-   TOP NAV (MATCH TARGET)
-   ========================= */
+/* ========================= TOP NAV ========================= */
 #top {
-  position: sticky;
-  top: 0;
+  position: static;
   z-index: 999;
-  background: white;
-  padding: 10px 0;
+  background: transparent;
+  padding: 14px 28px 0;
+  margin: 0 -24px;
+  width: calc(100% + 48px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 }
 
 .left-group {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 14px;
 }
 
 .right-group {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 18px;
+  padding-top: 2px;
 }
 
-#sidebarBtn { display: none; } /* sidebar is always open */
+#sidebarBtn {
+  display: none;
+}
 
-#top h3 { margin: 0; }
+#top h3 {
+  margin: 0;
+  font-weight: 800;
+}
 
 #top h3 a {
-  margin: 0 10px;
-  font-size: 30px;
-  color: #32A928;
+  margin: 0 8px;
+  font-size: 28px;
+  color: #32a928;
   text-decoration: none;
+  letter-spacing: 0.3px;
 }
 
-#top h3.Market a { text-decoration: underline; }
+#top h3.Market a {
+  text-decoration: underline;
+}
 
-#top img {
-  height: 110px;
+/* smaller icons like Home */
+#top img.Deliveries,
+#top img.Basket {
+  height: 70px;
   cursor: pointer;
 }
 
@@ -252,6 +262,7 @@ html {
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+  text-decoration: none;
 }
 
 .account-icon {
@@ -264,6 +275,10 @@ html {
   font-size: 15px;
   margin: 0;
   color: #32A928;
+}
+
+.account-info:hover .account-name {
+  text-decoration: underline;
 }
 
 /* Menu */
