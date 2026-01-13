@@ -33,7 +33,7 @@ export function FilterBar({ filters, onFilterChange, categories }: FilterBarProp
   };
 
   return (
-    <div className="mb-6 -mx-4 md:-mx-8">
+    <div className="mb-6 -mx-4 md:-mx-12">
       {/* Filter Section with Green Gradient Background */}
       <div className="relative overflow-hidden">
         {/* Background Image */}

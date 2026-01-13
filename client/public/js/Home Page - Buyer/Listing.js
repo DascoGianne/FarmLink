@@ -3,6 +3,29 @@ import {
   getPricingByListing,
   getTraceabilityByListing,
 } from "../api/listings.js";
+import API_BASE_URL from "../api/config.js";
+
+const FALLBACK_LISTING_IMAGE = "/client/public/images/pictures - resources/placeholder-produce.png";
+
+const API_ORIGIN = (() => {
+  try {
+    return new URL(API_BASE_URL).origin;
+  } catch (err) {
+    return "";
+  }
+})();
+
+function resolveImageUrl(url) {
+  if (!url) return "";
+  if (url.startsWith("blob:") || url.startsWith("data:")) return url;
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  if (/^\/?uploads\//.test(url)) {
+    if (!API_ORIGIN) return url;
+    const normalized = url.startsWith("/") ? url : `/${url}`;
+    return `${API_ORIGIN}${normalized}`;
+  }
+  return url;
+}
 
 const params = new URLSearchParams(window.location.search);
 const listingId = params.get("listing_id");
@@ -170,7 +193,18 @@ async function loadListing() {
       if (statusEl) statusEl.textContent = `Status: ${item.status || "N/A"}`;
       if (dateEl) dateEl.textContent = `Date listed: ${formatDateLong(item.date_listed)}`;
 
-      if (listingImageEl && item.image_url) listingImageEl.src = item.image_url;
+      if (listingImageEl) {
+        const imageUrl = resolveImageUrl(
+          item.image_1 ||
+            item.image_2 ||
+            item.image_3 ||
+            item.image_4 ||
+            item.image_5 ||
+            item.image_6 ||
+            FALLBACK_LISTING_IMAGE
+        );
+        listingImageEl.src = imageUrl;
+      }
 
       if (stockLeftEl && item.stocks_left != null) {
         stockLeftEl.textContent = `${item.stocks_left} kg`;

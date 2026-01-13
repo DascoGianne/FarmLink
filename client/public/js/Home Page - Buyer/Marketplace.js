@@ -1,6 +1,29 @@
 import { getRescueListings, getListings, getRescueAlertsByListing } from "../api/listings.js";
 import { addToCart } from "../api/cart.js";
 import { updateBadges } from "../api/badges.js";
+import API_BASE_URL from "../api/config.js";
+
+const FALLBACK_LISTING_IMAGE = "/client/public/images/pictures - resources/placeholder-produce.png";
+
+const API_ORIGIN = (() => {
+  try {
+    return new URL(API_BASE_URL).origin;
+  } catch (err) {
+    return "";
+  }
+})();
+
+function resolveImageUrl(url) {
+  if (!url) return "";
+  if (url.startsWith("blob:") || url.startsWith("data:")) return url;
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  if (/^\/?uploads\//.test(url)) {
+    if (!API_ORIGIN) return url;
+    const normalized = url.startsWith("/") ? url : `/${url}`;
+    return `${API_ORIGIN}${normalized}`;
+  }
+  return url;
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   // ================= SIDEBAR (always open) =================
@@ -101,9 +124,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Render your horizontal Listings row (existing behavior)
     if (listingsContainer) {
       listingsContainer.innerHTML = allListings
-        .map(
-          (item) => `
+        .map((item) => {
+          const imageUrl = resolveImageUrl(
+            item.image_1 ||
+              item.image_2 ||
+              item.image_3 ||
+              item.image_4 ||
+              item.image_5 ||
+              item.image_6 ||
+              FALLBACK_LISTING_IMAGE
+          );
+
+          return `
           <div class="listing-card" data-listing-id="${item.listing_id}">
+            <img src="${imageUrl}" alt="${item.crop_name || "Listing image"}">
             <h4>${item.crop_name}</h4>
             <p>${item.category}</p>
             <p>Stocks: ${item.total_stocks}</p>
@@ -113,8 +147,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             <div class="rescue-alerts"></div>
           </div>
-        `
-        )
+        `;
+        })
         .join("");
 
       // Card click -> listing page (ignore button clicks)

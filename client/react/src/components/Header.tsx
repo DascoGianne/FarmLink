@@ -8,9 +8,10 @@ interface HeaderProps {
   onAddClick: () => void;
   orderCount?: number;
   onOrdersClick?: () => void;
+  successMessage?: string | null;
 }
 
-export function Header({ currentTab, onTabChange, onTabHover, onAddClick, orderCount, onOrdersClick }: HeaderProps) {
+export function Header({ currentTab, onTabChange, onTabHover, onAddClick, orderCount, onOrdersClick, successMessage }: HeaderProps) {
   return (
     <header className="bg-white">
       {/* Navigation Tabs */}
@@ -23,17 +24,24 @@ export function Header({ currentTab, onTabChange, onTabHover, onAddClick, orderC
           <NavTab label="MY LISTINGS" active={currentTab === 'MY LISTINGS'} onClick={() => onTabChange('MY LISTINGS')} onHover={() => onTabHover?.('MY LISTINGS')} />
         </nav>
         
-        {/* Add New Button - Only show on MY LISTINGS tab */}
-        {currentTab === 'MY LISTINGS' && (
-          <button 
-            onClick={onAddClick}
-            className="bg-[#32a928] hover:bg-[#2a8f21] transition rounded-lg w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shadow-md"
-          >
-            <svg className="w-6 h-6 md:w-7 md:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
-        )}
+        <div className="flex items-center gap-12">
+          {currentTab === 'MY LISTINGS' && successMessage && (
+            <span className="text-[#32a928] text-xl md:text-2xl font-semibold italic whitespace-nowrap">
+              {successMessage}
+            </span>
+          )}
+          {/* Add New Button - Only show on MY LISTINGS tab */}
+          {currentTab === 'MY LISTINGS' && (
+            <button 
+              onClick={onAddClick}
+              className="bg-[#32a928] hover:bg-[#2a8f21] transition rounded-lg w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shadow-md cursor-pointer"
+            >
+              <svg className="w-6 h-6 md:w-7 md:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          )}
+        </div>
         
         {/* Orders Button - Show on HOME and MARKETPLACE tabs */}
         {(currentTab === 'HOME' || currentTab === 'MARKETPLACE') && onOrdersClick && (
@@ -53,7 +61,7 @@ interface NavTabProps {
 
 function NavTab({ label, active, onClick, onHover }: NavTabProps) {
   return (
-    <button onClick={onClick} onMouseEnter={onHover} className="relative hover:opacity-80 transition">
+    <button onClick={onClick} onMouseEnter={onHover} className="relative hover:opacity-80 transition cursor-pointer">
       <span className="text-2xl md:text-3xl font-bold text-[#32a928]">
         {label}
       </span>

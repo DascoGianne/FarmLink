@@ -1,5 +1,5 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Toaster } from 'sonner@2.0.3';
+import { Toaster, toast } from 'sonner@2.0.3';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { FilterBar, FilterOptions } from './components/FilterBar';
@@ -155,31 +155,72 @@ const toNumber = (value: number | string | null | undefined) => {
   return Number.isNaN(parsed) ? null : parsed;
 };
 
-const uploadListingImage = async (file: File, token: string) => {
+const uploadListingImage = async (
+  file: File,
+  token: string,
+  onProgress?: (progress: number) => void
+) => {
   const formData = new FormData();
   formData.append('image', file);
 
-  const response = await fetch('/api/uploads/listing-image', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
+  return new Promise<string>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/uploads/listing-image');
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
+    xhr.upload.addEventListener('progress', (event) => {
+      if (!event.lengthComputable) return;
+      const progress = event.loaded / event.total;
+      if (onProgress) {
+        onProgress(progress);
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      try {
+        const payload = JSON.parse(xhr.responseText || '{}');
+        if (xhr.status < 200 || xhr.status >= 300) {
+          reject(new Error(payload?.message || 'Image upload failed'));
+          return;
+        }
+        resolve(payload?.url as string);
+      } catch (error) {
+        reject(error instanceof Error ? error : new Error('Image upload failed'));
+      }
+    });
+
+    xhr.addEventListener('error', () => {
+      reject(new Error('Image upload failed'));
+    });
+
+    xhr.send(formData);
   });
-
-  const payload = await parseJsonSafe(response);
-  if (!response.ok) {
-    throw new Error(payload?.message || 'Image upload failed');
-  }
-
-  return payload?.url as string;
 };
 
-const resolveListingImages = async (photos: (ListingPhoto | null)[], token: string) => {
-  const uploads = photos.map(async (photo) => {
+const resolveListingImages = async (
+  photos: (ListingPhoto | null)[],
+  token: string,
+  onProgress?: (progress: number) => void
+) => {
+  const uploadable = photos
+    .map((photo, index) => (photo?.file ? { photo, index } : null))
+    .filter((entry): entry is { photo: ListingPhoto; index: number } => Boolean(entry));
+  const progressByIndex = new Map<number, number>();
+  const totalUploads = uploadable.length;
+
+  const updateOverall = () => {
+    if (!onProgress || totalUploads === 0) return;
+    const total = Array.from(progressByIndex.values()).reduce((sum, value) => sum + value, 0);
+    onProgress(total / totalUploads);
+  };
+
+  const uploads = photos.map(async (photo, index) => {
     if (!photo) return null;
     if (photo.file) {
-      return uploadListingImage(photo.file, token);
+      return uploadListingImage(photo.file, token, (progress) => {
+        progressByIndex.set(index, progress);
+        updateOverall();
+      });
     }
     return photo.url || null;
   });
@@ -202,6 +243,8 @@ export default function App() {
   const [listingsError, setListingsError] = useState<string | null>(null);
   const [isSavingListing, setIsSavingListing] = useState(false);
   const [orderCount, setOrderCount] = useState<number | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [focusTrigger, setFocusTrigger] = useState(0); // Add focus trigger
   const [filters, setFilters] = useState<FilterOptions>({
     category: 'All Categories',
@@ -213,6 +256,29 @@ export default function App() {
   // Store the previous quantity modal state to restore it when returning from freshness form
   const [previousQuantityModalOpen, setPreviousQuantityModalOpen] = useState(false);
   const hasLoadedSession = useRef(false);
+  const pendingDeletesRef = useRef(
+    new Map<number, { listing: Listing; timeoutId: number }>()
+  );
+  const successTimerRef = useRef<number | null>(null);
+
+  const showSuccessMessage = useCallback((message: string) => {
+    setSuccessMessage(message);
+    if (successTimerRef.current) {
+      window.clearTimeout(successTimerRef.current);
+    }
+    successTimerRef.current = window.setTimeout(() => {
+      setSuccessMessage(null);
+      successTimerRef.current = null;
+    }, 3000);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (successTimerRef.current) {
+        window.clearTimeout(successTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -368,7 +434,9 @@ export default function App() {
 
       setListings(mappedListings);
     } catch (error) {
-      setListingsError(error instanceof Error ? error.message : 'Failed to load listings');
+      const message = error instanceof Error ? error.message : 'Failed to load listings';
+      setListingsError(message);
+      toast.error(message);
     } finally {
       setIsLoadingListings(false);
     }
@@ -474,21 +542,35 @@ export default function App() {
   const handleDeleteListing = async (id: number) => {
     if (!authToken) return;
 
-    try {
-      const response = await fetch(`/api/listings/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      const payload = await parseJsonSafe(response);
-      if (!response.ok) {
-        throw new Error(payload?.message || 'Failed to delete listing');
+    const listing = listings.find((item) => item.id === id);
+    if (!listing) return;
+
+    setListings((prev) => prev.filter((item) => item.id !== id));
+
+    const timeoutId = window.setTimeout(async () => {
+      pendingDeletesRef.current.delete(id);
+      try {
+        const response = await fetch(`/api/listings/${id}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        const payload = await parseJsonSafe(response);
+        if (!response.ok) {
+          throw new Error(payload?.message || 'Failed to delete listing');
+        }
+        showSuccessMessage('Listing deleted.');
+        toast.success('Listing deleted.');
+      } catch (error) {
+        setListings((prev) => [listing, ...prev]);
+        toast.error(error instanceof Error ? error.message : 'Failed to delete listing');
       }
-      await fetchListings();
-    } catch (error) {
-      alert(error instanceof Error ? error.message : 'Failed to delete listing');
-    }
+    }, 4000);
+
+    pendingDeletesRef.current.set(id, { listing, timeoutId });
+
+    toast('Listing removed.');
   };
 
   const handleStatusChange = async (id: number, status: 'Active' | 'Sold out') => {
@@ -510,8 +592,9 @@ export default function App() {
       setListings(prev => prev.map(listing =>
         listing.id === id ? { ...listing, status } : listing
       ));
+      showSuccessMessage('Status updated.');
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Failed to update status');
+      toast.error(error instanceof Error ? error.message : 'Failed to update status');
     }
   };
 
@@ -531,14 +614,23 @@ export default function App() {
 
   const handleSaveListing = async (updatedListing: ListingDraft) => {
     if (!authToken) {
-      alert('Authentication required.');
+      toast.error('Authentication required.');
       return;
     }
 
     setIsSavingListing(true);
 
     try {
-      const imageUrls = await resolveListingImages(updatedListing.photos, authToken);
+      const uploadCount = updatedListing.photos.filter((photo) => photo?.file).length;
+      if (uploadCount > 0) {
+        setUploadProgress(0);
+      }
+      const imageUrls = await resolveListingImages(
+        updatedListing.photos,
+        authToken,
+        uploadCount > 0 ? setUploadProgress : undefined
+      );
+      setUploadProgress(null);
 
       const payload = {
         promo_id: promoIdFromSelection(updatedListing.promos),
@@ -627,10 +719,13 @@ export default function App() {
       setIsModalOpen(false);
       setIsQuantityModalOpen(false);
       setEditingListing(null);
+      const successText = updatedListing.id ? 'Listing updated.' : 'New listing successful.';
+      showSuccessMessage(successText);
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Failed to save listing');
+      toast.error(error instanceof Error ? error.message : 'Failed to save listing');
     } finally {
       setIsSavingListing(false);
+      setUploadProgress(null);
     }
   };
 
@@ -737,8 +832,9 @@ export default function App() {
           onTabChange={setCurrentTab}
           onTabHover={handleTabHover}
           onAddClick={handleAddClick} 
-        onOrdersClick={handleOrdersClick}
+          onOrdersClick={handleOrdersClick}
           orderCount={orderCount ?? 0}
+          successMessage={successMessage}
         />
         <main className="flex-1">
           {listingsError && (
@@ -771,12 +867,24 @@ export default function App() {
                 onFilterChange={setFilters} 
                 categories={categories}
               />
-              <ListingsTable 
-                listings={filteredListings} 
-                onEdit={handleEditClick} 
-                onDelete={handleDeleteListing} 
-                onStatusChange={handleStatusChange} 
-              />
+              {isLoadingListings && listings.length === 0 ? (
+                <div className="mt-6 space-y-4">
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className="h-20 rounded-lg bg-gray-100 animate-pulse" />
+                  ))}
+                </div>
+              ) : filteredListings.length === 0 ? (
+                <div className="mt-6 rounded-lg border border-dashed border-gray-300 p-8 text-center text-gray-500">
+                  No listings yet. Create your first crop listing to get started.
+                </div>
+              ) : (
+                <ListingsTable 
+                  listings={filteredListings} 
+                  onEdit={handleEditClick} 
+                  onDelete={handleDeleteListing} 
+                  onStatusChange={handleStatusChange} 
+                />
+              )}
             </div>
           )}
           
@@ -807,6 +915,8 @@ export default function App() {
         onFreshnessFormOpen={handleFreshnessFormOpen}
         onFreshnessFormClose={handleFreshnessFormClose}
         ngoName={ngoProfile?.ngo_name}
+        isSaving={isSavingListing}
+        uploadProgress={uploadProgress}
       />
 
       {/* Quantity/Unit/Price Modal */}

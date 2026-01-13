@@ -4,6 +4,40 @@ document.addEventListener("DOMContentLoaded", () => {
     updateBadges();
 });
 
+const getRoleFromToken = () => {
+  const token = localStorage.getItem("farmlink_token") || localStorage.getItem("token");
+  if (!token) return null;
+  try {
+    const payload = token.split(".")[1];
+    const decoded = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+    const data = JSON.parse(decoded);
+    return data?.role || null;
+  } catch (err) {
+    return null;
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  const role = getRoleFromToken();
+  if (role !== "NGO") return;
+
+  const navRight = document.querySelector(".nav-right");
+  if (navRight) {
+    navRight.remove();
+  }
+
+  const sidebar = document.getElementById("sidebar");
+  if (sidebar) {
+    const links = sidebar.querySelectorAll("a");
+    links.forEach((link) => {
+      const href = link.getAttribute("href") || "";
+      if (href.includes("MyBasket.html") || href.includes("MyDeliveries.html")) {
+        link.remove();
+      }
+    });
+  }
+});
+
 //sidebar
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");

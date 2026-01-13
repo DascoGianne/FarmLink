@@ -70,9 +70,11 @@ interface AddListingModalProps {
   onFreshnessFormOpen?: () => void;
   onFreshnessFormClose?: () => void;
   ngoName?: string;
+  isSaving?: boolean;
+  uploadProgress?: number | null;
 }
 
-export function AddListingModal({ isOpen, onClose, editingListing, quantityEntries, onSave, onRequestQuantityFocus, onFreshnessFormOpen, onFreshnessFormClose, ngoName }: AddListingModalProps) {
+export function AddListingModal({ isOpen, onClose, editingListing, quantityEntries, onSave, onRequestQuantityFocus, onFreshnessFormOpen, onFreshnessFormClose, ngoName, isSaving, uploadProgress }: AddListingModalProps) {
   const [cropName, setCropName] = useState('');
   const [price, setPrice] = useState('');
   const [totalStocks, setTotalStocks] = useState('');
@@ -96,6 +98,15 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
     category: string;
     freshnessRating: number;
   } | null>(null);
+  const [formErrors, setFormErrors] = useState<{
+    cropName?: string;
+    price?: string;
+    totalStocks?: string;
+    description?: string;
+    quantities?: string;
+    freshness?: string;
+    photos?: string;
+  }>({});
 
   // Refs for form navigation
   const cropNameRef = useRef<HTMLInputElement>(null);
@@ -162,6 +173,7 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
         discount25: false,
         discount50: false,
       });
+      setFormErrors({});
     }
   }, [editingListing, isOpen]);
 
@@ -175,6 +187,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
         return currentQty < lowestQty ? current : lowest;
       });
       setPrice(lowestEntry.price);
+      if (formErrors.quantities) {
+        setFormErrors((prev) => ({ ...prev, quantities: undefined, price: undefined }));
+      }
     } else {
       // Reset price when no entries exist
       setPrice('');
@@ -199,6 +214,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
           preview: reader.result as string,
         };
         setPhotos(newPhotos);
+        if (formErrors.photos) {
+          setFormErrors((prev) => ({ ...prev, photos: undefined }));
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -211,28 +229,37 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
   };
 
   const handleFinish = () => {
+    const errors: typeof formErrors = {};
     // Validation
     if (!cropName.trim()) {
-      alert('Please enter a crop name');
-      return;
+      errors.cropName = 'Crop name is required.';
     }
     if (!price.trim()) {
-      alert('Please enter a price');
-      return;
+      errors.price = 'Price is required.';
     }
     if (!totalStocks.trim()) {
-      alert('Please enter total stocks');
-      return;
+      errors.totalStocks = 'Total stocks is required.';
     }
     if (!freshnessData) {
-      alert('Please complete the freshness form');
-      return;
+      errors.freshness = 'Complete the freshness form to continue.';
     }
     
     // Get the first photo or use the existing image if editing
     const firstPhoto = photos.find(p => p?.preview || p?.url);
     if (!firstPhoto && !editingListing) {
-      alert('Please upload at least one photo');
+      errors.photos = 'Upload at least one photo.';
+    }
+
+    if (quantityEntries.length === 0) {
+      errors.quantities = 'Add at least one quantity and price entry.';
+    }
+
+    if (!description.trim()) {
+      errors.description = 'Description is required.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
       return;
     }
     
@@ -254,7 +281,6 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
     };
     
     onSave(updatedListing);
-    onClose();
   };
 
   const handleOpenFreshnessForm = () => {
@@ -278,6 +304,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
     setShowPromosModal(true); // Show promos modal again
     if (data) {
       setFreshnessData(data);
+      if (formErrors.freshness) {
+        setFormErrors((prev) => ({ ...prev, freshness: undefined }));
+      }
     }
     if (onFreshnessFormClose) {
       onFreshnessFormClose();
@@ -551,6 +580,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                   ))}
                 </div>
               </div>
+              {formErrors.photos && (
+                <p className="mt-2 text-[12px] text-red-500">{formErrors.photos}</p>
+              )}
             </div>
 
             {/* Right Column - Form Fields and Buttons */}
@@ -558,7 +590,7 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
               {/* Form Fields */}
               <div className="flex-1">
                 {/* Profile Section */}
-                <div className="flex items-center gap-3 mb-5">
+                <div className="flex items-center gap-3 mb-2">
                   <div className="relative w-[60px] h-[60px] bg-[#9bdc8c] rounded-full flex items-center justify-center shrink-0">
                     <img 
                       src={imgEllipse971} 
@@ -578,6 +610,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                     </p>
                   </div>
                 </div>
+                {formErrors.freshness && (
+                  <p className="mb-4 text-[12px] text-red-500">{formErrors.freshness}</p>
+                )}
 
                 {/* Crop Name */}
                 <div className="mb-4">
@@ -585,7 +620,12 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                     <input
                       type="text"
                       value={cropName}
-                      onChange={(e) => setCropName(e.target.value)}
+                      onChange={(e) => {
+                        setCropName(e.target.value);
+                        if (formErrors.cropName) {
+                          setFormErrors((prev) => ({ ...prev, cropName: undefined }));
+                        }
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault();
@@ -604,6 +644,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                       <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                     </svg>
                   </div>
+                  {formErrors.cropName && (
+                    <p className="mt-1 text-[12px] text-red-500">{formErrors.cropName}</p>
+                  )}
                 </div>
 
                 {/* Price */}
@@ -622,6 +665,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                       <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                     </svg>
                   </div>
+                  {formErrors.price && (
+                    <p className="mt-1 text-[12px] text-red-500">{formErrors.price}</p>
+                  )}
                 </div>
 
                 {/* Total Stocks Available */}
@@ -638,6 +684,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                         const value = e.target.value;
                         if (value === '' || /^\d*\.?\d*$/.test(value)) {
                           setTotalStocks(value);
+                          if (formErrors.totalStocks) {
+                            setFormErrors((prev) => ({ ...prev, totalStocks: undefined }));
+                          }
                         }
                       }}
                       onKeyDown={(e) => {
@@ -656,6 +705,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                       <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                     </svg>
                   </div>
+                  {formErrors.totalStocks && (
+                    <p className="mt-1 text-[12px] text-red-500">{formErrors.totalStocks}</p>
+                  )}
                 </div>
 
                 {/* Description */}
@@ -663,7 +715,12 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                   <div className="relative">
                     <textarea
                       value={description}
-                      onChange={(e) => setDescription(e.target.value.slice(0, 100))}
+                      onChange={(e) => {
+                        setDescription(e.target.value.slice(0, 100));
+                        if (formErrors.description) {
+                          setFormErrors((prev) => ({ ...prev, description: undefined }));
+                        }
+                      }}
                       placeholder="Type your crop Description in here...."
                       className={`w-full h-[95px] border-2 border-dashed border-black rounded-[12px] px-4 py-3 text-[13px] italic outline-none resize-none placeholder:text-gray-400 placeholder:italic focus:border-[#32a928] ${
                         description ? 'text-black' : 'text-[#6b6b6b]'
@@ -676,6 +733,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                       {description.length}/100
                     </p>
                   </div>
+                  {formErrors.description && (
+                    <p className="mt-1 text-[12px] text-red-500">{formErrors.description}</p>
+                  )}
                 </div>
 
                 {/* Quantities Available */}
@@ -706,6 +766,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                       </svg>
                     </div>
                   )}
+                  {formErrors.quantities && (
+                    <p className="mt-2 text-[12px] text-red-500">{formErrors.quantities}</p>
+                  )}
                 </div>
 
                 {/* Promotional Banners */}
@@ -716,24 +779,46 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
               </div>
 
               {/* Buttons at the bottom of right column */}
-              <div className="flex gap-4 mt-6">
-                <button
-                  onClick={onClose}
-                  className="flex-1 bg-[#e5e5e5] hover:bg-gray-300 text-[#4f4f4f] text-[20px] font-bold py-3 rounded-[10px] transition h-[50px] flex items-center justify-center"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleFinish}
-                  disabled={!isFormValid()}
-                  className={`flex-1 text-[20px] font-bold py-3 rounded-[10px] transition h-[50px] flex items-center justify-center ${
-                    isFormValid()
-                      ? 'bg-[#5EB14E] hover:bg-[#4a9a3d] text-white cursor-pointer'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
-                >
-                  Finish
-                </button>
+              <div className="flex flex-col gap-3 mt-6">
+                {typeof uploadProgress === 'number' && (
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
+                      <div
+                        className="h-full bg-[#5EB14E] transition-all"
+                        style={{ width: `${Math.round(uploadProgress * 100)}%` }}
+                      />
+                    </div>
+                    <span className="text-xs text-gray-500">
+                      Uploading {Math.round(uploadProgress * 100)}%
+                    </span>
+                  </div>
+                )}
+                <div className="flex gap-4">
+                  <button
+                    onClick={onClose}
+                    className="flex-1 bg-[#e5e5e5] hover:bg-gray-300 text-[#4f4f4f] text-[20px] font-bold py-3 rounded-[10px] transition h-[50px] flex items-center justify-center"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleFinish}
+                    disabled={!isFormValid() || isSaving}
+                    className={`flex-1 text-[20px] font-bold py-3 rounded-[10px] transition h-[50px] flex items-center justify-center ${
+                      isFormValid() && !isSaving
+                        ? 'bg-[#5EB14E] hover:bg-[#4a9a3d] text-white cursor-pointer'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
+                    {isSaving ? (
+                      <span className="flex items-center gap-2">
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        Saving...
+                      </span>
+                    ) : (
+                      'Finish'
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

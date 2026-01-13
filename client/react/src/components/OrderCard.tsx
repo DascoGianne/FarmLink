@@ -26,6 +26,7 @@ interface OrderCardProps {
   shipping?: string;
   orderStatus?: string;
   onConfirm?: () => void;
+  isConfirming?: boolean;
 }
 
 export function OrderCard({
@@ -41,7 +42,8 @@ export function OrderCard({
   total,
   shipping = "20.00",
   orderStatus = "Pending",
-  onConfirm
+  onConfirm,
+  isConfirming = false
 }: OrderCardProps) {
   const [isModalOpen, setModalOpen] = useState(false);
   const isPending = orderStatus === "Pending";
@@ -62,9 +64,10 @@ export function OrderCard({
           <button
             type="button"
             onClick={onConfirm}
+            disabled={isConfirming}
             className="bg-[#5EB14E] hover:bg-[#4a9a3d] text-white font-['Poppins'] font-extrabold text-[16px] px-10 py-2.5 rounded-[8px] transition"
           >
-            Confirm Order
+            {isConfirming ? 'Confirming...' : 'Confirm Order'}
           </button>
         )}
       </div>
@@ -163,7 +166,7 @@ export function OrderCard({
         </div>
 
         {/* Buyer ID Section */}
-        <div className="bg-[#f2f2f2] rounded-[20px] p-5 flex flex-col">
+        <div className="bg-[#f2f2f2] rounded-[20px] p-5 flex flex-col w-full max-w-[260px] justify-self-end">
           <h3 className="font-['Poppins'] text-[16px] font-bold text-[#32a928] text-center mb-4">
             Buyer ID #{buyerId}
           </h3>
@@ -204,3 +207,6 @@ export function OrderCard({
     </div>
   );
 }
+
+
+

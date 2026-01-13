@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner@2.0.3';
 import BackgroundBlobs from '../imports/Group52557';
 import { OrderCard } from './OrderCard';
 
@@ -59,6 +60,7 @@ export function Orders({ authUser, authToken, onOrderCountChange }: OrdersProps)
   const [orders, setOrders] = useState<OrderApi[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmingId, setConfirmingId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!authUser || !authToken) return;
@@ -84,7 +86,9 @@ export function Orders({ authUser, authToken, onOrderCountChange }: OrdersProps)
           onOrderCountChange(data.length);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load orders');
+        const message = err instanceof Error ? err.message : 'Failed to load orders';
+        setError(message);
+        toast.error(message);
       } finally {
         setIsLoading(false);
       }
@@ -136,6 +140,7 @@ export function Orders({ authUser, authToken, onOrderCountChange }: OrdersProps)
           orderStatus={orderStatus}
           onConfirm={orderStatus === 'Pending' ? async () => {
             try {
+              setConfirmingId(order.order_id);
               const response = await fetch(`/api/orders/${order.order_id}/status`, {
                 method: 'PUT',
                 headers: {
@@ -155,10 +160,14 @@ export function Orders({ authUser, authToken, onOrderCountChange }: OrdersProps)
                     : item
                 )
               );
+              toast.success('Order confirmed.');
             } catch (err) {
-              alert(err instanceof Error ? err.message : 'Failed to confirm order');
+              toast.error(err instanceof Error ? err.message : 'Failed to confirm order');
+            } finally {
+              setConfirmingId(null);
             }
           } : undefined}
+          isConfirming={confirmingId === order.order_id}
         />
       );
     });
@@ -177,6 +186,14 @@ export function Orders({ authUser, authToken, onOrderCountChange }: OrdersProps)
         <h1 className="text-3xl font-bold text-[#32a928] text-center mb-8">
           My Orders
         </h1>
+
+        {isLoading && (
+          <div className="space-y-4">
+            {Array.from({ length: 2 }).map((_, index) => (
+              <div key={index} className="h-40 rounded-[20px] bg-gray-100 animate-pulse" />
+            ))}
+          </div>
+        )}
 
         {!isLoading && error && (
           <p className="text-center text-red-600">{error}</p>

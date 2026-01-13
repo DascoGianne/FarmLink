@@ -136,6 +136,7 @@ export function Marketplace({ listings }: MarketplaceProps) {
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Handle category click - toggle filter on/off
   const handleCategoryClick = (category: string) => {
@@ -148,14 +149,24 @@ export function Marketplace({ listings }: MarketplaceProps) {
     }
   };
 
-  // Filter products and rescue deals based on selected category
-  const filteredProducts = selectedCategory 
-    ? products.filter(p => p.category === selectedCategory)
-    : products;
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const matchesSearch = (product: Product) => {
+    if (!normalizedQuery) return true;
+    return [
+      product.name,
+      product.category,
+      product.address,
+    ]
+      .filter(Boolean)
+      .some((value) => String(value).toLowerCase().includes(normalizedQuery));
+  };
 
-  const filteredRescueDeals = selectedCategory
-    ? rescueDeals.filter(p => p.category === selectedCategory)
-    : rescueDeals;
+  // Filter products and rescue deals based on selected category + search
+  const filteredProducts = (selectedCategory ? products.filter(p => p.category === selectedCategory) : products)
+    .filter(matchesSearch);
+
+  const filteredRescueDeals = (selectedCategory ? rescueDeals.filter(p => p.category === selectedCategory) : rescueDeals)
+    .filter(matchesSearch);
 
   return (
     <div className="w-full">
@@ -201,6 +212,8 @@ export function Marketplace({ listings }: MarketplaceProps) {
               <input
                 type="text"
                 placeholder="Search Product..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 bg-transparent outline-none text-[#9ca3af] text-[16px] font-['Poppins'] font-normal placeholder:text-[#9ca3af]"
               />
             </div>

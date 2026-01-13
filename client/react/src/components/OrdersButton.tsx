@@ -11,7 +11,7 @@ export function OrdersButton({ orderCount, onClick }: OrdersButtonProps) {
   return (
     <button 
       onClick={onClick}
-      className="relative w-[75px] h-[70px] hover:opacity-80 transition"
+      className="relative w-[75px] h-[70px] hover:opacity-80 transition cursor-pointer"
     >
       <div className="absolute left-[4px] size-[67px] top-0" data-name="image 48">
         <img alt="Orders clipboard" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgImage48} />

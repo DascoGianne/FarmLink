@@ -144,12 +144,12 @@ export function ListingsTable({ onEdit, listings, onDelete, onStatusChange }: Li
                       <div className="flex items-center gap-2">
                         <button 
                           onClick={() => onEdit(listing)}
-                          className="bg-[#5eb14e] hover:bg-[#4a9c3c] text-white px-4 py-2 rounded-lg font-medium transition flex items-center gap-2"
+                          className="bg-[#5eb14e] hover:bg-[#4a9c3c] text-white px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 cursor-pointer"
                         >
                           <img src={imgEdit} alt="Edit" className="w-4 h-4" />
                           Edit
                         </button>
-                        <button className="bg-white hover:bg-red-50 border border-red-300 text-red-600 p-2 rounded-lg transition" onClick={() => handleDeleteClick(listing.id, listing.name)}>
+                        <button className="bg-white hover:bg-red-50 border border-red-300 text-red-600 p-2 rounded-lg transition cursor-pointer" onClick={() => handleDeleteClick(listing.id, listing.name)}>
                           <img src={imgDelete} alt="Delete" className="w-5 h-5" />
                         </button>
                       </div>
@@ -303,12 +303,12 @@ function ListingCard({ listing, onEdit, onDelete, onStatusChange }: ListingCardP
       <div className="flex items-center gap-2">
         <button 
           onClick={() => onEdit(listing)}
-          className="flex-1 bg-[#5eb14e] hover:bg-[#4a9c3c] text-white px-4 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2"
+          className="flex-1 bg-[#5eb14e] hover:bg-[#4a9c3c] text-white px-4 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 cursor-pointer"
         >
           <img src={imgEdit} alt="Edit" className="w-4 h-4" />
           Edit
         </button>
-        <button className="bg-white hover:bg-red-50 border border-red-300 text-red-600 p-2 rounded-lg transition" onClick={() => onDelete(listing.id, listing.name)}>
+        <button className="bg-white hover:bg-red-50 border border-red-300 text-red-600 p-2 rounded-lg transition cursor-pointer" onClick={() => onDelete(listing.id, listing.name)}>
           <img src={imgDelete} alt="Delete" className="w-5 h-5" />
         </button>
       </div>

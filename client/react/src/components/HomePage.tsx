@@ -24,6 +24,15 @@ export function HomePage({
   const backgroundYPosition = -165; // Adjust Y position (negative moves up, positive moves down)
   const backgroundScale = 0.76; // Adjust scale (1 = original size, 1.5 = 150%, etc.)
 
+  const resolveStaticUrl = (path: string) => {
+    if (typeof window === 'undefined') return path;
+    const { protocol, hostname, port } = window.location;
+    if (port === '5173') {
+      return `${protocol}//${hostname}:3000${path}`;
+    }
+    return `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`;
+  };
+
   return (
     <div className="relative flex-1 overflow-hidden bg-white">
       {/* Full Page Background - Anchored to Right */}
@@ -175,7 +184,13 @@ export function HomePage({
                 >
                   Explore Marketplace
                 </button>
-                <button className="bg-white hover:bg-gray-50 text-[#32a928] font-semibold px-[60px] py-[12px] rounded-full border-2 border-[#32a928] shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105">
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.location.href = resolveStaticUrl("/client/views/layouts/Home page - Buyer/about.html");
+                  }}
+                  className="bg-white hover:bg-gray-50 text-[#32a928] font-semibold px-[60px] py-[12px] rounded-full border-2 border-[#32a928] shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105"
+                >
                   Learn About FarmLink
                 </button>
               </div>
