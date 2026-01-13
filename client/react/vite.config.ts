@@ -128,7 +128,7 @@
     },
     server: {
       port: 5173,
-      open: true,
+      open: 'http://localhost:3000/client/views/layouts/login.html',
       proxy: {
         '/api': 'http://127.0.0.1:3000'
       },
