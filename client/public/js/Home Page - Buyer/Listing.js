@@ -285,12 +285,13 @@ async function loadListing() {
     });
   }
 
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", () => {
-      // You can route to your checkout page
-      window.location.href = "./Checkout.html";
-    });
-  }
+if (checkoutBtn) {
+  checkoutBtn.addEventListener("click", () => {
+    const checkoutUrl = new URL("./Checkout section/Checkout.html", window.location.href).href;
+    window.location.href = checkoutUrl;
+  });
+}
+
 }
 
 loadListing().catch((err) => {
