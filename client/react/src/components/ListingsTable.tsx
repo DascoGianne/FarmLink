@@ -233,7 +233,7 @@ function StatusDropdown({ status, onStatusChange }: StatusDropdownProps) {
         className="bg-white border border-black rounded-2xl px-4 py-2 pr-8 appearance-none cursor-pointer text-gray-800 outline-none hover:bg-gray-50 transition"
         onChange={(e) => onStatusChange(e.target.value as 'Active' | 'Sold out')}
       >
-        <option value="Active">Active</option>
+        <option value="Active">Available</option>
         <option value="Sold out">Sold out</option>
       </select>
       <img

@@ -1,5 +1,7 @@
 console.log("✅ Orderplace.js loaded");
 
+import { hydrateBuyerSidebar } from "../../api/sidebar.js";
+
 // Load updateBadges safely (so modal still works even if badges import fails)
 let updateBadgesFn = null;
 (async () => {
@@ -54,6 +56,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   }
+
+  await hydrateBuyerSidebar();
 
   /* ===== Badges (won't break modal if backend/import fails) ===== */
   try {

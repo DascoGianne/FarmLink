@@ -332,6 +332,7 @@ body {
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+  text-decoration: none;
 }
 
 .account-icon {
@@ -344,6 +345,10 @@ body {
   font-size: 15px;
   margin: 0;
   color: #32a928;
+}
+
+.account-info:hover .account-name {
+  text-decoration: underline;
 }
 
 .menu-title {

@@ -5,6 +5,7 @@ import imgEllipse971 from "figma:asset/ff1c3364a0ea8b0d0477ee0221561c76294067da.
 import imgLeaf from "figma:asset/b2b29d891a360c1c20df9597a06fd413e7d10568.png";
 import imgImage from "figma:asset/c0b5003c0cc5716f11a5c44caa4174cdb398de48.png";
 import { FreshnessFormModal } from './FreshnessFormModal';
+import { CategoryModal } from './CategoryModal';
 import { QuantityEntry } from './QuantityUnitPriceModal';
 import { PromosModal } from './PromosModal';
 import { PromoBadges } from './PromoBadges';
@@ -85,6 +86,7 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
   const [hideAddListing, setHideAddListing] = useState(false);
   const [isPromosModalOpen, setIsPromosModalOpen] = useState(false);
   const [showPromosModal, setShowPromosModal] = useState(true); // Control promos modal visibility
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedPromos, setSelectedPromos] = useState({
     limitedStocks: false,
     freeShipping: false,
@@ -112,6 +114,7 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
   const cropNameRef = useRef<HTMLInputElement>(null);
   const totalStocksRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const categoryOptions = ['Greens', 'Grains', 'Vegetables', 'Fruits', 'Root Crops', 'Exotic', 'Spices', 'Native'];
 
   // Auto-focus on Crop Name field when modal opens
   useEffect(() => {
@@ -146,7 +149,7 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
       // If listing has freshness rating, set freshness data
       if (editingListing.freshness) {
         setFreshnessData({
-          farmerName: 'Farmer Name',
+          farmerName: editingListing.farmerName || 'Farmer Name',
           farmAddress: editingListing.address || 'Farm Address',
           harvestDate: new Date().toISOString().split('T')[0],
           category: editingListing.category,
@@ -158,6 +161,7 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
       if (editingListing.promos) {
         setSelectedPromos(editingListing.promos);
       }
+      setSelectedCategory(editingListing.category || '');
     } else {
       // Reset form for new listing
       setCropName('');
@@ -173,6 +177,7 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
         discount25: false,
         discount50: false,
       });
+      setSelectedCategory('');
       setFormErrors({});
     }
   }, [editingListing, isOpen]);
@@ -264,7 +269,7 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
     }
     
     // Determine the category from freshness data or existing listing
-    const category = freshnessData?.category || editingListing?.category || 'Vegetables';
+    const category = freshnessData?.category || selectedCategory || editingListing?.category || 'Vegetables';
     
     // Create the listing object
     const updatedListing: ListingDraft = {
@@ -345,8 +350,9 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
     const hasDescription = description.trim().length > 0;
     const hasQuantityEntries = quantityEntries.length > 0;
     const hasFreshnessData = freshnessData !== null;
+    const hasCategory = selectedCategory.trim().length > 0;
     
-    return hasPhoto && hasCropName && hasPrice && hasTotalStocks && hasDescription && hasQuantityEntries && hasFreshnessData;
+    return hasPhoto && hasCropName && hasPrice && hasTotalStocks && hasDescription && hasQuantityEntries && hasFreshnessData && hasCategory;
   };
 
   return (
@@ -419,7 +425,7 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
                     Freshness Rating By FarmLink
                   </p>
                   <p className="text-white text-[12px] italic">
-                    *Use within a week for best taste.
+                    *Consume within five days for best taste.
                   </p>
                 </div>
 
@@ -828,8 +834,19 @@ export function AddListingModal({ isOpen, onClose, editingListing, quantityEntri
       {/* Freshness Form Modal */}
       <FreshnessFormModal 
         isOpen={isFreshnessFormOpen} 
+        category={selectedCategory}
         onClose={handleCloseFreshnessForm} 
       />
+
+      {/* Category Modal - Conditionally Visible */}
+      {isOpen && showPromosModal && (
+        <CategoryModal
+          isOpen={true}
+          categories={categoryOptions}
+          selectedCategory={selectedCategory}
+          onSelect={setSelectedCategory}
+        />
+      )}
 
       {/* Promos Modal - Conditionally Visible */}
       {isOpen && showPromosModal && (

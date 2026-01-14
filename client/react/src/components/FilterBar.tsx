@@ -55,7 +55,7 @@ export function FilterBar({ filters, onFilterChange, categories }: FilterBarProp
                 placeholder="All Categories"
                 value={filters.category}
                 onChange={handleCategoryChange}
-                options={['Greens', 'Vegetables', 'Root Crops', 'Spices', 'Grains', 'Fruits', 'Exotic', 'Native']}
+                options={categories.length > 0 ? categories : ['Greens', 'Vegetables', 'Root Crops', 'Spices', 'Grains', 'Fruits', 'Exotic', 'Native']}
               />
             </div>
 
@@ -68,7 +68,7 @@ export function FilterBar({ filters, onFilterChange, categories }: FilterBarProp
                 placeholder="All Status"
                 value={filters.status}
                 onChange={handleStatusChange}
-                options={['Active', 'Sold out']}
+                options={['Available', 'Sold out']}
               />
             </div>
 

@@ -1,5 +1,6 @@
 import { getListings } from "../api/listings.js";
 import { updateBadges } from "../api/badges.js";
+import { hydrateBuyerSidebar } from "../api/sidebar.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // ================= SIDEBAR (always open) =================
@@ -19,6 +20,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   }
+
+  await hydrateBuyerSidebar();
 
   // ================= BADGES (top icons) =================
   await updateBadges();

@@ -190,6 +190,7 @@ async function loadBuyerProfile() {
     const emailInput = document.getElementById("profile-email");
     const contactInput = document.getElementById("profile-contact");
     const addressInput = document.getElementById("profile-address");
+    const accountName = document.querySelector(".account-name");
 
     if (!usernameInput || !emailInput || !contactInput || !addressInput) return;
 
@@ -222,6 +223,10 @@ async function loadBuyerProfile() {
         ]
             .filter(Boolean)
             .join(", ");
+
+        if (accountName && buyer.username) {
+            accountName.textContent = buyer.username;
+        }
     } catch (err) {
         console.error("Failed to load buyer profile:", err);
         alert(err?.message || "Failed to load profile");

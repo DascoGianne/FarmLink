@@ -237,6 +237,7 @@ html {
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+  text-decoration: none;
 }
 .account-icon {
   width: 50px;
@@ -247,6 +248,10 @@ html {
   font-size: 15px;
   margin: 0;
   color: #32A928;
+}
+
+.account-info:hover .account-name {
+  text-decoration: underline;
 }
 
 /* Menu */

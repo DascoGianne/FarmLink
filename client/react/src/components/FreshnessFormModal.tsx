@@ -1,10 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import imgHeaderBg from "figma:asset/f394064e8a6ce0cfed98517b9c37405371194eb2.png";
 import imgEllipse971 from "figma:asset/ff1c3364a0ea8b0d0477ee0221561c76294067da.png";
-import imgTearOffCalendar from "figma:asset/13dbd4868e94ead4adc10a7d5d972370bb4b4067.png";
 
 interface FreshnessFormModalProps {
   isOpen: boolean;
+  category: string;
   onClose: (data?: {
     farmerName: string;
     farmAddress: string;
@@ -14,24 +14,16 @@ interface FreshnessFormModalProps {
   }) => void;
 }
 
-export function FreshnessFormModal({ isOpen, onClose }: FreshnessFormModalProps) {
-  const [farmerName, setFarmerName] = useState('');
-  const [farmAddress, setFarmAddress] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [harvestDate, setHarvestDate] = useState('');
-
-  // Refs for form navigation
-  const farmerNameRef = useRef<HTMLInputElement>(null);
-  const farmAddressRef = useRef<HTMLInputElement>(null);
-
-  const categories = ['Greens', 'Grains', 'Vegetables', 'Fruits', 'Root Crops', 'Exotic', 'Spices', 'Native'];
+export function FreshnessFormModal({ isOpen, onClose, category }: FreshnessFormModalProps) {
+  const [farmerName] = useState('Farmer Danilo Ramos');
+  const [farmAddress] = useState('Lot 16, Gintong Binhi St.');
+  const [harvestDate] = useState('2026-01-15');
 
   if (!isOpen) return null;
 
   // Check if all fields are filled
-  const isFormValid = farmerName.trim() !== '' && 
-                      farmAddress.trim() !== '' && 
-                      selectedCategory !== '' && 
+  const isFormValid = farmerName.trim() !== '' &&
+                      farmAddress.trim() !== '' &&
                       harvestDate !== '';
 
   const handleRate = () => {
@@ -43,7 +35,7 @@ export function FreshnessFormModal({ isOpen, onClose }: FreshnessFormModalProps)
     const formData = {
       farmerName,
       farmAddress,
-      category: selectedCategory,
+      category,
       harvestDate,
       freshnessRating: parseFloat(randomRating),
     };
@@ -53,21 +45,6 @@ export function FreshnessFormModal({ isOpen, onClose }: FreshnessFormModalProps)
 
   const handleBackClick = () => {
     onClose();
-  };
-
-  // Handle Enter key navigation
-  const handleFarmerNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      farmAddressRef.current?.focus();
-    }
-  };
-
-  const handleFarmAddressKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      // Do nothing - stay in farm address field
-    }
   };
 
   return (
@@ -145,13 +122,10 @@ export function FreshnessFormModal({ isOpen, onClose }: FreshnessFormModalProps)
                 <input
                   type="text"
                   value={farmerName}
-                  onChange={(e) => setFarmerName(e.target.value)}
-                  placeholder="Farmer Danilo Ramos"
+                  readOnly
                   className={`w-full border border-[#979797] rounded-[10px] px-4 py-2.5 text-[18px] font-semibold outline-none focus:border-[#32a928] placeholder:text-[#c8c8c8] ${
                     farmerName ? 'text-black' : 'text-[#979797]'
                   }`}
-                  ref={farmerNameRef}
-                  onKeyDown={handleFarmerNameKeyDown}
                 />
               </div>
 
@@ -163,40 +137,11 @@ export function FreshnessFormModal({ isOpen, onClose }: FreshnessFormModalProps)
                 <input
                   type="text"
                   value={farmAddress}
-                  onChange={(e) => setFarmAddress(e.target.value)}
-                  placeholder="Lot 16, Gintong Binhi St."
+                  readOnly
                   className={`w-full border border-[#979797] rounded-[10px] px-4 py-2.5 text-[18px] font-semibold outline-none focus:border-[#32a928] placeholder:text-[#c8c8c8] ${
                     farmAddress ? 'text-black' : 'text-[#979797]'
                   }`}
-                  ref={farmAddressRef}
-                  onKeyDown={handleFarmAddressKeyDown}
                 />
-              </div>
-
-              {/* Crop Listing Category */}
-              <div className="mb-4">
-                <label className="text-[#979797] text-[11px] font-semibold block mb-2">
-                  Crop Listing Category
-                </label>
-                <div className="grid grid-cols-2 gap-x-8 gap-y-1.5">
-                  {categories.map((category) => (
-                    <label key={category} className="flex items-center gap-2.5 cursor-pointer group">
-                      <div className="relative w-4 h-4">
-                        <input
-                          type="radio"
-                          name="category"
-                          value={category}
-                          checked={selectedCategory === category}
-                          onChange={(e) => setSelectedCategory(e.target.value)}
-                          className="appearance-none w-4 h-4 border-2 border-[#c8c8c8] rounded-[3px] cursor-pointer checked:bg-black checked:border-[#c8c8c8]"
-                        />
-                      </div>
-                      <span className={`text-[15px] font-semibold ${selectedCategory === category ? 'text-black' : 'text-[#979797]'}`}>
-                        {category}
-                      </span>
-                    </label>
-                  ))}
-                </div>
               </div>
 
               {/* Date of Harvest */}
@@ -207,8 +152,7 @@ export function FreshnessFormModal({ isOpen, onClose }: FreshnessFormModalProps)
                 <input
                   type="date"
                   value={harvestDate}
-                  onChange={(e) => setHarvestDate(e.target.value)}
-                  placeholder="dd/mm/yyyy"
+                  readOnly
                   className={`w-full border border-[#979797] rounded-[10px] px-4 py-2.5 text-[18px] font-semibold outline-none focus:border-[#32a928] cursor-pointer ${
                     harvestDate ? 'text-black' : 'text-[#979797]'
                   }`}

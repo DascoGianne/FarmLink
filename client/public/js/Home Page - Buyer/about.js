@@ -1,4 +1,5 @@
 import { updateBadges } from "../api/badges.js";
+import { hydrateBuyerSidebar } from "../api/sidebar.js";
 
 // Function to get role from token
 const getRoleFromToken = () => {

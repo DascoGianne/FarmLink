@@ -68,7 +68,7 @@ const USER_KEY = 'farmlink_user';
 const getLoginUrl = () => {
   if (typeof window === 'undefined') return '/client/views/layouts/login.html';
   const { protocol, hostname, port } = window.location;
-  if (port === '5173') {
+  if (port && port !== '3000') {
     return `${protocol}//${hostname}:3000/client/views/layouts/login.html`;
   }
   return `${protocol}//${hostname}${port ? `:${port}` : ''}/client/views/layouts/login.html`;
@@ -767,7 +767,9 @@ export default function App() {
       const matchesCategory = filters.category.startsWith('All Categories') || listing.category === filters.category;
       
       // Status filter
-      const matchesStatus = filters.status === 'All Status' || listing.status === filters.status;
+      const matchesStatus =
+        filters.status === 'All Status' ||
+        (filters.status === 'Available' ? listing.status === 'Active' : listing.status === filters.status);
       
       // Price range filter
       let matchesPriceRange = true;
