@@ -68,7 +68,7 @@ html {
 /* ========================= TOP NAV ========================= */
 #top {
   position: sticky;
-  top: 0;
+  top: 30px;
   z-index: 999;
   background: transparent;
   padding: 14px 28px 0;
@@ -114,7 +114,7 @@ html {
 /* smaller icons like Picture 2 */
 #top img.Deliveries,
 #top img.Basket {
-  height: 70px;
+  height: 95px;
   cursor: pointer;
 }
 

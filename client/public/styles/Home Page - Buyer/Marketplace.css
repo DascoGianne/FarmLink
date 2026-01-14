@@ -1,5 +1,6 @@
 /* =========================
    FarmLink Marketplace (Target Layout CSS)
+   ✅ UPDATED: Results section removed
    Copy + Paste Entire File
    ========================= */
 
@@ -469,26 +470,23 @@ html {
 
 /* =========================
    ✅ LISTINGS + RESCUE (TARGET CARD STYLE)
-   - Horizontal scroll row like screenshot
    ========================= */
 
-/* Make both rows scroll horizontally */
+/* Hide scrollbars (Firefox + others) */
 .rescue-deals,
 .listings,
 .categories-row {
-  scrollbar-width: none;      /* Firefox */
-  -ms-overflow-style: none;   /* IE/Edge legacy */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .rescue-deals::-webkit-scrollbar,
 .listings::-webkit-scrollbar,
 .categories-row::-webkit-scrollbar {
-  display: none;              /* Chrome/Safari */
+  display: none;
 }
 
-
-
-/* Rescue deals can stay horizontal scroll */
+/* Rescue deals horizontal scroll */
 .rescue-deals{
   display: flex;
   gap: 16px;
@@ -497,36 +495,19 @@ html {
   scroll-snap-type: x mandatory;
 }
 
-/* ✅ Listings becomes a shopping grid (columns) */
+/* Listings grid */
 .listings{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 18px;
   padding: 8px 4px 14px;
-  overflow: visible;   /* ✅ no horizontal scrolling */
-}
-
-
-/* smoother horizontal scroll */
-.rescue-deals::-webkit-scrollbar,
-.listings::-webkit-scrollbar {
-  height: 12px;
-}
-.rescue-deals::-webkit-scrollbar-track,
-.listings::-webkit-scrollbar-track {
-  background: #dff5df;
-  border-radius: 10px;
-}
-.rescue-deals::-webkit-scrollbar-thumb,
-.listings::-webkit-scrollbar-thumb {
-  background: #32A928;
-  border-radius: 10px;
+  overflow: visible;
 }
 
 /* Base card look */
 .listing-card,
 .rescue-card {
-  flex: 0 0 180px;              /* card width like screenshot */
+  flex: 0 0 180px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.10);
@@ -543,18 +524,18 @@ html {
   box-shadow: 0 10px 22px rgba(0,0,0,0.14);
 }
 
-/* ✅ Image area (works with either <img> inside card OR background-image later) */
+/* Image area */
 .listing-card img,
 .rescue-card img {
   width: 100%;
   height: 120px;
-  object-fit: contain;          /* so fruits not cropped */
+  object-fit: contain;
   display: block;
   background: #ffffff;
   padding: 8px;
 }
 
-/* ✅ Title + info area */
+/* Title + info */
 .listing-card h4,
 .rescue-card h4 {
   margin: 8px 10px 2px;
@@ -572,28 +553,7 @@ html {
   line-height: 1.2;
 }
 
-/* ✅ Bottom price row (optional if your JS prints prices) */
-.listing-card .price-row,
-.rescue-card .price-row {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin: 6px 10px 10px;
-}
-
-.price-old {
-  font-size: 12px;
-  color: #9a9a9a;
-  text-decoration: line-through;
-}
-
-.price-new {
-  font-size: 14px;
-  font-weight: 800;
-  color: #222;
-}
-
-/* ✅ Discount badge on bottom-right like screenshot */
+/* Discount badge */
 .listing-card::after,
 .rescue-card::after {
   content: "50%";
@@ -609,24 +569,7 @@ html {
   box-shadow: 0 6px 12px rgba(255, 59, 48, 0.25);
 }
 
-/* ✅ Optional small ribbon text (FREE SHIPPING style) */
-.listing-card .ribbon,
-.rescue-card .ribbon {
-  position: absolute;
-  left: 0;
-  bottom: 38px;
-  background: #36c36c;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-/* ✅ If you don’t have ribbons in HTML/JS, this does nothing */
-
-/* Buttons inside listing card (if you keep them) */
+/* Buttons inside listing card */
 .add-to-basket-btn,
 .rescue-alerts-btn {
   width: calc(100% - 20px);
@@ -654,128 +597,45 @@ html {
 /* =========================
    CATEGORIES
    ========================= */
-/* =========================
-   CATEGORIES (image already has border)
-   ========================= */
 .categories-row{
   display: flex;
   flex-wrap: nowrap;
   gap: 26px;
   align-items: center;
-
   overflow-x: auto;
   padding: 20px 10px;
-
   scroll-snap-type: x mandatory;
 }
 
-/* scrollbar (optional) */
-.categories-row::-webkit-scrollbar{
-  height: 12px;
-}
-.categories-row::-webkit-scrollbar-track{
-  background: #dff5df;
-  border-radius: 10px;
-}
-.categories-row::-webkit-scrollbar-thumb{
-  background: #32A928;
-  border-radius: 10px;
-}
-
-/* button reset */
 .cat{
   border: none;
   background: transparent;
   padding: 0;
   cursor: pointer;
-
   flex: 0 0 auto;
   scroll-snap-align: start;
 }
 
-/* the image itself */
 .cat img{
-  height: 170px;          /* 🔥 match screenshot */
+  height: 170px;
   width: auto;
   display: block;
-
-  transition:
-    transform 0.18s ease,
-    filter 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* subtle hover glow only */
 .cat:hover img{
   transform: translateY(-3px);
   filter: drop-shadow(0 8px 16px rgba(50,169,40,0.35));
 }
 
-/* click */
 .cat:active img{
   transform: translateY(-1px) scale(0.98);
 }
 
-/* responsive */
 @media (max-width: 900px){
   .cat img{
     height: 130px;
   }
 }
 
-/* =========================
-   RESULTS (SEARCH OUTPUT)
-   ========================= */
-.results {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 8px 4px 14px;
-}
-
-.results .result-card {
-  flex: 0 0 220px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.10);
-  padding: 12px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.results .result-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.14);
-}
-
-.results .result-card h4 {
-  margin: 0 0 6px;
-  font-size: 14px;
-  font-weight: 800;
-  color: #2b2b2b;
-}
-
-.results .result-card p {
-  margin: 2px 0;
-  font-size: 12px;
-  color: #6b6b6b;
-}
-
-.results .result-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.results .result-actions button {
-  flex: 1;
-  border: none;
-  border-radius: 10px;
-  padding: 8px 10px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.results .btn-add { background: #32A928; color: #fff; }
-.results .btn-view { background: #e6f6e6; color: #2a8f22; }
+/* ✅ RESULTS SECTION REMOVED */

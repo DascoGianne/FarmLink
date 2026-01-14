@@ -103,7 +103,10 @@ html {
 
 #sidebarBtn { display: none; }
 
-#top h3 { margin: 0; }
+#top h3 { 
+  margin: 0;
+  margin-left: 20px; 
+}
 
 #top h3 a{
   margin: 0 10px;

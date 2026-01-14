@@ -1,49 +1,58 @@
 import { updateBadges } from "../api/badges.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  updateBadges();
-});
-
+// Function to get role from token
 const getRoleFromToken = () => {
   const token = localStorage.getItem("farmlink_token") || localStorage.getItem("token");
   if (!token) return null;
+
   try {
     const payload = token.split(".")[1];
     const decoded = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
     const data = JSON.parse(decoded);
     return data?.role || null;
   } catch (err) {
+    console.warn("Failed to decode token:", err);
     return null;
   }
 };
 
+// Run on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
+  updateBadges();
+
   const role = getRoleFromToken();
-  if (role !== "NGO") return;
+  console.log("User role:", role); // Log the role for debugging
 
-  const navRight = document.querySelector(".nav-right");
-  if (navRight) {
-    navRight.remove();
+  // Only hide basket/deliveries if the role is NGO
+  if (role === "NGO") {
+    const navRight = document.querySelector(".nav-right");
+    if (navRight) {
+      navRight.style.display = "none";
+    }
+
+    const sidebar = document.getElementById("sidebar");
+    if (sidebar) {
+      const links = sidebar.querySelectorAll('a[href*="MyBasket.html"], a[href*="MyDeliveries.html"]');
+      links.forEach(link => {
+        const listItem = link.closest("li");
+        if (listItem) {
+          listItem.style.display = "none";
+        } else {
+          link.style.display = "none";
+        }
+      });
+    }
   }
 
-  const sidebar = document.getElementById("sidebar");
-  if (sidebar) {
-    const links = sidebar.querySelectorAll("a");
-    links.forEach((link) => {
-      const href = link.getAttribute("href") || "";
-      if (href.includes("MyBasket.html") || href.includes("MyDeliveries.html")) {
-        link.remove();
-      }
-    });
-  }
+  // Initialize sidebar functionality
+  initSidebar();
+  initSidebarSearch();
 });
 
-
-
-// Sidebar
-document.addEventListener("DOMContentLoaded", () => {
+// Function to handle sidebar open/close
+function initSidebar() {
   const sidebar = document.getElementById("sidebar");
-  const sidebarBtn = document.querySelector(".sidebar-btn"); // ✅ correct selector
+  const sidebarBtn = document.querySelector(".sidebar-btn");
   const closeBtn = document.querySelector(".sidebar-close");
 
   if (!sidebar || !sidebarBtn || !closeBtn) {
@@ -59,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sidebar.classList.remove("open");
   });
 
-  // (Optional) close when clicking outside sidebar
+  // Optional: close sidebar when clicking outside
   document.addEventListener("click", (e) => {
     const clickedInsideSidebar = sidebar.contains(e.target);
     const clickedMenuButton = sidebarBtn.contains(e.target);
@@ -67,22 +76,23 @@ document.addEventListener("DOMContentLoaded", () => {
       sidebar.classList.remove("open");
     }
   });
-});
+}
 
-// Sidebar search functionality
-const searchInput = document.querySelector('.search-input');
-const menuItems = document.querySelectorAll('#sidebar-menu li');
+// Function to initialize sidebar search
+function initSidebarSearch() {
+  const searchInput = document.querySelector('.search-input');
+  const menuItems = document.querySelectorAll('#sidebar-menu li');
 
-searchInput.addEventListener('input', function () {
-    let filter = searchInput.value.toLowerCase();
+  if (!searchInput) {
+    console.warn("Search input not found.");
+    return;
+  }
 
+  searchInput.addEventListener('input', function () {
+    const filter = searchInput.value.toLowerCase();
     menuItems.forEach(item => {
-        let text = item.textContent.toLowerCase();
-
-        if (text.includes(filter)) {
-            item.style.display = "block";   
-        } else {
-            item.style.display = "none"; 
-        }
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(filter) ? "flex" : "none";
     });
-});
+  });
+}

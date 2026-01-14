@@ -3,7 +3,8 @@ import { addToCart } from "../api/cart.js";
 import { updateBadges } from "../api/badges.js";
 import API_BASE_URL from "../api/config.js";
 
-const FALLBACK_LISTING_IMAGE = "/client/public/images/pictures - resources/placeholder-produce.png";
+const FALLBACK_LISTING_IMAGE =
+  "/client/public/images/pictures - resources/placeholder-produce.png";
 
 const API_ORIGIN = (() => {
   try {
@@ -65,63 +66,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ================= LISTINGS (FETCH ONCE) =================
   const listingsContainer = document.querySelector(".listings");
-  const resultsContainer = document.querySelector(".results");
   const topSearch = document.getElementById("topSearch");
 
   let allListings = [];
-
-  // Helper: render results cards
-  const renderResults = (items, query) => {
-    if (!resultsContainer) return;
-
-    const q = (query || "").trim();
-    if (!q) {
-      resultsContainer.innerHTML = `<p style="color:#6b6b6b;margin:0 4px;">Type in the search box to see results.</p>`;
-      return;
-    }
-
-    if (!items.length) {
-      resultsContainer.innerHTML = `<p style="color:#6b6b6b;margin:0 4px;">No results found for "<b>${q}</b>".</p>`;
-      return;
-    }
-
-    resultsContainer.innerHTML = items
-      .map(
-        (item) => `
-          <div class="result-card" data-listing-id="${item.listing_id}">
-            <h4>${item.crop_name}</h4>
-            <p>${item.category}</p>
-            <p>Stocks: ${item.total_stocks}</p>
-
-            <div class="result-actions">
-              <button class="btn-add" type="button">Add</button>
-              <button class="btn-view" type="button">View</button>
-            </div>
-          </div>
-        `
-      )
-      .join("");
-  };
-
-  // Helper: do filtering
-  const filterListings = (query) => {
-    const q = query.toLowerCase().trim();
-    if (!q) return [];
-
-    return allListings.filter((item) => {
-      const crop = String(item.crop_name || "").toLowerCase();
-      const cat = String(item.category || "").toLowerCase();
-      // add more fields if you want:
-      // const seller = String(item.seller_name || "").toLowerCase();
-      return crop.includes(q) || cat.includes(q);
-    });
-  };
 
   try {
     const res = await getListings();
     allListings = res.data || [];
 
-    // Render your horizontal Listings row (existing behavior)
     if (listingsContainer) {
       listingsContainer.innerHTML = allListings
         .map((item) => {
@@ -136,18 +88,18 @@ document.addEventListener("DOMContentLoaded", async () => {
           );
 
           return `
-          <div class="listing-card" data-listing-id="${item.listing_id}">
-            <img src="${imageUrl}" alt="${item.crop_name || "Listing image"}">
-            <h4>${item.crop_name}</h4>
-            <p>${item.category}</p>
-            <p>Stocks: ${item.total_stocks}</p>
+            <div class="listing-card" data-listing-id="${item.listing_id}">
+              <img src="${imageUrl}" alt="${item.crop_name || "Listing image"}">
+              <h4>${item.crop_name}</h4>
+              <p>${item.category}</p>
+              <p>Stocks: ${item.total_stocks}</p>
 
-            <button class="add-to-basket-btn" type="button">Add to Basket</button>
-            <button class="rescue-alerts-btn" type="button">View Rescue Alerts</button>
+              <button class="add-to-basket-btn" type="button">Add to Basket</button>
+              <button class="rescue-alerts-btn" type="button">View Rescue Alerts</button>
 
-            <div class="rescue-alerts"></div>
-          </div>
-        `;
+              <div class="rescue-alerts"></div>
+            </div>
+          `;
         })
         .join("");
 
@@ -235,91 +187,70 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error loading listings:", err);
   }
 
-  // ================= TOP SEARCH -> RESULTS =================
-  if (topSearch && resultsContainer) {
-    // initial message
-    renderResults([], "");
+  // ================= TOP SEARCH -> FILTER LISTINGS + RESCUE (NOT CATEGORIES) =================
+  if (topSearch) {
+    const normalize = (v) => String(v || "").toLowerCase().trim();
 
-    // live search
+    const filterListingsInDOM = (query) => {
+      const q = normalize(query);
+      const cards = document.querySelectorAll(".listings .listing-card");
+
+      cards.forEach((card) => {
+        const text = normalize(card.textContent);
+        card.style.display = !q || text.includes(q) ? "" : "none";
+      });
+    };
+
+    const filterRescueInDOM = (query) => {
+      const q = normalize(query);
+      const cards = document.querySelectorAll(".rescue-deals .rescue-card");
+
+      cards.forEach((card) => {
+        const text = normalize(card.textContent);
+        card.style.display = !q || text.includes(q) ? "" : "none";
+      });
+    };
+
     topSearch.addEventListener("input", () => {
       const q = topSearch.value;
-      const matches = filterListings(q);
-      renderResults(matches, q);
-    });
-
-    // click behavior for result cards + buttons (event delegation)
-    resultsContainer.addEventListener("click", async (event) => {
-      const card = event.target.closest(".result-card");
-      if (!card) return;
-
-      const listingId = card.dataset.listingId;
-      if (!listingId) return;
-
-      const listing = allListings.find((x) => String(x.listing_id) === String(listingId));
-      if (!listing) return;
-
-      // View button OR clicking card (not Add button)
-      if (event.target.classList.contains("btn-add")) {
-        addToCart({
-          listing_id: listing.listing_id,
-          ngo_id: listing.ngo_id,
-          crop_name: listing.crop_name,
-          category: listing.category,
-          image_1: listing.image_1 || "",
-        });
-
-        await updateBadges();
-        mirrorBadgesToSidebar();
-
-        event.target.textContent = "Added";
-        event.target.disabled = true;
-        setTimeout(() => {
-          event.target.textContent = "Add";
-          event.target.disabled = false;
-        }, 900);
-        return;
-      }
-
-      // View listing page (either View button or card click)
-      window.location.href = `./Listing.html?listing_id=${encodeURIComponent(listingId)}`;
+      filterListingsInDOM(q);
+      filterRescueInDOM(q);
+      // ✅ Categories are NOT affected
     });
   }
 
-// ================= RESCUE DEALS =================
-const rescueContainer = document.querySelector(".rescue-deals");
-const rescueStatus = document.querySelector(".rescue-status");
+  // ================= RESCUE DEALS =================
+  const rescueContainer = document.querySelector(".rescue-deals");
+  const rescueStatus = document.querySelector(".rescue-status");
 
-try {
-  const res = await getRescueListings();
-  const rescue = res.data || [];
+  try {
+    const res = await getRescueListings();
+    const rescue = res.data || [];
 
-  // render ONLY cards inside the flex row
-  if (rescueContainer) {
-    rescueContainer.innerHTML = rescue
-      .map(
-        (item) => `
-          <div class="rescue-card">
-            <h4>${item.crop_name}</h4>
-            <p>Discount: ${item.discount_applied}%</p>
-          </div>
-        `
-      )
-      .join("");
+    if (rescueContainer) {
+      rescueContainer.innerHTML = rescue
+        .map(
+          (item) => `
+            <div class="rescue-card">
+              <h4>${item.crop_name}</h4>
+              <p>Discount: ${item.discount_applied}%</p>
+            </div>
+          `
+        )
+        .join("");
+    }
+
+    if (rescueStatus) {
+      rescueStatus.innerHTML =
+        rescue.length === 0 ? "<p>No rescue deals available.</p>" : "";
+    }
+
+    console.log("✅ Rescue deals loaded:", rescue.length);
+  } catch (err) {
+    console.error("❌ Error loading rescue deals:", err);
+
+    if (rescueStatus) {
+      rescueStatus.innerHTML = "<p>Failed to load rescue deals.</p>";
+    }
   }
-
-  // message goes BELOW (not inside the flex row)
-  if (rescueStatus) {
-    rescueStatus.innerHTML =
-      rescue.length === 0 ? "<p>No rescue deals available.</p>" : "";
-  }
-
-  console.log("✅ Rescue deals loaded:", rescue.length);
-} catch (err) {
-  console.error("❌ Error loading rescue deals:", err);
-
-  if (rescueStatus) {
-    rescueStatus.innerHTML = "<p>Failed to load rescue deals.</p>";
-  }
-}
-
 });
