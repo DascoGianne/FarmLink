@@ -27,7 +27,6 @@
         <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="search-box" alt="Search Background" />
         <div class="search-wrapper">
           <img src="../../../public/images/MAIN PAGE/Search.png" class="search-icon" alt="Search Icon" />
-          <!-- ✅ important: unique id so JS can target sidebar search -->
           <input type="text" id="sidebarSearch" class="search-input" placeholder="Search..." />
         </div>
       </div>
@@ -119,14 +118,10 @@
       <!-- TOP NAV -->
       <div id="top">
         <div class="left-group">
-          <!-- ✅ not needed when sidebar is always open (CSS can hide it) -->
           <img src="../../../public/images/MAIN PAGE/Sidebar Button.png" id="sidebarBtn" alt="Sidebar Button" />
 
           <h3 class="Home"><a href="./Home.html">Home</a></h3>
-
-          <!-- ✅ separator between Home and Marketplace -->
           <span class="nav-separator" aria-hidden="true"></span>
-
           <h3 class="Market"><a href="./Marketplace.html">MARKETPLACE</a></h3>
         </div>
 
@@ -143,14 +138,14 @@
         </div>
       </div>
 
-      <!-- HERO SECTION (matches target layout) -->
+      <!-- HERO SECTION -->
       <section class="hero">
-        <!-- Left big banner -->
         <img src="../../../public/images/MAIN PAGE/Advertisement 1.png" class="hero-banner" alt="Advertisement 1" />
 
-        <!-- Right column: search + ad -->
         <div class="hero-right">
-          <img src="/client/public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="searchbg" alt="Search Background" />
+          <!-- ✅ CHANGED to match your other relative paths (avoid /client/public...) -->
+          <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/search bg.jpg" class="searchbg" alt="Search Background" />
+
           <div class="hero-search">
             <img src="../../../public/images/MAIN PAGE/Search.png" class="search-icon" alt="Search Icon" />
             <input type="text" id="topSearch" placeholder="Search anything in the marketplace..." />
@@ -163,18 +158,19 @@
       <!-- MARKET CONTENT -->
       <div class="market-section">
 
-        <div class="rescue-deals-section">
+        <!-- ✅ Added id (optional, but helpful) -->
+        <div class="rescue-deals-section" id="rescueSection">
           <h3>Rescue Deals!!!</h3>
 
           <div class="rescue-deals">
             <!-- JS will append rescue cards here -->
           </div>
 
-          <!-- message goes below rescue row -->
           <div class="rescue-status" aria-live="polite"></div>
         </div>
 
-        <div class="listings-section">
+        <!-- ✅ Added id (optional, but helpful) -->
+        <div class="listings-section" id="listingsSection">
           <h3>Listings</h3>
           <div class="listings">
             <!-- JS will render listing cards here -->
@@ -226,7 +222,6 @@
 
   </div>
 
-  <!-- ✅ MUST BE module so we can import api/listings.js -->
   <script type="module" src="../../../public/js/Home Page - Buyer/Marketplace.js"></script>
 </body>
 </html>
