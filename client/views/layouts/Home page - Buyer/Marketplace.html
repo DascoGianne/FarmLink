@@ -33,10 +33,10 @@
 
       <!-- Account -->
       <h4 class="account-title">Account</h4>
-      <div class="account-info">
+      <a class="account-info" href="./MyProfile.html">
         <img src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Profile Picture.png" class="account-icon" alt="Profile" />
-        <h2 class="account-name">Test Name</h2>
-      </div>
+        <h2 class="account-name" id="sidebarAccountName">Test Name</h2>
+      </a>
 
       <!-- Menu -->
       <h4 class="menu-title">Main Menu</h4>
@@ -163,7 +163,87 @@
           <h3>Rescue Deals!!!</h3>
 
           <div class="rescue-deals">
-            <!-- JS will append rescue cards here -->
+            <article
+              class="rescue-card"
+              data-static="true"
+              data-rating="3.6"
+              data-harvest="JAN 15"
+              data-pill="FLASH SALE! OVERSUPPLY"
+              data-ngo="IKOLANDIA Agri. Assoc."
+              data-farmer="Farmer Danilo Ramos"
+              data-location="Benguet, La Trinidad"
+              data-name="Pechay"
+              data-old-price="P60"
+              data-new-price="P45.00"
+              data-stocks="50 kg"
+              data-discount="25% OFF"
+              data-desc="Fresh pechay that needs to be sold soon! These greens are still perfectly nutritious and delicious, but we need to clear them out quickly. Ideal for stir-fries, soups, or salads. Get this rescue deal and save 25% while helping reduce food waste! Perfect for sinigang, chopsuey, or any Filipino vegetable dish."
+              data-image="../../../public/images/rescuedeals/pechay.png"
+              data-thumb="../../../public/images/rescuedeals/pechay.png"
+            >
+              <div class="rescue-meta">
+                <span class="rescue-rating">
+                  <span class="rescue-leaf" aria-hidden="true"></span>
+                  3.6
+                </span>
+                <span class="rescue-pill">FLASH SALE! OVERSUPPLY</span>
+              </div>
+              <div class="rescue-img-wrap">
+                <img class="rescue-image" src="../../../public/images/rescuedeals/pechay.png" alt="Pechay" />
+              </div>
+              <div class="rescue-discount-bar">
+                <span class="rescue-discount">25% OFF</span>
+              </div>
+              <div class="rescue-info">
+                <h4 class="rescue-title">Pechay</h4>
+                <p class="rescue-location">Benguet, La Trinidad</p>
+                <div class="rescue-price">
+                  <span class="rescue-price-old">P60.00</span>
+                  <span class="rescue-price-new">P45.00</span>
+                </div>
+              </div>
+            </article>
+
+            <article
+              class="rescue-card"
+              data-static="true"
+              data-rating="3.4"
+              data-harvest="JAN 15"
+              data-pill="FLASH SALE! OVERSUPPLY"
+              data-ngo="Green Earth NGO"
+              data-farmer="Farmer Name"
+              data-location="Nueva Ecija, San Isidro"
+              data-name="Tomato"
+              data-old-price="P75"
+              data-new-price="P37.50"
+              data-stocks="80 kg"
+              data-discount="50% OFF"
+              data-desc="Ripe tomatoes at rescue price! These tomatoes are at peak ripeness and need to be sold quickly before they become overripe. Still fresh and flavorful - perfect for making sauces, salsa, or cooking immediately. Great deal at 25% off! Ideal for menudo, afritada, caldereta, or fresh salads."
+              data-image="../../../public/images/rescuedeals/tomato.png"
+              data-thumb="../../../public/images/rescuedeals/tomato.png"
+            >
+              <div class="rescue-meta">
+                <span class="rescue-rating">
+                  <span class="rescue-leaf" aria-hidden="true"></span>
+                  3.4
+                </span>
+                <span class="rescue-pill">FLASH SALE! OVERSUPPLY</span>
+              </div>
+              <div class="rescue-img-wrap">
+                <img class="rescue-image" src="../../../public/images/rescuedeals/tomato.png" alt="Tomato" />
+              </div>
+              <div class="rescue-discount-bar">
+                <span class="rescue-discount">50% OFF</span>
+              </div>
+              <div class="rescue-info">
+                <h4 class="rescue-title">Tomato</h4>
+                <p class="rescue-location">Nueva Ecija, San Isidro</p>
+                <div class="rescue-price">
+                  <span class="rescue-price-old">P75.00</span>
+                  <span class="rescue-price-new">P37.50</span>
+                </div>
+              </div>
+            </article>
           </div>
 
           <div class="rescue-status" aria-live="polite"></div>
@@ -220,6 +300,69 @@
       </div>
     </main>
 
+  </div>
+
+  <div class="rescue-modal" id="rescueModal" aria-hidden="true">
+    <div class="rescue-modal__card" role="dialog" aria-modal="true" aria-label="Rescue deal details">
+      <button class="rescue-modal__close" type="button" aria-label="Close">×</button>
+      <div class="rescue-modal__header">
+        <div class="rescue-modal__rating">
+          <span class="rescue-modal__leaf" aria-hidden="true"></span>
+          <span id="rescueModalRating">0.0</span>
+        </div>
+        <div class="rescue-modal__header-text">
+          <div class="rescue-modal__title">Freshness Rating By FarmLink</div>
+          <div class="rescue-modal__subtitle">*Consume within five days for best taste.</div>
+        </div>
+        <div class="rescue-modal__harvest">
+          <div class="rescue-modal__harvest-label">HARVEST DATE:</div>
+          <div id="rescueModalHarvest" class="rescue-modal__harvest-date">JAN 15</div>
+        </div>
+      </div>
+      <div class="rescue-modal__body">
+        <div class="rescue-modal__left">
+          <div class="rescue-modal__pill-row">
+            <span id="rescueModalPill" class="rescue-modal__pill">FLASH SALE! OVERSUPPLY</span>
+          </div>
+          <img id="rescueModalImage" class="rescue-modal__image" alt="" />
+          <div class="rescue-modal__discount-bar">
+            <span id="rescueModalDiscount">0% OFF</span>
+          </div>
+          <div class="rescue-modal__thumbs">
+            <img id="rescueModalThumb" class="rescue-modal__thumb" alt="" />
+          </div>
+        </div>
+        <div class="rescue-modal__right">
+          <div class="rescue-modal__ngo">
+            <img class="rescue-modal__avatar" src="../../../public/images/MAIN PAGE/SIDEBAR MAIN MENU/Sidebar Profile Picture.png" alt="" />
+            <div class="rescue-modal__ngo-text">
+              <span id="rescueModalNgo">NGO</span>
+              <span id="rescueModalFarmer" class="rescue-modal__farmer">Farmer Name</span>
+              <span id="rescueModalLocation" class="rescue-modal__location">Location</span>
+            </div>
+          </div>
+          <h3 id="rescueModalName" class="rescue-modal__name">Item</h3>
+          <div class="rescue-modal__prices">
+            <span id="rescueModalOldPrice" class="rescue-modal__price-old">P0</span>
+            <span id="rescueModalNewPrice" class="rescue-modal__price-new">P0</span>
+          </div>
+          <div id="rescueModalStocks" class="rescue-modal__stocks">Stocks left: 0 kg</div>
+          <p id="rescueModalDesc" class="rescue-modal__desc"></p>
+          <div class="rescue-modal__qty">
+            <div class="rescue-modal__qty-label">Quantity</div>
+            <div class="rescue-modal__qty-options">
+              <button class="rescue-modal__qty-btn is-active" type="button">1kg</button>
+              <button class="rescue-modal__qty-btn" type="button">5kg</button>
+              <button class="rescue-modal__qty-btn" type="button">10kg</button>
+            </div>
+          </div>
+          <div class="rescue-modal__actions">
+            <button class="rescue-modal__checkout" type="button">Checkout</button>
+            <button class="rescue-modal__add" type="button">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script type="module" src="../../../public/js/Home Page - Buyer/Marketplace.js"></script>

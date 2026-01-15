@@ -1,6 +1,7 @@
 import { getRescueListings, getListings, getRescueAlertsByListing } from "../api/listings.js";
 import { addToCart } from "../api/cart.js";
 import { updateBadges } from "../api/badges.js";
+import { hydrateBuyerSidebar } from "../api/sidebar.js";
 import API_BASE_URL from "../api/config.js";
 
 const FALLBACK_LISTING_IMAGE =
@@ -142,6 +143,24 @@ async function mapWithLimit(items, limit, mapper) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const accountNameEl = document.getElementById("sidebarAccountName");
+  if (accountNameEl) {
+    const nameKeys = [
+      "buyerName",
+      "username",
+      "userName",
+      "name",
+      "accountName",
+    ];
+    for (const key of nameKeys) {
+      const value = localStorage.getItem(key);
+      if (value) {
+        accountNameEl.textContent = value;
+        break;
+      }
+    }
+  }
+
   // ================= SIDEBAR =================
   const sidebar = document.getElementById("sidebar");
   if (sidebar) sidebar.classList.add("open");
@@ -155,6 +174,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         const text = item.textContent.toLowerCase();
         item.style.display = text.includes(filter) ? "flex" : "none";
       });
+    });
+  }
+
+  await hydrateBuyerSidebar();
+
+  const accountInfo = document.querySelector(".account-info");
+  if (accountInfo && accountInfo.tagName !== "A") {
+    accountInfo.setAttribute("role", "link");
+    accountInfo.setAttribute("tabindex", "0");
+    accountInfo.addEventListener("click", () => {
+      window.location.href = "./MyProfile.html";
+    });
+    accountInfo.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        window.location.href = "./MyProfile.html";
+      }
     });
   }
 
@@ -225,6 +261,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   function renderRescue(list) {
     if (!rescueContainer) return;
 
+    if (!list.length) {
+      const hasStaticCards = rescueContainer.querySelector(".rescue-card");
+      if (hasStaticCards) return;
+    }
+
     rescueContainer.innerHTML = list
       .map((item) => {
         const imageUrl = resolveImageUrl(
@@ -272,7 +313,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderRescue(filteredRescue);
 
     if (rescueStatus) {
+      const hasStaticCards = rescueContainer?.querySelector(".rescue-card");
       if (!rescueLoaded) rescueStatus.innerHTML = "<p>Loading rescue deals...</p>";
+      else if (hasStaticCards && !filteredRescue.length) rescueStatus.innerHTML = "";
       else rescueStatus.innerHTML = filteredRescue.length ? "" : "<p>No rescue deals available.</p>";
     }
   }
@@ -362,8 +405,96 @@ document.addEventListener("DOMContentLoaded", async () => {
     rescueContainer.addEventListener("click", (event) => {
       const card = event.target.closest(".rescue-card");
       const listingId = card?.dataset?.listingId;
+      if (!card) return;
+
+      if (card.dataset.static === "true") {
+        const modal = document.getElementById("rescueModal");
+        if (!modal) return;
+
+        const setText = (id, value) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = value || "";
+        };
+
+        const setImage = (id, value, altText) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.src = value || "";
+          el.alt = altText || "";
+        };
+
+        setText("rescueModalRating", card.dataset.rating);
+        setText("rescueModalHarvest", card.dataset.harvest);
+        setText("rescueModalPill", card.dataset.pill);
+        setText("rescueModalNgo", card.dataset.ngo);
+        setText("rescueModalFarmer", card.dataset.farmer);
+        setText("rescueModalLocation", card.dataset.location);
+        setText("rescueModalName", card.dataset.name);
+        setText("rescueModalOldPrice", card.dataset.oldPrice);
+        setText("rescueModalNewPrice", card.dataset.newPrice);
+        setText("rescueModalStocks", `Stocks left: ${card.dataset.stocks || ""}`);
+        setText("rescueModalDesc", card.dataset.desc);
+        setText("rescueModalDiscount", card.dataset.discount);
+        setImage("rescueModalImage", card.dataset.image, card.dataset.name);
+        setImage("rescueModalThumb", card.dataset.thumb, card.dataset.name);
+
+        modal.dataset.itemName = card.dataset.name || "";
+
+        const qtyButtons = modal.querySelectorAll(".rescue-modal__qty-btn");
+        qtyButtons.forEach((btn) => {
+          btn.classList.toggle("is-active", btn.textContent.trim() === "1kg");
+        });
+
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        return;
+      }
+
       if (!listingId) return;
       window.location.href = `./Listing.html?listing_id=${encodeURIComponent(listingId)}`;
+    });
+  }
+
+  const rescueModal = document.getElementById("rescueModal");
+  if (rescueModal) {
+    rescueModal.addEventListener("click", (event) => {
+      const closeBtn = event.target.closest(".rescue-modal__close");
+      if (closeBtn || event.target === rescueModal) {
+        rescueModal.classList.remove("is-open");
+        rescueModal.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    rescueModal.addEventListener("click", (event) => {
+      const qtyBtn = event.target.closest(".rescue-modal__qty-btn");
+      if (!qtyBtn) return;
+
+      const btns = rescueModal.querySelectorAll(".rescue-modal__qty-btn");
+      btns.forEach((btn) => btn.classList.remove("is-active"));
+      qtyBtn.classList.add("is-active");
+
+      const itemName = rescueModal.dataset.itemName || "";
+      const qty = qtyBtn.textContent.trim();
+      const priceSets = {
+        pechay: {
+          "1kg": { old: "P60", new: "P45.00" },
+          "5kg": { old: "P287", new: "P215.25" },
+          "10kg": { old: "P547", new: "P410.25" },
+        },
+        tomato: {
+          "1kg": { old: "P75", new: "P37.50" },
+          "5kg": { old: "P360", new: "P180.00" },
+          "10kg": { old: "P680", new: "P340.00" },
+        },
+      };
+
+      const prices = priceSets[itemName.toLowerCase()]?.[qty];
+      if (!prices) return;
+
+      const oldEl = document.getElementById("rescueModalOldPrice");
+      const newEl = document.getElementById("rescueModalNewPrice");
+      if (oldEl) oldEl.textContent = prices.old;
+      if (newEl) newEl.textContent = prices.new;
     });
   }
 
