@@ -1,6 +1,7 @@
 import { getMe } from "../api/me.js";
 import { getBuyerById, updateBuyerById } from "../api/buyers.js";
 import { updateBadges } from "../api/badges.js";
+import { changePassword } from "../api/auth.js";
 
 /* =========================
    Sidebar (PERMANENT OPEN)
@@ -295,6 +296,55 @@ document.addEventListener("DOMContentLoaded", () => {
         saveBtn.addEventListener("click", (event) => {
             event.preventDefault();
             handleProfileSave();
+        });
+    }
+
+    const changePasswordBtn = document.querySelector(".change-password-section .save-btn");
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener("click", async (event) => {
+            event.preventDefault();
+
+            const currentInput = document.getElementById("current-password");
+            const newInput = document.getElementById("new-password");
+            const confirmInput = document.getElementById("confirm-password");
+
+            if (!currentInput || !newInput || !confirmInput) return;
+
+            const currentPassword = currentInput.value.trim();
+            const newPassword = newInput.value.trim();
+            const confirmPassword = confirmInput.value.trim();
+
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                alert("Please fill out all password fields.");
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                alert("New password must be at least 6 characters.");
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                alert("New password and confirmation do not match.");
+                return;
+            }
+
+            changePasswordBtn.disabled = true;
+
+            try {
+                await changePassword({
+                    current_password: currentPassword,
+                    new_password: newPassword,
+                });
+                alert("Password updated.");
+                currentInput.value = "";
+                newInput.value = "";
+                confirmInput.value = "";
+            } catch (err) {
+                alert(err?.message || "Failed to update password.");
+            } finally {
+                changePasswordBtn.disabled = false;
+            }
         });
     }
 });

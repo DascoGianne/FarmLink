@@ -57,6 +57,9 @@ router.get("/auth/me", verifyToken, (req, res) => {
   return res.json({ success: true, user: req.user });
 });
 
+// Change password (any logged-in user)
+router.post("/auth/change-password", verifyToken, mainController.changePassword);
+
 // Orders (BUYER only)
 router.post("/orders", verifyToken, requireBuyer, mainController.createOrder);
 router.get("/orders/buyer/:buyer_id", verifyToken, requireBuyer, (req, res, next) => {

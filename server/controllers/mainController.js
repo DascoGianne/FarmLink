@@ -1165,6 +1165,64 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.changePassword = async (req, res) => {
+  const { current_password, new_password } = req.body;
+
+  if (!current_password || !new_password) {
+    return res.status(400).json({
+      success: false,
+      message: "current_password and new_password are required",
+    });
+  }
+
+  if (new_password.length < 6) {
+    return res.status(400).json({
+      success: false,
+      message: "new_password must be at least 6 characters",
+    });
+  }
+
+  const role = req.user?.role;
+  const userId = req.user?.id;
+
+  if (!role || !userId) {
+    return res.status(401).json({ success: false, message: "Unauthorized" });
+  }
+
+  const table = role === "BUYER" ? "buyers" : role === "NGO" ? "ngo" : null;
+  const idField = role === "BUYER" ? "buyer_id" : "ngo_id";
+
+  if (!table) {
+    return res.status(403).json({ success: false, message: "Forbidden" });
+  }
+
+  try {
+    const [rows] = await db.query(
+      `SELECT password FROM ${table} WHERE ${idField} = ? LIMIT 1`,
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Account not found" });
+    }
+
+    const match = await bcrypt.compare(current_password, rows[0].password);
+    if (!match) {
+      return res.status(401).json({ success: false, message: "Current password is incorrect" });
+    }
+
+    const hashed = await bcrypt.hash(new_password, 10);
+    await db.query(
+      `UPDATE ${table} SET password = ? WHERE ${idField} = ?`,
+      [hashed, userId]
+    );
+
+    return res.status(200).json({ success: true, message: "Password updated" });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 exports.getNgoById = async (req, res) => {
   const { ngo_id } = req.params;
 

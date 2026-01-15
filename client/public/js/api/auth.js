@@ -41,6 +41,28 @@ async function getAuthJson(path) {
   return result;
 }
 
+async function postAuthJson(path, data) {
+  const token = getToken();
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  const text = await response.text();
+  let result = null;
+  try {
+    result = text ? JSON.parse(text) : {};
+  } catch {
+    result = { success: false, message: text || "Unexpected response" };
+  }
+  if (!response.ok) throw result;
+  return result;
+}
+
 /* ---------------- AUTH API ---------------- */
 export function registerNgo(data) {
   return postJson("/auth/register/ngo", data);
@@ -67,4 +89,8 @@ export async function loginUser(data) {
 
 export function getMe() {
   return getAuthJson("/auth/me");
+}
+
+export function changePassword(data) {
+  return postAuthJson("/auth/change-password", data);
 }
