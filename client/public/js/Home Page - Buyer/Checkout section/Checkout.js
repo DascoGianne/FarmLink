@@ -266,6 +266,8 @@ async function handleFinishOrder() {
         subtotal: itemSubtotal,
         delivery_fee: itemFee,
         total_amount: itemTotal,
+        delivery_method: selectedDeliveryMethod,
+        payment_method: selectedPaymentMethod,
         ...addressPayload,
       });
     }

@@ -569,7 +569,9 @@ exports.createOrder = async (req, res) => {
     province,
     municipality_city,
     barangay,
-    street_no
+    street_no,
+    payment_method,
+    delivery_method,
   } = req.body;
 
   const buyer_id = req.user?.id;
@@ -582,11 +584,19 @@ exports.createOrder = async (req, res) => {
     });
   }
 
+  let connection;
   try {
     const order_status = "Pending";
     const order_date = new Date();
+    const payment_date = new Date();
+    const resolvedPaymentMethod = payment_method || "Cash On Delivery";
+    const resolvedDeliveryMethod = delivery_method || "Courier Service";
+    const resolvedAmountPaid = Number.isFinite(Number(total_amount)) ? Number(total_amount) : 0;
 
-    const [result] = await db.query(
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    const [result] = await connection.query(
       `
       INSERT INTO orders (
         buyer_id, ngo_id, listing_id, quantity,
@@ -600,22 +610,47 @@ exports.createOrder = async (req, res) => {
         buyer_id, ngo_id, listing_id, quantity,
         subtotal || 0, delivery_fee || 0, total_amount || 0,
         region || "", province || "", municipality_city || "", barangay || "", street_no || "",
-        order_date, order_status
+        order_date, order_status,
       ]
     );
+
+    const orderId = result.insertId;
+
+    await connection.query(
+      `
+      INSERT INTO payments (order_id, payment_method, amount_paid, payment_date, payment_status)
+      VALUES (?, ?, ?, ?, ?)
+      `,
+      [orderId, resolvedPaymentMethod, resolvedAmountPaid, payment_date, "Pending"]
+    );
+
+    await connection.query(
+      `
+      INSERT INTO logistics (order_id, ngo_id, delivery_method, delivery_status, estimated_arrival, delivery_date)
+      VALUES (?, ?, ?, ?, ?, ?)
+      `,
+      [orderId, ngo_id, resolvedDeliveryMethod, "Pending", null, null]
+    );
+
+    await connection.commit();
 
     return res.status(201).json({
       success: true,
       message: "Order created successfully",
       data: {
-        order_id: result.insertId,
+        order_id: orderId,
       },
     });
   } catch (err) {
+    if (connection) {
+      await connection.rollback();
+    }
     return res.status(500).json({
       success: false,
       message: err.message,
     });
+  } finally {
+    if (connection) connection.release();
   }
 };
 
